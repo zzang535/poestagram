@@ -1,6 +1,16 @@
+"use client";
+
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function LoginForm() {
+  const router = useRouter();
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    router.push("/");
+  };
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-4">
       <div className="w-full max-w-[375px] space-y-6">
@@ -8,13 +18,13 @@ export default function LoginForm() {
           <h1 className="font-['Pacifico'] text-3xl text-white">poe2stagram</h1>
         </div>
 
-        <form className="space-y-4">
+        <form className="space-y-4" onSubmit={handleSubmit}>
           <div>
             <input
               type="text"
               placeholder="사용자 이름 또는 이메일"
               className="w-full px-4 py-3 border border-gray-700 rounded-lg text-sm focus:border-white focus:ring-white bg-gray-900 text-white"
-              required
+              // required
             />
           </div>
           <div>
@@ -22,7 +32,7 @@ export default function LoginForm() {
               type="password"
               placeholder="비밀번호"
               className="w-full px-4 py-3 border border-gray-700 rounded-lg text-sm focus:border-white focus:ring-white bg-gray-900 text-white"
-              required
+              // required
             />
           </div>
           <button
@@ -43,7 +53,7 @@ export default function LoginForm() {
           <p className="text-sm text-gray-400">
             계정이 없으신가요?
             <Link
-              href="#"
+              href="/signup"
               className="text-blue-400 font-medium hover:underline ml-1"
             >
               가입하기
