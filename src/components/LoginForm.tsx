@@ -8,7 +8,7 @@ export default function LoginForm() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    router.push("/");
+    router.push("/home");
   };
 
   return (
