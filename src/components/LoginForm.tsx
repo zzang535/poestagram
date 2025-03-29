@@ -22,7 +22,7 @@ export default function LoginForm() {
           <div>
             <input
               type="text"
-              placeholder="사용자 이름 또는 이메일"
+              placeholder="이메일"
               className="w-full px-4 py-3 border border-gray-700 rounded-lg text-sm focus:border-white focus:ring-white bg-gray-900 text-white"
               // required
             />
@@ -44,7 +44,7 @@ export default function LoginForm() {
         </form>
 
         <div className="text-center mt-6">
-          <Link href="#" className="text-blue-400 text-sm hover:underline">
+          <Link href="/find-password" className="text-blue-400 text-sm hover:underline">
             비밀번호를 잊으셨나요?
           </Link>
         </div>
