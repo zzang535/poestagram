@@ -29,10 +29,10 @@ export default function CreatePost() {
 
   if (isPreviewMode) {
     return (
-      <div className="px-4">
-        <div className="w-full max-w-[375px] mx-auto space-y-6">
-          <div className="bg-gray-900 rounded-lg p-4">
-            <div className="relative w-full aspect-[9/16] bg-gray-800 rounded-2xl overflow-hidden">
+      <div className="max-w-2xl mx-auto">
+        <div className="space-y-6">
+          <div className="bg-black rounded-lg p-4">
+            <div className="relative w-full aspect-[9/16] bg-gray-900 rounded-2xl overflow-hidden">
               {preview && (
                 <img
                   src={preview}
@@ -43,7 +43,7 @@ export default function CreatePost() {
             </div>
           </div>
 
-          <div className="bg-gray-900 rounded-lg p-4">
+          <div className="bg-black rounded-lg p-4">
             <h2 className="text-lg font-semibold text-white mb-4">설명</h2>
             <p className="text-gray-300">{description}</p>
           </div>
@@ -60,10 +60,10 @@ export default function CreatePost() {
   }
 
   return (
-    <div className="px-4">
-      <div className="w-full max-w-[375px] mx-auto space-y-6">
-        <div className="bg-gray-900 rounded-lg p-6">
-          <div className="border-2 border-dashed border-gray-700 rounded-lg p-8 text-center">
+    <div className="max-w-2xl mx-auto">
+      <div className="space-y-6">
+        <div className="bg-black rounded-lg p-6">
+          <div className="border-2 border-dashed border-gray-900 rounded-lg p-8 text-center">
             <input
               type="file"
               id="fileUpload"
@@ -81,10 +81,10 @@ export default function CreatePost() {
           </div>
         </div>
 
-        <div className="bg-gray-900 rounded-lg p-4">
+        <div className="bg-black rounded-lg p-4">
           <h2 className="text-lg font-semibold text-white mb-4">설명 작성</h2>
           <textarea
-            className="w-full h-32 border-none resize-none focus:ring-2 focus:ring-red-800 bg-gray-800 text-white placeholder-gray-400 rounded-lg p-4"
+            className="w-full h-32 border-none resize-none focus:ring-2 focus:ring-red-800 bg-gray-900 text-white placeholder-gray-400 rounded-lg p-4"
             placeholder="내용을 입력해주세요 (최대 500자)"
             maxLength={500}
             value={description}

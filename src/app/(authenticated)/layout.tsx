@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBars, faHouse, faPlus, faUser } from "@fortawesome/free-solid-svg-icons";
 
 export default function AuthenticatedLayout({
   children,
@@ -12,37 +14,42 @@ export default function AuthenticatedLayout({
   const isCreatePage = pathname === "/create";
 
   return (
-    <div className="min-h-screen bg-gray-900">
-      <nav className="fixed top-0 w-full bg-gray-900 border-b border-gray-800 z-50">
-        <div className="max-w-8xl mx-auto px-4 h-14 flex items-center justify-between">
-          {isCreatePage ? (
-            <h1 className="text-xl font-medium text-white">새 게시물</h1>
-          ) : (
-            <h1 className="font-['Pacifico'] text-xl text-white">poe2stagram</h1>
-          )}
+    <div className="min-h-screen bg-black">
+      <header className="fixed top-0 left-0 right-0 bg-black border-b border-gray-900">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
+          <h1 className="text-xl font-bold text-white flex-1">
+            {isCreatePage ? "새 게시물" : "poe2stagram"}
+          </h1>
+          <button className="text-white p-2 hover:bg-gray-900 rounded-lg transition-colors ml-auto">
+            <FontAwesomeIcon icon={faBars} className="text-xl" />
+          </button>
         </div>
-      </nav>
+      </header>
 
-      <main className="mt-14 mb-16">
-        {children}
+      <main className="pt-16 pb-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {children}
+        </div>
       </main>
 
-      <nav className="fixed bottom-0 w-full bg-gray-900 border-t border-gray-800">
-        <div className="grid grid-cols-3 h-16">
-          <Link href="/home" className="flex flex-col items-center justify-center">
-            <i className="fa-solid fa-house text-xl text-red-800"></i>
-            <span className="text-xs mt-1 text-white">홈</span>
-          </Link>
+      <nav className="fixed bottom-0 left-0 right-0 bg-black border-t border-gray-900">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-3 h-16">
+            <Link href="/home" className="flex flex-col items-center justify-center">
+              <FontAwesomeIcon icon={faHouse} className="text-xl text-red-800" />
+              <span className="text-xs mt-1 text-white">홈</span>
+            </Link>
 
-          <Link href="/create" className="flex flex-col items-center justify-center">
-            <i className="fa-solid fa-plus text-xl text-white"></i>
-            <span className="text-xs mt-1 text-white">만들기</span>
-          </Link>
+            <Link href="/create" className="flex flex-col items-center justify-center">
+              <FontAwesomeIcon icon={faPlus} className="text-xl text-white" />
+              <span className="text-xs mt-1 text-white">만들기</span>
+            </Link>
 
-          <Link href="/profile" className="flex flex-col items-center justify-center">
-            <i className="fa-solid fa-user text-xl text-white"></i>
-            <span className="text-xs mt-1 text-white">프로필</span>
-          </Link>
+            <Link href="/profile" className="flex flex-col items-center justify-center">
+              <FontAwesomeIcon icon={faUser} className="text-xl text-white" />
+              <span className="text-xs mt-1 text-white">프로필</span>
+            </Link>
+          </div>
         </div>
       </nav>
     </div>

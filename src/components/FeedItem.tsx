@@ -20,8 +20,8 @@ export default function FeedItem({
   comments,
 }: FeedItemProps) {
   return (
-    <article className="bg-gray-900 border-b border-gray-800 pb-4 mb-4 overflow-hidden">
-      <div className="flex items-center p-4">
+    <article className="bg-black rounded-lg mb-4 overflow-hidden">
+      <div className="flex items-center p-4 border-b border-gray-800">
         <img
           src={userImage}
           alt="유저"
@@ -38,7 +38,7 @@ export default function FeedItem({
           className="absolute top-0 left-0 w-full h-full object-contain bg-black"
         />
       </div>
-      <div className="px-4 pt-4">
+      <div className="px-4 pt-4 border-t border-gray-800">
         <div className="flex items-center justify-between mb-2">
           <div className="flex space-x-4">
             <button className="text-2xl text-white">
