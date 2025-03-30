@@ -32,6 +32,13 @@ export default function DocsPage() {
         <section>
           <h2 className="text-xl font-semibold mb-4">개발 문서</h2>
           <div className="grid gap-4">
+            <Link 
+              href="/docs/work-log" 
+              className="block p-4 bg-gray-900 rounded-lg hover:bg-gray-800 transition-colors"
+            >
+              <h3 className="text-lg font-medium mb-2">작업일지</h3>
+              <p className="text-gray-400">프로젝트 진행 상황 및 작업 내역</p>
+            </Link>
             {/* 추후 개발 문서들 추가 */}
           </div>
         </section>

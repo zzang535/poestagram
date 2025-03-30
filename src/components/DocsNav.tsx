@@ -19,18 +19,31 @@ export default function DocsNav() {
       </div>
       
       <div className="space-y-2">
-        <Link 
-          href="/docs/common" 
-          className={`block px-4 py-2 rounded-lg transition-colors ${isActive("/docs/common")}`}
-        >
-          공통 디자인 가이드
-        </Link>
-        <Link 
-          href="/docs/login" 
-          className={`block px-4 py-2 rounded-lg transition-colors ${isActive("/docs/login")}`}
-        >
-          로그인 화면 기획서
-        </Link>
+        <div className="mb-4">
+          <h3 className="text-sm font-semibold text-gray-400 px-4 mb-2">기획서</h3>
+          <Link 
+            href="/docs/common" 
+            className={`block px-4 py-2 rounded-lg transition-colors ${isActive("/docs/common")}`}
+          >
+            공통 디자인 가이드
+          </Link>
+          <Link 
+            href="/docs/login" 
+            className={`block px-4 py-2 rounded-lg transition-colors ${isActive("/docs/login")}`}
+          >
+            로그인 화면 기획서
+          </Link>
+        </div>
+
+        <div>
+          <h3 className="text-sm font-semibold text-gray-400 px-4 mb-2">개발 문서</h3>
+          <Link 
+            href="/docs/work-log" 
+            className={`block px-4 py-2 rounded-lg transition-colors ${isActive("/docs/work-log")}`}
+          >
+            작업일지
+          </Link>
+        </div>
       </div>
     </nav>
   );
