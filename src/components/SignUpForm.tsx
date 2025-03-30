@@ -1,17 +1,60 @@
+"use client";
+
 import Link from "next/link";
+import { useState } from "react";
+import { sendVerificationEmail } from "@/api/auth";
 
 export default function SignUpForm() {
+  const [email, setEmail] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [message, setMessage] = useState("");
+
+  const handleSendVerification = async () => {
+    if (!email) {
+      setMessage("이메일을 입력해주세요.");
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      setMessage("");
+      const response = await sendVerificationEmail(email);
+      setMessage(response.message);
+    } catch (error) {
+      setMessage("인증번호 전송에 실패했습니다.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-4">
       <div className="w-full max-w-[375px] space-y-6">
         <form className="space-y-4">
           <div>
-            <input
-              type="email"
-              placeholder="이메일"
-              className="w-full px-4 py-3 border border-gray-700 rounded-lg text-sm focus:border-white focus:ring-white bg-gray-900 text-white"
-              required
-            />
+            <div className="flex gap-2">
+              <input
+                type="email"
+                placeholder="이메일"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="flex-1 px-4 py-3 border border-gray-700 rounded-lg text-sm focus:border-white focus:ring-white bg-gray-900 text-white"
+                required
+              />
+              <button
+                type="button"
+                onClick={handleSendVerification}
+                disabled={isLoading}
+                className="w-[100px] bg-red-800 text-white rounded-lg font-medium hover:bg-red-900 transition-colors disabled:bg-gray-700 disabled:cursor-not-allowed"
+              >
+                {isLoading ? "전송중..." : "전송"}
+              </button>
+            </div>
+            {message && (
+              <p className={`mt-2 text-sm ${message.includes("실패") ? "text-red-500" : "text-green-500"}`}>
+                {message}
+              </p>
+            )}
           </div>
 
           <div className="flex gap-2">
