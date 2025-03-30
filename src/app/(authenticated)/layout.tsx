@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars, faHouse, faPlus, faUser, faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
+import { faBars, faHouse, faPlus, faUser, faSignOutAlt, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
 
 export default function AuthenticatedLayout({
@@ -14,6 +14,7 @@ export default function AuthenticatedLayout({
   const pathname = usePathname();
   const router = useRouter();
   const isCreatePage = pathname === "/create";
+  const isUserFeedPage = pathname.startsWith("/user-feed/");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleLogout = () => {
@@ -28,19 +29,38 @@ export default function AuthenticatedLayout({
     router.push("/login");
   };
 
+  const handleBack = () => {
+    router.back();
+  };
+
   return (
     <div className="min-h-screen bg-black">
       <header className="fixed top-0 left-0 right-0 bg-black border-b border-gray-800 z-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
-          <h1 className="text-xl font-bold text-white flex-1">
-            {isCreatePage ? "새 게시물" : "poe2stagram"}
-          </h1>
-          <button 
-            className="text-white p-2 hover:bg-gray-800 rounded-lg transition-colors ml-auto"
-            onClick={() => setIsMenuOpen(true)}
-          >
-            <FontAwesomeIcon icon={faBars} className="text-xl" />
-          </button>
+          {isUserFeedPage ? (
+            <>
+              <button 
+                className="text-white p-2 hover:bg-gray-800 rounded-lg transition-colors"
+                onClick={handleBack}
+              >
+                <FontAwesomeIcon icon={faArrowLeft} className="text-xl" />
+              </button>
+              <h1 className="text-xl font-bold text-white">게시물</h1>
+              <div className="w-8" /> {/* 오른쪽 정렬을 위한 빈 공간 */}
+            </>
+          ) : (
+            <>
+              <h1 className="text-xl font-bold text-white flex-1">
+                {isCreatePage ? "새 게시물" : "poe2stagram"}
+              </h1>
+              <button 
+                className="text-white p-2 hover:bg-gray-800 rounded-lg transition-colors ml-auto"
+                onClick={() => setIsMenuOpen(true)}
+              >
+                <FontAwesomeIcon icon={faBars} className="text-xl" />
+              </button>
+            </>
+          )}
         </div>
       </header>
 

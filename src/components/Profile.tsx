@@ -1,6 +1,10 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+
 export default function Profile() {
+  const router = useRouter();
+  
   // 임시 데이터
   const profile = {
     username: "yoonhwang",
@@ -47,6 +51,10 @@ export default function Profile() {
     },
   ];
 
+  const handlePostClick = () => {
+    router.push(`/user-feed/${profile.username}`);
+  };
+
   return (
     <div className="min-h-screen bg-gray-950 text-white">
       {/* 프로필 정보 섹션 */}
@@ -72,7 +80,11 @@ export default function Profile() {
       {/* 게시물 그리드 */}
       <section className="grid grid-cols-3 gap-px bg-gray-800">
         {posts.map((post) => (
-          <div key={post.id} className="relative aspect-square group">
+          <div 
+            key={post.id} 
+            className="relative aspect-square group cursor-pointer"
+            onClick={handlePostClick}
+          >
             <img
               src={post.image}
               alt={`게시물 ${post.id}`}
