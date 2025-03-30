@@ -11,7 +11,7 @@ export default function LoginForm() {
     e.preventDefault();
     // TODO: 실제 로그인 로직 구현
     useAuthStore.getState().login();
-    router.push("/home");
+    router.push("/feed");
   };
 
   return (

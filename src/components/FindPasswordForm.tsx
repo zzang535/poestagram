@@ -158,7 +158,7 @@ export default function FindPasswordForm() {
                   onClick={() => {
                     // TODO: 비밀번호 변경 로직 구현
                     console.log("비밀번호 변경");
-                    router.push("/home");
+                    router.push("/feed");
                   }}
                 > 
                   계속
