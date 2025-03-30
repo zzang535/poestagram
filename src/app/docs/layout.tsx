@@ -49,6 +49,12 @@ export default function DocsLayout({
                 >
                   작업일지
                 </Link>
+                <Link 
+                  href="/docs/tech-stack" 
+                  className="block text-gray-300 hover:text-white transition-colors"
+                >
+                  기술 스택
+                </Link>
               </div>
             </section>
           </div>

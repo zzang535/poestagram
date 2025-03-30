@@ -5,9 +5,17 @@ export default function WorkLogPage() {
     {
       date: "2025-03-30",
       day: "일",
+      time: "15:30-17:30",
+      hours: 2,
+      content: "• fast api 서버 제작\n• render 배포\n• 이메일 코드 전송 api 연동",
+      workers: "황윤, 클로드, gpt"
+    },
+    {
+      date: "2025-03-30",
+      day: "일",
       time: "12:00-15:00",
       hours: 3,
-      content: "권한별 페이지 분기, docs 페이지 레이아웃 분기, 댓글 모달 작업",
+      content: "• 권한별 페이지 분기\n• docs 페이지 레이아웃 분기\n• 댓글 모달 작업",
       workers: "황윤, 클로드, gpt"
     },
     {
@@ -15,7 +23,7 @@ export default function WorkLogPage() {
       day: "일",
       time: "9:00-12:00",
       hours: 3,
-      content: "프로필 페이지, 선개발 후 피그마 방식으로 변경",
+      content: "• 프로필 페이지\n• 선개발 후 피그마 방식으로 변경",
       workers: "황윤, 클로드, gpt"
     },
     {
@@ -23,7 +31,7 @@ export default function WorkLogPage() {
       day: "토",
       time: "19:00-22:00",
       hours: 3,
-      content: "비밀번호 찾기 와이어프레임 / 비밀번호 찾기 마크업",
+      content: "• 비밀번호 찾기 와이어프레임\n• 비밀번호 찾기 마크업",
       workers: "황윤, creatie, 클로드, gpt"
     },
     {
@@ -31,7 +39,7 @@ export default function WorkLogPage() {
       day: "토",
       time: "19:00-22:00",
       hours: 3,
-      content: "creatie 테스트, 로그인, 회원가입, 홈, 만들기 페이지 마크업",
+      content: "• creatie 테스트\n• 로그인 페이지 마크업\n• 회원가입 페이지 마크업\n• 홈 페이지 마크업\n• 만들기 페이지 마크업",
       workers: "황윤, creatie, 클로드, gpt"
     },
     {
@@ -39,7 +47,7 @@ export default function WorkLogPage() {
       day: "목",
       time: "20:00-21:00",
       hours: 2,
-      content: "피그마로 와이어프레임 작성",
+      content: "• 피그마로 와이어프레임 작성",
       workers: "황윤"
     }
   ];
@@ -69,7 +77,7 @@ export default function WorkLogPage() {
                   <td className="border border-gray-700 px-4 py-2">{log.day}</td>
                   <td className="border border-gray-700 px-4 py-2">{log.time}</td>
                   <td className="border border-gray-700 px-4 py-2">{log.hours}</td>
-                  <td className="border border-gray-700 px-4 py-2">{log.content}</td>
+                  <td className="border border-gray-700 px-4 py-2 whitespace-pre-line">{log.content}</td>
                   <td className="border border-gray-700 px-4 py-2">{log.workers}</td>
                 </tr>
               ))}
