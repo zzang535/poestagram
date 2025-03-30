@@ -28,7 +28,7 @@ export default function SignUpForm() {
   };
 
   return (
-    <div className="h-[calc(100vh-100px)] flex flex-col items-center justify-center px-4">
+    <div className="min-h-screen  flex flex-col items-center justify-center px-4 py-20">
       <div className="w-full max-w-[375px] space-y-6">
         <form className="space-y-4">
           <div>
@@ -38,7 +38,19 @@ export default function SignUpForm() {
                 placeholder="이메일"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-[70%] px-4 py-3 border border-gray-700 rounded-lg text-sm focus:border-white focus:ring-white bg-gray-900 text-white"
+                className="
+                  w-[70%] 
+                  px-4 
+                  py-3 
+                  border 
+                  border-gray-700
+                  rounded-lg 
+                  text-sm 
+                  focus:border-white 
+                  focus:ring-white 
+                  bg-gray-900 
+                  text-white
+                "
                 required
               />
               <button
@@ -130,6 +142,7 @@ export default function SignUpForm() {
             </Link>
           </p>
         </div>
+        
       </div>
     </div>
   );
