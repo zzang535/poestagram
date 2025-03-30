@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars, faHouse, faPlus, faUser, faSignOutAlt, faUserMinus, faKey } from "@fortawesome/free-solid-svg-icons";
+import { faBars, faHouse, faPlus, faUser, faSignOutAlt, faKey } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
 
 export default function AuthenticatedLayout({
@@ -32,7 +32,7 @@ export default function AuthenticatedLayout({
 
   return (
     <div className="min-h-screen bg-black">
-      <header className="fixed top-0 left-0 right-0 bg-black border-b border-gray-800 z-10">
+      <header className="fixed top-0 left-0 right-0 bg-black border-b border-gray-800 z-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
           <h1 className="text-xl font-bold text-white flex-1">
             {isCreatePage ? "새 게시물" : "poe2stagram"}
@@ -49,14 +49,14 @@ export default function AuthenticatedLayout({
       {/* 메뉴가 열려있을 때 배경을 어둡게 */}
       {isMenuOpen && (
         <div 
-          className="fixed inset-0 bg-black bg-opacity-30 transition-opacity z-20"
+          className="fixed inset-0 bg-black bg-opacity-30 transition-opacity z-30"
           onClick={() => setIsMenuOpen(false)}
         />
       )}
 
       {/* 오른쪽 슬라이드 메뉴 */}
-      <div className={`fixed top-0 bottom-16 right-0 w-64 bg-black border-l border-gray-800 transform transition-transform duration-300 ease-in-out z-30 ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
-        <div className="p-4">
+      <div className={`fixed inset-y-0 right-0 w-64 bg-black border-l border-gray-800 transform transition-transform duration-300 ease-in-out z-40 ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+        <div className="p-4 flex flex-col h-full">
           <div className="flex justify-between items-center mb-8">
             <h2 className="text-xl font-bold text-white">메뉴</h2>
             <button 
@@ -66,7 +66,14 @@ export default function AuthenticatedLayout({
               <span className="text-2xl">&times;</span>
             </button>
           </div>
-          <div className="space-y-4">
+          <div className="space-y-4 flex-1">
+            <button
+              onClick={handleChangePassword}
+              className="w-full flex items-center space-x-3 text-white p-3 hover:bg-gray-800 rounded-lg transition-colors"
+            >
+              <FontAwesomeIcon icon={faKey} className="text-xl" />
+              <span>비밀번호 변경</span>
+            </button>
             <button
               onClick={handleLogout}
               className="w-full flex items-center space-x-3 text-white p-3 hover:bg-gray-800 rounded-lg transition-colors"
@@ -74,19 +81,13 @@ export default function AuthenticatedLayout({
               <FontAwesomeIcon icon={faSignOutAlt} className="text-xl" />
               <span>로그아웃</span>
             </button>
+          </div>
+          <div className="pt-4 border-t border-gray-800">
             <button
               onClick={handleDeleteAccount}
-              className="w-full flex items-center space-x-3 text-white p-3 hover:bg-gray-800 rounded-lg transition-colors"
+              className="w-full text-gray-400 text-sm p-2 hover:text-white transition-colors"
             >
-              <FontAwesomeIcon icon={faUserMinus} className="text-xl" />
-              <span>회원 탈퇴</span>
-            </button>
-            <button
-              onClick={handleChangePassword}
-              className="w-full flex items-center space-x-3 text-white p-3 hover:bg-gray-800 rounded-lg transition-colors"
-            >
-              <FontAwesomeIcon icon={faKey} className="text-xl" />
-              <span>비밀번호 변경</span>
+              회원 탈퇴
             </button>
           </div>
         </div>
@@ -98,7 +99,7 @@ export default function AuthenticatedLayout({
         </div>
       </main>
 
-      <nav className="fixed bottom-0 left-0 right-0 bg-black border-t border-gray-800 z-50">
+      <nav className="fixed bottom-0 left-0 right-0 bg-black border-t border-gray-800 z-20">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-3 h-16">
             <Link href="/home" className="flex flex-col items-center justify-center">
