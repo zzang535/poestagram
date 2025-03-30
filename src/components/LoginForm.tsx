@@ -14,10 +14,6 @@ export default function LoginForm() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-4">
       <div className="w-full max-w-[375px] space-y-6">
-        <div className="text-center mb-16">
-          <h1 className="font-['Pacifico'] text-3xl text-white">poe2stagram</h1>
-        </div>
-
         <form className="space-y-4" onSubmit={handleSubmit}>
           <div>
             <input
