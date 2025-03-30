@@ -41,14 +41,14 @@ export default function RootLayout({
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   // 현재 경로에 따른 네비게이션 활성화 상태
-  const isFeedActive = pathname === "/home";
+  const isFeedActive = pathname === "/feed";
   const isCreateActive = pathname === "/create";
   const isProfileActive = pathname === "/profile";
 
   const handleLogout = () => {
     useAuthStore.getState().logout();
     setIsMenuOpen(false);
-    router.push("/home");
+    router.push("/feed");
   };
 
   const handleDeleteAccount = () => {
@@ -186,7 +186,7 @@ export default function RootLayout({
             <div className="max-w-7xl mx-auto">
               <div className="grid grid-cols-3 h-16">
                 <button 
-                  onClick={() => handleNavigation("/home")}
+                  onClick={() => handleNavigation("/feed")}
                   className={`flex flex-col items-center justify-center ${
                     isFeedActive ? "text-red-800" : "text-white"
                   }`}

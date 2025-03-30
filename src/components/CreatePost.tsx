@@ -1,11 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+
 
 export default function CreatePost() {
   const [description, setDescription] = useState("");
   const [preview, setPreview] = useState<string | null>(null);
   const [isPreviewMode, setIsPreviewMode] = useState(false);
+  const router = useRouter();
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -20,7 +23,8 @@ export default function CreatePost() {
   };
 
   const handleUpload = () => {
-    setIsPreviewMode(true);
+    router.push("/feed");
+    // setIsPreviewMode(true);
   };
 
   const handleEdit = () => {
