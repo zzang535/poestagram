@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars, faHouse, faPlus, faUser, faSignOutAlt, faKey } from "@fortawesome/free-solid-svg-icons";
+import { faBars, faHouse, faPlus, faUser, faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
 
 export default function AuthenticatedLayout({
@@ -12,22 +12,20 @@ export default function AuthenticatedLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const router = useRouter();
   const isCreatePage = pathname === "/create";
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleLogout = () => {
     // TODO: 로그아웃 로직 구현
     console.log("로그아웃");
+    router.push("/login");
   };
 
   const handleDeleteAccount = () => {
     // TODO: 회원 탈퇴 로직 구현
     console.log("회원 탈퇴");
-  };
-
-  const handleChangePassword = () => {
-    // TODO: 비밀번호 변경 로직 구현
-    console.log("비밀번호 변경");
+    router.push("/login");
   };
 
   return (
@@ -67,13 +65,6 @@ export default function AuthenticatedLayout({
             </button>
           </div>
           <div className="space-y-4 flex-1">
-            <button
-              onClick={handleChangePassword}
-              className="w-full flex items-center space-x-3 text-white p-3 hover:bg-gray-800 rounded-lg transition-colors"
-            >
-              <FontAwesomeIcon icon={faKey} className="text-xl" />
-              <span>비밀번호 변경</span>
-            </button>
             <button
               onClick={handleLogout}
               className="w-full flex items-center space-x-3 text-white p-3 hover:bg-gray-800 rounded-lg transition-colors"
