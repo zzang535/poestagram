@@ -23,6 +23,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  
+  // docs 경로에서는 기본 레이아웃만 적용
+  if (pathname.startsWith("/docs")) {
+    return (
+      <html lang="ko">
+        <body>
+          {children}
+        </body>
+      </html>
+    );
+  }
+
   const router = useRouter();
   const isCreatePage = pathname === "/create";
   const isUserFeedPage = pathname.startsWith("/user-feed/");
