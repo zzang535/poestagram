@@ -28,24 +28,24 @@ export default function SignUpForm() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-4">
+    <div className="h-[calc(100vh-100px)] flex flex-col items-center justify-center px-4">
       <div className="w-full max-w-[375px] space-y-6">
         <form className="space-y-4">
           <div>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex gap-2">
               <input
                 type="email"
                 placeholder="이메일"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="flex-1 px-4 py-3 border border-gray-700 rounded-lg text-sm focus:border-white focus:ring-white bg-gray-900 text-white"
+                className="w-[70%] px-4 py-3 border border-gray-700 rounded-lg text-sm focus:border-white focus:ring-white bg-gray-900 text-white"
                 required
               />
               <button
                 type="button"
                 onClick={handleSendVerification}
                 disabled={isLoading}
-                className="w-[100px] bg-red-800 text-white rounded-lg font-medium hover:bg-red-900 transition-colors disabled:bg-gray-700 disabled:cursor-not-allowed"
+                className="w-[30%] bg-red-800 text-white rounded-lg font-medium hover:bg-red-900 transition-colors disabled:bg-gray-700 disabled:cursor-not-allowed"
               >
                 {isLoading ? "전송중..." : "전송"}
               </button>
@@ -61,12 +61,12 @@ export default function SignUpForm() {
             <input
               type="text"
               placeholder="인증번호 6자리 입력"
-              className="flex-1 px-4 py-3 border border-gray-700 rounded-lg text-sm focus:border-white focus:ring-white bg-gray-900 text-white"
+              className="w-[70%] px-4 py-3 border border-gray-700 rounded-lg text-sm focus:border-white focus:ring-white bg-gray-900 text-white"
               required
             />
             <button
               type="button"
-              className="w-[100px] bg-red-800 text-white rounded-lg font-medium hover:bg-red-900 transition-colors"
+              className="w-[30%] bg-red-800 text-white rounded-lg font-medium hover:bg-red-900 transition-colors"
             >
               인증하기
             </button>
