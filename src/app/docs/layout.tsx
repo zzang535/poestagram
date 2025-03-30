@@ -31,6 +31,12 @@ export default function DocsLayout({
                 >
                   로그인 화면 기획서
                 </Link>
+                <Link 
+                  href="/docs/access-control" 
+                  className="block text-gray-300 hover:text-white transition-colors"
+                >
+                  접근 권한 기획서
+                </Link>
               </div>
             </section>
 

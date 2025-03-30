@@ -1,3 +1,5 @@
+"use client";
+
 export default function WorkLogPage() {
   const workLogs = [
     {
@@ -37,42 +39,44 @@ export default function WorkLogPage() {
   const totalHours = workLogs.reduce((sum, log) => sum + log.hours, 0);
 
   return (
-    <div className="p-4">
-      <h1 className="text-2xl font-bold mb-6">작업일지</h1>
-      <div className="overflow-x-auto">
-        <table className="min-w-full border-collapse">
-          <thead>
-            <tr className="bg-gray-800">
-              <th className="border border-gray-700 px-4 py-2 text-left">날짜</th>
-              <th className="border border-gray-700 px-4 py-2 text-left">요일</th>
-              <th className="border border-gray-700 px-4 py-2 text-left">작업시각</th>
-              <th className="border border-gray-700 px-4 py-2 text-left">시간</th>
-              <th className="border border-gray-700 px-4 py-2 text-left">내용</th>
-              <th className="border border-gray-700 px-4 py-2 text-left">작업자</th>
-            </tr>
-          </thead>
-          <tbody>
-            {workLogs.map((log, index) => (
-              <tr key={index} className="hover:bg-gray-900">
-                <td className="border border-gray-700 px-4 py-2">{log.date}</td>
-                <td className="border border-gray-700 px-4 py-2">{log.day}</td>
-                <td className="border border-gray-700 px-4 py-2">{log.time}</td>
-                <td className="border border-gray-700 px-4 py-2">{log.hours}</td>
-                <td className="border border-gray-700 px-4 py-2">{log.content}</td>
-                <td className="border border-gray-700 px-4 py-2">{log.workers}</td>
+    <div className="p-8">
+      <h1 className="text-3xl font-bold mb-8">작업일지</h1>
+      <div className="bg-gray-900 p-6 rounded-lg">
+        <div className="overflow-x-auto">
+          <table className="min-w-full border-collapse">
+            <thead>
+              <tr className="bg-gray-800">
+                <th className="border border-gray-700 px-4 py-2 text-left">날짜</th>
+                <th className="border border-gray-700 px-4 py-2 text-left">요일</th>
+                <th className="border border-gray-700 px-4 py-2 text-left">작업시각</th>
+                <th className="border border-gray-700 px-4 py-2 text-left">시간</th>
+                <th className="border border-gray-700 px-4 py-2 text-left">내용</th>
+                <th className="border border-gray-700 px-4 py-2 text-left">작업자</th>
               </tr>
-            ))}
-            <tr className="bg-gray-800 font-semibold">
-              <td colSpan={3} className="border border-gray-700 px-4 py-2 text-right">
-                총 작업 시간
-              </td>
-              <td className="border border-gray-700 px-4 py-2">
-                {totalHours}
-              </td>
-              <td colSpan={2} className="border border-gray-700 px-4 py-2" />
-            </tr>
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {workLogs.map((log, index) => (
+                <tr key={index} className="hover:bg-gray-900">
+                  <td className="border border-gray-700 px-4 py-2">{log.date}</td>
+                  <td className="border border-gray-700 px-4 py-2">{log.day}</td>
+                  <td className="border border-gray-700 px-4 py-2">{log.time}</td>
+                  <td className="border border-gray-700 px-4 py-2">{log.hours}</td>
+                  <td className="border border-gray-700 px-4 py-2">{log.content}</td>
+                  <td className="border border-gray-700 px-4 py-2">{log.workers}</td>
+                </tr>
+              ))}
+              <tr className="bg-gray-800 font-semibold">
+                <td colSpan={3} className="border border-gray-700 px-4 py-2 text-right">
+                  총 작업 시간
+                </td>
+                <td className="border border-gray-700 px-4 py-2">
+                  {totalHours}
+                </td>
+                <td colSpan={2} className="border border-gray-700 px-4 py-2" />
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );
