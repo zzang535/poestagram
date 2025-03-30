@@ -32,7 +32,7 @@ export default function SignUpForm() {
       <div className="w-full max-w-[375px] space-y-6">
         <form className="space-y-4">
           <div>
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2">
               <input
                 type="email"
                 placeholder="이메일"
