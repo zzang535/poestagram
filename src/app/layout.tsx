@@ -3,9 +3,19 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars, faHouse, faPlus, faUser, faSignOutAlt, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import { 
+  faBars, 
+  faNewspaper, 
+  faPlus, 
+  faUser, 
+  faSignOutAlt, 
+  faArrowLeft,
+  faSignInAlt,
+  faUserPlus
+} from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
 import "./globals.css";
+import { useAuthStore } from "@/store/authStore";
 
 export default function RootLayout({
   children,
@@ -18,10 +28,15 @@ export default function RootLayout({
   const isUserFeedPage = pathname.startsWith("/user-feed/");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+  // 현재 경로에 따른 네비게이션 활성화 상태
+  const isFeedActive = pathname === "/home";
+  const isCreateActive = pathname === "/create";
+  const isProfileActive = pathname === "/profile";
+
   const handleLogout = () => {
-    // TODO: 로그아웃 로직 구현
-    console.log("로그아웃");
-    router.push("/login");
+    useAuthStore.getState().logout();
+    setIsMenuOpen(false);
+    router.push("/home");
   };
 
   const handleDeleteAccount = () => {
@@ -33,6 +48,21 @@ export default function RootLayout({
   const handleBack = () => {
     router.back();
   };
+
+  const handleNavigation = (path: string) => {
+    if (path === "/create" || path === "/profile") {
+      if (useAuthStore.getState().isLoggedIn) {
+        router.push(path);
+      } else {
+        router.push("/login");
+      }
+    } else {
+      router.push(path);
+    }
+  };
+
+  // 로그인 상태를 Zustand store에서 가져옴
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
 
   return (
     <html lang="ko">
@@ -88,22 +118,49 @@ export default function RootLayout({
                 </button>
               </div>
               <div className="space-y-4 flex-1">
-                <button
-                  onClick={handleLogout}
-                  className="w-full flex items-center space-x-3 text-white p-3 hover:bg-gray-800 rounded-lg transition-colors"
-                >
-                  <FontAwesomeIcon icon={faSignOutAlt} className="text-xl" />
-                  <span>로그아웃</span>
-                </button>
+                {isLoggedIn ? (
+                  // 로그인 상태일 때 보여줄 메뉴
+                  <>
+                    <button
+                      onClick={handleLogout}
+                      className="w-full flex items-center space-x-3 text-white p-3 hover:bg-gray-800 rounded-lg transition-colors"
+                    >
+                      <FontAwesomeIcon icon={faSignOutAlt} className="text-xl" />
+                      <span>로그아웃</span>
+                    </button>
+                  </>
+                ) : (
+                  // 로그아웃 상태일 때 보여줄 메뉴
+                  <>
+                    <Link
+                      href="/login"
+                      className="w-full flex items-center space-x-3 text-white p-3 hover:bg-gray-800 rounded-lg transition-colors"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      <FontAwesomeIcon icon={faSignInAlt} className="text-xl" />
+                      <span>로그인</span>
+                    </Link>
+                    <Link
+                      href="/signup"
+                      className="w-full flex items-center space-x-3 text-white p-3 hover:bg-gray-800 rounded-lg transition-colors"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      <FontAwesomeIcon icon={faUserPlus} className="text-xl" />
+                      <span>회원가입</span>
+                    </Link>
+                  </>
+                )}
               </div>
-              <div className="pt-4 border-t border-gray-800">
-                <button
-                  onClick={handleDeleteAccount}
-                  className="w-full text-gray-400 text-sm p-2 hover:text-white transition-colors"
-                >
-                  회원 탈퇴
-                </button>
-              </div>
+              {isLoggedIn && (
+                <div className="pt-4 border-t border-gray-800">
+                  <button
+                    onClick={handleDeleteAccount}
+                    className="w-full text-gray-400 text-sm p-2 hover:text-white transition-colors"
+                  >
+                    회원 탈퇴
+                  </button>
+                </div>
+              )}
             </div>
           </div>
 
@@ -116,20 +173,35 @@ export default function RootLayout({
           <nav className="fixed bottom-0 left-0 right-0 bg-black border-t border-gray-800 z-20">
             <div className="max-w-7xl mx-auto">
               <div className="grid grid-cols-3 h-16">
-                <Link href="/home" className="flex flex-col items-center justify-center">
-                  <FontAwesomeIcon icon={faHouse} className="text-xl text-red-800" />
-                  <span className="text-xs mt-1 text-white">홈</span>
-                </Link>
+                <button 
+                  onClick={() => handleNavigation("/home")}
+                  className={`flex flex-col items-center justify-center ${
+                    isFeedActive ? "text-red-800" : "text-white"
+                  }`}
+                >
+                  <FontAwesomeIcon icon={faNewspaper} className="text-xl" />
+                  <span className="text-xs mt-1">피드</span>
+                </button>
 
-                <Link href="/create" className="flex flex-col items-center justify-center">
-                  <FontAwesomeIcon icon={faPlus} className="text-xl text-white" />
-                  <span className="text-xs mt-1 text-white">만들기</span>
-                </Link>
+                <button 
+                  onClick={() => handleNavigation("/create")}
+                  className={`flex flex-col items-center justify-center ${
+                    isCreateActive ? "text-red-800" : "text-white"
+                  }`}
+                >
+                  <FontAwesomeIcon icon={faPlus} className="text-xl" />
+                  <span className="text-xs mt-1">만들기</span>
+                </button>
 
-                <Link href="/profile" className="flex flex-col items-center justify-center">
-                  <FontAwesomeIcon icon={faUser} className="text-xl text-white" />
-                  <span className="text-xs mt-1 text-white">프로필</span>
-                </Link>
+                <button 
+                  onClick={() => handleNavigation("/profile")}
+                  className={`flex flex-col items-center justify-center ${
+                    isProfileActive ? "text-red-800" : "text-white"
+                  }`}
+                >
+                  <FontAwesomeIcon icon={faUser} className="text-xl" />
+                  <span className="text-xs mt-1">프로필</span>
+                </button>
               </div>
             </div>
           </nav>
