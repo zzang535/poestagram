@@ -152,28 +152,36 @@ export default function CommentModal({ isOpen, onClose }: CommentModalProps) {
   ];
 
   return (
-    <div className="fixed inset-0 z-50">
+    <div className="fixed inset-0 z-50 h-screen">
       <div 
         className={`fixed inset-0 bg-black transition-opacity duration-300 ${
           isVisible ? 'bg-opacity-50' : 'bg-opacity-0'
         }`} 
         onClick={onClose} 
-        style={{ top: '0px' }}
       />
       <div 
-        className={`fixed left-0 right-0 bottom-0 bg-black transform transition-all duration-300 ease-out rounded-t-2xl mx-auto max-w-[1280px] ${
+        className={`
+            fixed left-0 right-0 bottom-0 bg-black 
+            transform transition-all duration-300 
+            ase-out rounded-t-2xl mx-auto max-w-[1280px] ${
           isVisible ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0'
         }`}
-        style={{ top: '0px' }}
       >
         <div className="flex flex-col h-[calc(100vh)]">
-          <div className="flex items-center justify-between p-4 border-b border-gray-800">
+
+          {/* 댓글 헤더  */}
+          <div className="
+                  fixed top-0 left-0 right-0 
+                  flex items-center justify-between p-4 
+                  border-b border-gray-800 bg-black
+                ">
             <h2 className="text-lg font-semibold text-white">댓글</h2>
             <button onClick={onClose} className="text-gray-400 hover:text-white">
               <FontAwesomeIcon icon={faXmark} className="text-xl" />
             </button>
           </div>
-          <div className="flex-1 overflow-y-auto">
+
+          <div className="flex-1 overflow-y-auto py-[60px]">
             {dummyComments.map((comment) => (
               <div key={comment.id} className="p-4 border-b border-gray-800">
                 <div className="flex items-start space-x-3">
@@ -193,7 +201,13 @@ export default function CommentModal({ isOpen, onClose }: CommentModalProps) {
               </div>
             ))}
           </div>
-          <div className="p-4 border-t border-gray-800">
+
+          {/* 댓글 입력 영역 */}
+          <div className="
+                fixed bottom-0 left-0 right-0 p-4 
+                border-t border-gray-800 z-50
+                bg-black
+              ">
             <div className="flex items-center space-x-2">
               <input
                 type="text"

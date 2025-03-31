@@ -28,7 +28,7 @@ export default function SignUpForm() {
   };
 
   return (
-    <div className="min-h-screen  flex flex-col items-center justify-center px-4 py-20">
+    <div className="min-h-screen flex flex-col items-center justify-center px-4 py-20">
       <div className="w-full max-w-[375px] space-y-6">
         <form className="space-y-4">
           <div>

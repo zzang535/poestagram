@@ -33,8 +33,9 @@ const feedData = [
 ];
 
 export default function HomePage() {
+  // header, nav 크기 만큼 패딩 추가
   return (
-    <div className="feed-section">
+    <div className="feed-section py-[73px]">
       {feedData.map((feed, index) => (
         <FeedItem
           key={index}

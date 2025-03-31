@@ -56,7 +56,7 @@ export default function Profile() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-950 text-white">
+    <div className="bg-gray-950 text-white py-[73px]">
       {/* 프로필 정보 섹션 */}
       <section className="px-5 py-6 border-b border-gray-800">
         <div className="flex items-center space-x-6">
