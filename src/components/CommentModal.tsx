@@ -152,7 +152,7 @@ export default function CommentModal({ isOpen, onClose }: CommentModalProps) {
   ];
 
   return (
-    <div className="fixed inset-0 z-50 h-screen">
+    <div className="fixed inset-0 z-50 h-[100dvh]">
       <div 
         className={`fixed inset-0 bg-black transition-opacity duration-300 ${
           isVisible ? 'bg-opacity-50' : 'bg-opacity-0'
@@ -167,7 +167,7 @@ export default function CommentModal({ isOpen, onClose }: CommentModalProps) {
           isVisible ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0'
         }`}
       >
-        <div className="flex flex-col h-[calc(100vh)]">
+        <div className="flex flex-col h-[100dvh]">
 
           {/* 댓글 헤더  */}
           <div className="

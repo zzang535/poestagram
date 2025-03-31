@@ -57,7 +57,11 @@ export default function SignUpForm() {
                 type="button"
                 onClick={handleSendVerification}
                 disabled={isLoading}
-                className="w-[30%] bg-red-800 text-white rounded-lg font-medium hover:bg-red-900 transition-colors disabled:bg-gray-700 disabled:cursor-not-allowed"
+                className="
+                  w-[30%] bg-red-800 text-white rounded-lg 
+                  font-medium hover:bg-red-900 transition-colors 
+                  disabled:bg-gray-700 disabled:cursor-not-allowed
+                "
               >
                 {isLoading ? "전송중..." : "전송"}
               </button>
