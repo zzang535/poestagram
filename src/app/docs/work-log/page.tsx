@@ -5,6 +5,14 @@ export default function WorkLogPage() {
     {
       date: "2025-03-31",
       day: "월",
+      time: "23:00-24:00",
+      hours: 1,
+      content: "• 로그인, 회원가입, 게시물작성, 피드, 프로필 페이지 높이 뷰포트\n• 댓글 모달 레이아웃 조정",
+      workers: "황윤, 클로드, gpt"
+    },
+    {
+      date: "2025-03-31",
+      day: "월",
       time: "0:00-1:00",
       hours: 1,
       content: "• 이메일 인증코드 전송 api 제작\n• signup 페이지 레이아웃 수정",
