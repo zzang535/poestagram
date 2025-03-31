@@ -64,7 +64,7 @@ export default function CreatePost() {
   }
 
   return (
-    <div className="h-screen max-w-2xl mx-auto flex items-center justify-center">
+    <div className="h-[100dvh] max-w-2xl mx-auto flex items-center justify-center">
       {/* 가운데 박스 */}
       <div className="space-y-6">
         <div className="bg-black rounded-lg p-6">
