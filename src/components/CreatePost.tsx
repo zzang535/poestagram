@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCamera } from "@fortawesome/free-solid-svg-icons";
 
 
 export default function CreatePost() {
@@ -64,11 +66,29 @@ export default function CreatePost() {
   }
 
   return (
-    <div className="h-[100dvh] max-w-2xl mx-auto flex items-center justify-center">
+    <div className="
+      h-[100dvh] 
+      max-w-2xl 
+      mx-auto 
+      flex 
+      items-center 
+      justify-center
+    ">
       {/* 가운데 박스 */}
       <div className="space-y-6">
-        <div className="bg-black rounded-lg p-6">
-          <div className="border-2 border-dashed border-gray-900 rounded-lg p-8 text-center">
+        <div className="
+          bg-black 
+          rounded-lg 
+          p-6
+        ">
+          <div className="
+            border-2 
+            border-dashed 
+            border-gray-900 
+            rounded-lg 
+            p-8 
+            text-center
+          ">
             <input
               type="file"
               id="fileUpload"
@@ -77,32 +97,85 @@ export default function CreatePost() {
               onChange={handleFileChange}
             />
             <label htmlFor="fileUpload" className="cursor-pointer block">
-              <div className="mx-auto w-16 h-16 bg-red-800 bg-opacity-10 rounded-full flex items-center justify-center mb-4">
-                <i className="fas fa-camera text-red-800 text-2xl"></i>
+              <div className="
+                mx-auto 
+                w-16 
+                h-16 
+                bg-opacity-10 
+                rounded-full 
+                flex 
+                items-center 
+                justify-center 
+                mb-4
+              ">
+                <FontAwesomeIcon icon={faCamera} className="text-2xl" />
               </div>
-              <p className="text-gray-300 mb-2">이미지 또는 동영상을 업로드하세요</p>
-              <p className="text-sm text-gray-400">지원 형식: JPG, PNG, MP4 (최대 100MB)</p>
+              <p className="
+                text-gray-300 
+                mb-2 
+                text-sm
+              ">이미지 또는 동영상을 업로드하세요</p>
+              <p className="
+                text-xs 
+                text-gray-400
+              ">지원 형식: JPG, PNG, MP4 (최대 100MB)</p>
             </label>
           </div>
         </div>
 
-        <div className="bg-black rounded-lg p-4">
-          <h2 className="text-lg font-semibold text-white mb-4">설명 작성</h2>
+        <div className="
+          bg-black 
+          rounded-lg 
+          p-4
+        ">
+          <h2 className="
+            text-base 
+            font-semibold 
+            text-white 
+            mb-4
+          ">설명 작성</h2>
           <textarea
-            className="w-full h-32 border-none resize-none focus:ring-2 focus:ring-red-800 bg-gray-900 text-white placeholder-gray-400 rounded-lg p-4"
+            className="
+              text-sm
+              w-full 
+              h-32 
+              border-none 
+              resize-none 
+              focus:ring-2 
+              focus:ring-red-800 
+              bg-gray-900 
+              text-white 
+              placeholder-gray-400 
+              rounded-lg 
+              p-4
+            "
             placeholder="내용을 입력해주세요 (최대 500자)"
             maxLength={500}
             value={description}
             onChange={handleDescriptionChange}
           />
-          <div className="text-right text-sm text-gray-400">
+          <div className="
+            text-right 
+            text-xs
+            text-gray-400
+          ">
             <span>{description.length}</span>/500자
           </div>
         </div>
 
         <button
           onClick={handleUpload}
-          className="w-full bg-red-800 text-white py-3 rounded-lg font-medium hover:bg-red-900 transition-colors"
+          className="
+            w-full 
+            bg-red-800 
+            text-white 
+            text-base
+            py-3 
+            rounded-lg 
+            font-medium 
+            hover:bg-red-900 
+            transition-colors
+          "
         >
           업로드하기
         </button>
