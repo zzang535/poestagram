@@ -5,6 +5,14 @@ export default function WorkLogPage() {
     {
       date: "2025-03-31",
       day: "월",
+      time: "9:00-11:00",
+      hours: 2,
+      content: "• 개인정보 처리방침 서버 컴포넌트 제작\n• api 서버 디렉토리 구조 변경\n• privacy 테이블 생성 및 마이그레이션",
+      workers: "황윤, 클로드, gpt"
+    },
+    {
+      date: "2025-03-31",
+      day: "월",
       time: "23:00-24:00",
       hours: 1,
       content: "• 로그인, 회원가입, 게시물작성, 피드, 프로필 페이지 높이 뷰포트\n• 댓글 모달 레이아웃 조정",
