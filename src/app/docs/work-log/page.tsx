@@ -3,8 +3,8 @@
 export default function WorkLogPage() {
   const workLogs = [
     {
-      date: "2025-03-31",
-      day: "월",
+      date: "2025-04-01",
+      day: "화",
       time: "9:00-11:00",
       hours: 2,
       content: "• 개인정보 처리방침 서버 컴포넌트 제작\n• api 서버 디렉토리 구조 변경\n• privacy 테이블 생성 및 마이그레이션",
