@@ -62,7 +62,7 @@ export default function LoginForm() {
 
         <div className="border-t border-gray-800 pt-6 mt-8">
           <div className="flex justify-center space-x-4 text-xs text-gray-400">
-            <Link href="#" className="hover:underline">
+            <Link href="/privacy" className="hover:underline">
               개인정보처리방침
             </Link>
             <span>•</span>
