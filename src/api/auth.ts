@@ -5,7 +5,7 @@ interface SendVerificationEmailResponse {
 
 export const sendVerificationEmail = async (email: string): Promise<SendVerificationEmailResponse> => {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/send-verification`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/send-verification`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
