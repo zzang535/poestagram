@@ -3,6 +3,14 @@
 export default function WorkLogPage() {
   const workLogs = [
     {
+      date: "2025-04-05",
+      day: "토",
+      time: "13:00-16:00",
+      hours: 3,
+      content: "• 회원가입 제작\n• 회원가입 후 자동 로그인 제작",
+      workers: "황윤, 클로드, gpt"
+    },
+    {
       date: "2025-04-01",
       day: "화",
       time: "9:00-11:00",
