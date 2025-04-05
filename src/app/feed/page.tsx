@@ -1,5 +1,6 @@
 "use client";
 
+import { useAuthStore } from '@/store/authStore';
 import FeedItem from "@/components/FeedItem";
 
 const feedData = [
@@ -32,22 +33,43 @@ const feedData = [
   },
 ];
 
-export default function HomePage() {
-  // header, nav 크기 만큼 패딩 추가
+export default function Feed() {
+  const { user, logout, isLoggedIn } = useAuthStore();
+
   return (
-    <div className="feed-section py-[73px]">
-      {feedData.map((feed, index) => (
-        <FeedItem
-          key={index}
-          userImage={feed.userImage}
-          userRole={feed.userRole}
-          postImage={feed.postImage}
-          likes={feed.likes}
-          username={feed.username}
-          content={feed.content}
-          comments={feed.comments}
-        />
-      ))}
+    <div className="min-h-screen bg-black text-white p-4">
+      <div className="max-w-4xl mx-auto">
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-2xl font-bold">피드</h1>
+          {isLoggedIn && (
+            <div className="flex items-center gap-4">
+              <span className="text-gray-300">안녕하세요, {user?.nickname}님!</span>
+              <button
+                onClick={logout}
+                className="px-4 py-2 bg-red-800 text-white rounded-lg hover:bg-red-900 transition-colors"
+              >
+                로그아웃
+              </button>
+            </div>
+          )}
+        </div>
+        
+        {/* 피드 내용 */}
+        <div className="space-y-4">
+          {feedData.map((feed, index) => (
+            <FeedItem
+              key={index}
+              userImage={feed.userImage}
+              userRole={feed.userRole}
+              postImage={feed.postImage}
+              likes={feed.likes}
+              username={feed.username}
+              content={feed.content}
+              comments={feed.comments}
+            />
+          ))}
+        </div>
+      </div>
     </div>
   );
 } 
