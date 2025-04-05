@@ -2,12 +2,14 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { sendVerificationEmail } from "@/api/auth";
+import { sendVerificationEmail, verifyCode } from "@/apis/auth";
 
 export default function SignUpForm() {
   const [email, setEmail] = useState("");
+  const [verificationCode, setVerificationCode] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState("");
+  const [isVerified, setIsVerified] = useState(false);
 
   const handleSendVerification = async () => {
     if (!email) {
@@ -22,6 +24,30 @@ export default function SignUpForm() {
       setMessage(response.message);
     } catch (error) {
       setMessage("인증번호 전송에 실패했습니다.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleVerifyCode = async () => {
+    if (!verificationCode) {
+      setMessage("인증번호를 입력해주세요.");
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      setMessage("");
+      const response = await verifyCode(email, verificationCode);
+      console.log(response);
+      if (response.is_verified) {
+        setMessage("인증이 완료되었습니다.");
+        setIsVerified(true);
+      } else {
+        setMessage("인증번호가 일치하지 않습니다.");
+      }
+    } catch (error) {
+      setMessage("인증번호 검증에 실패했습니다.");
     } finally {
       setIsLoading(false);
     }
@@ -56,18 +82,18 @@ export default function SignUpForm() {
               <button
                 type="button"
                 onClick={handleSendVerification}
-                disabled={isLoading}
+                disabled={isLoading || isVerified}
                 className="
                   w-[30%] bg-red-800 text-white rounded-lg 
                   font-medium hover:bg-red-900 transition-colors 
                   disabled:bg-gray-700 disabled:cursor-not-allowed
                 "
               >
-                {isLoading ? "전송중..." : "전송"}
+                {isLoading ? "전송중..." : isVerified ? "인증완료" : "전송"}
               </button>
             </div>
             {message && (
-              <p className={`mt-2 text-sm ${message.includes("실패") ? "text-red-500" : "text-green-500"}`}>
+              <p className={`mt-2 text-sm ${message.includes("실패") || message.includes("일치") ? "text-red-500" : "text-green-500"}`}>
                 {message}
               </p>
             )}
@@ -77,14 +103,20 @@ export default function SignUpForm() {
             <input
               type="text"
               placeholder="인증번호 6자리 입력"
+              value={verificationCode}
+              onChange={(e) => setVerificationCode(e.target.value)}
+              maxLength={6}
               className="w-[70%] px-4 py-3 border border-gray-700 rounded-lg text-sm focus:border-white focus:ring-white bg-gray-900 text-white"
               required
+              disabled={isVerified}
             />
             <button
               type="button"
-              className="w-[30%] bg-red-800 text-white rounded-lg font-medium hover:bg-red-900 transition-colors"
+              onClick={handleVerifyCode}
+              disabled={isLoading || isVerified}
+              className="w-[30%] bg-red-800 text-white rounded-lg font-medium hover:bg-red-900 transition-colors disabled:bg-gray-700 disabled:cursor-not-allowed"
             >
-              인증하기
+              {isLoading ? "검증중..." : isVerified ? "인증완료" : "인증하기"}
             </button>
           </div>
 
@@ -129,7 +161,8 @@ export default function SignUpForm() {
 
           <button
             type="submit"
-            className="w-full bg-red-800 text-white py-3 rounded-lg font-medium hover:bg-red-900 transition-colors mt-8"
+            disabled={!isVerified}
+            className="w-full bg-red-800 text-white py-3 rounded-lg font-medium hover:bg-red-900 transition-colors mt-8 disabled:bg-gray-700 disabled:cursor-not-allowed"
           >
             가입하기
           </button>
