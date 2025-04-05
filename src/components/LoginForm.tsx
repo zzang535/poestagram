@@ -10,7 +10,6 @@ export default function LoginForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     // TODO: 실제 로그인 로직 구현
-    useAuthStore.getState().login();
     router.push("/feed");
   };
 
