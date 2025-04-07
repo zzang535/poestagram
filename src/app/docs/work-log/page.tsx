@@ -3,7 +3,15 @@
 export default function WorkLogPage() {
   const workLogs = [
     {
-      date: "2024-04-07",
+      date: "2025-04-07",
+      day: "월",
+      time: "19:00-22:00",
+      hours: 3,
+      content: "• 헤더에 타이틀 표현\n• 회원가입 플로우 step 프로세스로 변경\n• 개인정보 처리방침, 이용약관 모달화\n• 개인정보 처리방침, 이용약관 애니메이션 오류 수정\n• 로그인, 회원가입 플로우 피그마에 표현",
+      workers: "황윤, 클로드, gpt, 피그마"
+    },
+    {
+      date: "2025-04-07",
       day: "월",
       time: "11:00-13:00",
       hours: 2,
