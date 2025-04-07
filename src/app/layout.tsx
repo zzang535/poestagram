@@ -34,8 +34,6 @@ export default function RootLayout({
   }
 
   const router = useRouter();
-  const isCreatePage = pathname === "/create";
-  const isUserFeedPage = pathname.startsWith("/user-feed/");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   // 현재 경로에 따른 네비게이션 활성화 상태
@@ -57,9 +55,6 @@ export default function RootLayout({
     router.push("/login");
   };
 
-  const handleBack = () => {
-    router.back();
-  };
 
   const handleNavigation = (path: string) => {
     if (path === "/create" || path === "/profile") {
@@ -81,9 +76,6 @@ export default function RootLayout({
       <body>
         <div className="min-h-screen bg-black flex flex-col">
           <Header 
-            isUserFeedPage={isUserFeedPage}
-            isCreatePage={isCreatePage}
-            onBack={handleBack}
             onMenuOpen={() => setIsMenuOpen(true)}
           />
 
