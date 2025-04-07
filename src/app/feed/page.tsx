@@ -34,7 +34,8 @@ const feedData = [
 ];
 
 export default function Feed() {
-  const { user, logout, isLoggedIn } = useAuthStore();
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn());
+  const { user, logout  } = useAuthStore();
 
   return (
     <div className="min-h-screen bg-black text-white p-4">
