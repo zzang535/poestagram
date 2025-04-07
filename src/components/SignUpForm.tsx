@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { sendVerificationEmail, verifyCode, signup } from "@/apis/auth";
+import { sendVerificationEmail, verifyCode, signup, checkEmail, login } from "@/apis/auth";
+import { useAuthStore } from "@/store/authStore";
 
 // 메시지 유형 정의
 type MessageType = "success" | "error" | "info";
@@ -16,11 +17,13 @@ interface Message {
 
 export default function SignUpForm() {
   const router = useRouter();
+  const [step, setStep] = useState<"email" | "verification" | "info">("email");
   const [email, setEmail] = useState("");
-  const [verificationCode, setVerificationCode] = useState("");
+  const [verificationCode, setVerificationCode] = useState(["", "", "", "", "", ""]);
   const [nickname, setNickname] = useState("");
   const [termsOfService, setTermsOfService] = useState(false);
   const [privacyPolicy, setPrivacyPolicy] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(180);
   const [isSending, setIsSending] = useState(false);
   const [isVerifying, setIsVerifying] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -28,19 +31,61 @@ export default function SignUpForm() {
   const [verificationMessage, setVerificationMessage] = useState<Message | null>(null);
   const [submitMessage, setSubmitMessage] = useState<Message | null>(null);
   const [isVerified, setIsVerified] = useState(false);
-  
+
+  useEffect(() => {
+    if (step === "verification" && timeLeft > 0) {
+      const timer = setInterval(() => {
+        setTimeLeft((prev) => prev - 1);
+      }, 1000);
+      return () => clearInterval(timer);
+    }
+  }, [step, timeLeft]);
+
+  const handleVerificationInput = (index: number, value: string) => {
+    if (value.length === 1 && index < 5) {
+      const nextInput = document.querySelector(`input[name="verification-${index + 1}"]`) as HTMLInputElement;
+      nextInput?.focus();
+    }
+    const newCode = [...verificationCode];
+    newCode[index] = value;
+    setVerificationCode(newCode);
+  };
+
+  const handleVerificationKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Backspace" && !verificationCode[index] && index > 0) {
+      const prevInput = document.querySelector(`input[name="verification-${index - 1}"]`) as HTMLInputElement;
+      prevInput?.focus();
+    }
+  };
+
+  const formatTime = (seconds: number) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
+  };
 
   const handleSendVerification = async () => {
     if (!email) {
-      setEmailMessage({ text: "이메일을 입력해주세요.", type: "info" });
+      setEmailMessage({ text: "이메일을 입력해주세요.", type: "error" });
       return;
     }
 
+    setIsSending(true);
+    setEmailMessage(null);
+
     try {
-      setIsSending(true);
-      setEmailMessage(null);
-      const response = await sendVerificationEmail(email);
-      setEmailMessage({ text: response.message, type: "success" });
+      // 먼저 이메일 중복 체크
+      const checkResult = await checkEmail(email);
+      if (checkResult.exists) {
+        setEmailMessage({ text: "이미 가입된 이메일입니다. 로그인을 진행해주세요.", type: "error" });
+        return;
+      }
+
+      // 이메일이 중복되지 않으면 인증 코드 전송
+      await sendVerificationEmail(email);
+      setEmailMessage({ text: "인증번호가 이메일로 전송되었습니다.", type: "success" });
+      setStep("verification");
+      setTimeLeft(180); // 타이머 리셋
     } catch (error) {
       setEmailMessage({ 
         text: error instanceof Error ? error.message : "인증번호 전송에 실패했습니다.", 
@@ -52,19 +97,21 @@ export default function SignUpForm() {
   };
 
   const handleVerifyCode = async () => {
-    if (!verificationCode) {
-      setVerificationMessage({ text: "인증번호를 입력해주세요.", type: "info" });
+    const code = verificationCode.join('');
+    if (code.length !== 6) {
+      setVerificationMessage({ text: "6자리 인증번호를 모두 입력해주세요.", type: "error" });
       return;
     }
 
+    setIsVerifying(true);
+    setVerificationMessage(null);
+
     try {
-      setIsVerifying(true);
-      setVerificationMessage(null);
-      const response = await verifyCode(email, verificationCode);
-      console.log(response);
+      const response = await verifyCode(email, code);
       if (response.is_verified) {
         setVerificationMessage({ text: "인증이 완료되었습니다.", type: "success" });
         setIsVerified(true);
+        setStep("info");
       } else {
         setVerificationMessage({ text: "인증번호가 일치하지 않습니다.", type: "error" });
       }
@@ -87,7 +134,7 @@ export default function SignUpForm() {
     }
 
     if (!nickname) {
-      setSubmitMessage({ text: "닉네임을 입력해주세요.", type: "info" });
+      setSubmitMessage({ text: "닉네임을 입력해주세요.", type: "error" });
       return;
     }
 
@@ -100,43 +147,29 @@ export default function SignUpForm() {
       setIsSubmitting(true);
       setSubmitMessage(null);
       
-      const response = await signup({
+      // 회원가입 API 호출
+      await signup({
         email,
         nickname,
         terms_of_service: termsOfService,
         privacy_policy: privacyPolicy
       });
 
-      setSubmitMessage({ text: response.message, type: "success" });
+      // 회원가입 성공 후 바로 로그인 API 호출
+      const loginResponse = await login(email);
       
-      // 자동 로그인 로직은 나중에 구현
-      /*
-      // 토큰 저장 및 로그인 상태 설정
-      if (response.access_token) {
-        try {
-            // Zustand 스토어에 상태 저장
-            setLoggedIn(true);
-            setUser({
-              id: response.user_id,
-              email: email,
-              nickname: nickname
-            });
-            setToken(response.access_token, response.token_type);
-        } catch (error) {
-          console.error("상태 저장 중 오류 발생:", error);
+      // 로그인 상태 설정
+      useAuthStore.getState().login({
+        access_token: loginResponse.access_token,
+        user: {
+          id: loginResponse.user_id,
+          email: loginResponse.email,
+          nickname: loginResponse.nickname
         }
-        
-        // 회원가입 성공 시 피드 페이지로 이동
-        setTimeout(() => {
-          router.push("/feed");
-        }, 1500);
-      } else {
-        // 토큰이 없는 경우 로그인 페이지로 이동
-        setTimeout(() => {
-          router.push("/login");
-        }, 1500);
-      }
-      */
+      });
+      
+      // 피드 페이지로 이동
+      router.push("/feed");
       
     } catch (error) {
       setSubmitMessage({ 
@@ -146,6 +179,16 @@ export default function SignUpForm() {
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const handleBackToEmail = () => {
+    // step1으로 돌아갈 때 상태 초기화
+    setEmail("");
+    setEmailMessage(null);
+    setVerificationCode(["", "", "", "", "", ""]);
+    setVerificationMessage(null);
+    setTimeLeft(180);
+    setStep("email");
   };
 
   // 메시지 유형에 따른 색상 결정 함수
@@ -163,153 +206,150 @@ export default function SignUpForm() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <div>
-            <div className="flex gap-2">
-              <input
-                type="email"
-                placeholder="이메일"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="
-                  w-[70%] 
-                  px-4 
-                  py-3 
-                  border 
-                  border-gray-700
-                  rounded-lg 
-                  text-sm 
-                  focus:border-white 
-                  focus:ring-white 
-                  bg-gray-900 
-                  text-white
-                  disabled:bg-gray-800
-                  disabled:cursor-not-allowed
-                "
-                required
-                disabled={isVerified}
-              />
-              <button
-                type="button"
+    <div className="w-full mx-auto min-h-screen flex items-center justify-center px-5">
+      <div className="w-full max-w-[400px] space-y-6">
+        {step === "email" && (
+          <>
+            <p className="text-gray-400 text-center">회원가입할 이메일 주소를 입력해 주세요</p>
+            <div className="space-y-4">
+              <div className="relative">
+                <input
+                  type="email"
+                  className="w-full px-4 py-3 border border-gray-700 rounded-lg text-sm focus:border-white focus:ring-white bg-gray-900 text-white"
+                  placeholder="이메일 주소"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
+              {emailMessage && (
+                <p className={`text-sm ${getMessageColor(emailMessage.type)}`}>
+                  {emailMessage.text}
+                </p>
+              )}
+              <button 
+                className="w-full bg-red-800 text-white py-3 rounded-lg font-medium hover:bg-red-900 transition-colors disabled:bg-gray-700 disabled:cursor-not-allowed"
                 onClick={handleSendVerification}
-                disabled={isSending || isVerified}
-                className="
-                  w-[30%] bg-red-800 text-white rounded-lg 
-                  font-medium hover:bg-red-900 transition-colors 
-                  disabled:bg-gray-700 disabled:cursor-not-allowed
-                "
+                disabled={isSending}
               >
-                {isSending ? "전송중..." : isVerified ? "인증완료" : "전송"}
+                {isSending ? "전송 중..." : "인증코드 받기"}
               </button>
+              <Link href="/login" className="block text-center text-blue-400 text-sm hover:underline">
+                이미 계정이 있으신가요? 로그인하기
+              </Link>
             </div>
-            {emailMessage && (
-              <p className={`mt-2 text-sm ${getMessageColor(emailMessage.type)}`}>
-                {emailMessage.text}
-              </p>
-            )}
-          </div>
+          </>
+        )}
 
-          <div>
-            <div className="flex gap-2">
-              <input
-                type="text"
-                placeholder="인증번호 6자리 입력"
-                value={verificationCode}
-                onChange={(e) => setVerificationCode(e.target.value)}
-                maxLength={6}
-                className="w-[70%] px-4 py-3 border border-gray-700 rounded-lg text-sm focus:border-white focus:ring-white bg-gray-900 text-white disabled:bg-gray-800 disabled:cursor-not-allowed"
-                required
-                disabled={isVerified}
-              />
-              <button
-                type="button"
+        {step === "verification" && (
+          <>
+            <p className="text-gray-400 text-center">이메일로 전송된 6자리 인증코드를 입력해 주세요</p>
+            <div className="space-y-4">
+              <div className="flex gap-2 justify-center mb-4">
+                {verificationCode.map((digit, index) => (
+                  <input
+                    key={index}
+                    type="text"
+                    maxLength={1}
+                    name={`verification-${index}`}
+                    className="w-12 h-12 text-center border border-gray-700 rounded-lg focus:border-white focus:ring-white bg-gray-900 text-white text-xl"
+                    value={digit}
+                    onChange={(e) => handleVerificationInput(index, e.target.value)}
+                    onKeyDown={(e) => handleVerificationKeyDown(index, e)}
+                  />
+                ))}
+              </div>
+              <div className="flex justify-between items-center mb-6">
+                <span className="text-gray-400">
+                  남은 시간: <span className="text-red-800">{formatTime(timeLeft)}</span>
+                </span>
+              </div>
+              {verificationMessage && (
+                <p className={`text-sm ${getMessageColor(verificationMessage.type)}`}>
+                  {verificationMessage.text}
+                </p>
+              )}
+              <button 
+                className="w-full bg-red-800 text-white py-3 rounded-lg font-medium hover:bg-red-900 transition-colors disabled:bg-gray-700 disabled:cursor-not-allowed"
                 onClick={handleVerifyCode}
-                disabled={isVerifying || isVerified}
-                className="w-[30%] bg-red-800 text-white rounded-lg font-medium hover:bg-red-900 transition-colors disabled:bg-gray-700 disabled:cursor-not-allowed"
+                disabled={isVerifying}
               >
-                {isVerifying ? "검증중..." : isVerified ? "인증완료" : "인증하기"}
+                {isVerifying ? "확인 중..." : "인증하기"}
+              </button>
+              <button 
+                className="w-full text-gray-400 py-2 hover:text-white transition-colors"
+                onClick={handleBackToEmail}
+              >
+                이메일 다시 입력하기
               </button>
             </div>
-            {verificationMessage && (
-              <p className={`mt-2 text-sm ${getMessageColor(verificationMessage.type)}`}>
-                {verificationMessage.text}
-              </p>
-            )}
-          </div>
+          </>
+        )}
 
-          <div>
-            <input
-              type="text"
-              placeholder="닉네임"
-              value={nickname}
-              onChange={(e) => setNickname(e.target.value)}
-              className="w-full px-4 py-3 border border-gray-700 rounded-lg text-sm focus:border-white focus:ring-white bg-gray-900 text-white"
-              required
-            />
-          </div>
-
-          <div className="space-y-3 pt-4">
-            <div className="flex items-center justify-between">
-              <label className="flex items-center gap-2">
+        {step === "info" && (
+          <>
+            <p className="text-gray-400 text-center">회원 정보를 입력해 주세요</p>
+            <form className="space-y-4" onSubmit={handleSubmit}>
+              <div>
                 <input
-                  type="checkbox"
-                  checked={termsOfService}
-                  onChange={(e) => setTermsOfService(e.target.checked)}
-                  className="w-5 h-5 border-gray-700 text-red-800 focus:ring-0 bg-gray-900"
+                  type="text"
+                  placeholder="닉네임"
+                  value={nickname}
+                  onChange={(e) => setNickname(e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-700 rounded-lg text-sm focus:border-white focus:ring-white bg-gray-900 text-white"
                   required
                 />
-                <span className="text-sm text-gray-300">서비스 이용약관 동의</span>
-              </label>
-              <button type="button" className="text-gray-400">
-                <i className="fas fa-chevron-right text-sm"></i>
+              </div>
+
+              <div className="space-y-3 pt-4">
+                <div className="flex items-center justify-between">
+                  <label className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      checked={termsOfService}
+                      onChange={(e) => setTermsOfService(e.target.checked)}
+                      className="w-5 h-5 border-gray-700 text-red-800 focus:ring-0 bg-gray-900"
+                      required
+                    />
+                    <span className="text-sm text-gray-300">서비스 이용약관 동의</span>
+                  </label>
+                  <button type="button" className="text-gray-400">
+                    <i className="fas fa-chevron-right text-sm"></i>
+                  </button>
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <label className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      checked={privacyPolicy}
+                      onChange={(e) => setPrivacyPolicy(e.target.checked)}
+                      className="w-5 h-5 border-gray-700 text-red-800 focus:ring-0 bg-gray-900"
+                      required
+                    />
+                    <span className="text-sm text-gray-300">개인정보 처리방침 동의</span>
+                  </label>
+                  <button type="button" className="text-gray-400">
+                    <i className="fas fa-chevron-right text-sm"></i>
+                  </button>
+                </div>
+              </div>
+
+              {submitMessage && (
+                <p className={`text-sm ${getMessageColor(submitMessage.type)}`}>
+                  {submitMessage.text}
+                </p>
+              )}
+
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full bg-red-800 text-white py-3 rounded-lg font-medium hover:bg-red-900 transition-colors disabled:bg-gray-700 disabled:cursor-not-allowed"
+              >
+                {isSubmitting ? "가입 중..." : "가입하기"}
               </button>
-            </div>
-
-            <div className="flex items-center justify-between">
-              <label className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  checked={privacyPolicy}
-                  onChange={(e) => setPrivacyPolicy(e.target.checked)}
-                  className="w-5 h-5 border-gray-700 text-red-800 focus:ring-0 bg-gray-900"
-                  required
-                />
-                <span className="text-sm text-gray-300">개인정보 처리방침 동의</span>
-              </label>
-              <button type="button" className="text-gray-400">
-                <i className="fas fa-chevron-right text-sm"></i>
-              </button>
-            </div>
-          </div>
-
-          {submitMessage && (
-            <p className={`text-sm ${getMessageColor(submitMessage.type)}`}>
-              {submitMessage.text}
-            </p>
-          )}
-
-          <button
-            type="submit"
-            disabled={!isVerified || isSubmitting}
-            className="w-full bg-red-800 text-white py-3 rounded-lg font-medium hover:bg-red-900 transition-colors mt-8 disabled:bg-gray-700 disabled:cursor-not-allowed"
-          >
-            {isSubmitting ? "가입중..." : "가입하기"}
-          </button>
-        </form>
-
-        <div className="text-center mt-6">
-          <p className="text-sm text-gray-400">
-            이미 계정이 있으신가요?
-            <Link
-              href="/login"
-              className="text-blue-400 font-medium hover:underline ml-1"
-            >
-              로그인 하기
-            </Link>
-          </p>
-        </div>
+            </form>
+          </>
+        )}
       </div>
     </div>
   );
