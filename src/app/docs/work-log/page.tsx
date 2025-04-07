@@ -3,6 +3,14 @@
 export default function WorkLogPage() {
   const workLogs = [
     {
+      date: "2024-04-07",
+      day: "월",
+      time: "11:00-13:00",
+      hours: 2,
+      content: "• 이메일 인증 방식의 로그인 기능 구현\n• 로그인 상태 관리 개선",
+      workers: "황윤, 클로드, gpt"
+    },
+    {
       date: "2025-04-05",
       day: "토",
       time: "13:00-16:00",
