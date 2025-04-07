@@ -123,107 +123,100 @@ export default function LoginForm() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-950">
-      <header className="fixed top-0 left-0 right-0 bg-gray-950 border-b border-gray-800">
-        <div className="w-[375px] mx-auto px-5 py-4">
-          <h1 className="text-xl font-bold text-white">
-            {step === "email" ? "로그인" : "인증코드 확인"}
-          </h1>
-        </div>
-      </header>
-
-      <main className="w-[375px] mx-auto min-h-screen flex items-center justify-center px-5">
-        <div className="w-full space-y-6">
-          {step === "email" && (
-            <>
-              <p className="text-gray-400 text-center">가입하신 이메일 주소를 입력해 주세요</p>
-              <div className="space-y-4">
-                <div className="relative">
-                  <input
-                    type="email"
-                    className="w-full px-4 py-3 border border-gray-700 rounded-lg text-sm focus:border-white focus:ring-white bg-gray-900 text-white"
-                    placeholder="이메일 주소"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                  />
-                </div>
-                {emailMessage && (
-                  <p className={`text-sm ${emailMessage.type === 'error' ? 'text-red-500' : 'text-green-500'}`}>
-                    {emailMessage.text}
-                  </p>
-                )}
-                <button 
-                  className="w-full bg-red-800 text-white py-3 rounded-lg font-medium hover:bg-red-900 transition-colors disabled:bg-gray-700 disabled:cursor-not-allowed"
-                  onClick={handleSendVerification}
-                  disabled={isSending}
-                >
-                  {isSending ? "전송 중..." : "인증코드 받기"}
-                </button>
-                <Link href="/signup" className="block text-center text-blue-400 text-sm hover:underline">
-                  계정이 없으신가요? 가입하기
-                </Link>
+    <div className="w-full mx-auto min-h-screen flex items-center justify-center px-5">
+      {/* 전체 박스 */}
+      
+      <div className="w-full max-w-[400px] space-y-6">
+        {/* content box */}
+        {step === "email" && (
+          <>
+            <p className="text-gray-400 text-center">가입하신 이메일 주소를 입력해 주세요</p>
+            <div className="space-y-4">
+              <div className="relative">
+                <input
+                  type="email"
+                  className="w-full px-4 py-3 border border-gray-700 rounded-lg text-sm focus:border-white focus:ring-white bg-gray-900 text-white"
+                  placeholder="이메일 주소"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
               </div>
-            </>
-          )}
-
-          {step === "verification" && (
-            <>
-              <p className="text-gray-400 text-center">이메일로 전송된 6자리 인증코드를 입력해 주세요</p>
-              <div className="space-y-4">
-                <div className="flex gap-2 justify-center mb-4">
-                  {verificationCode.map((digit, index) => (
-                    <input
-                      key={index}
-                      type="text"
-                      maxLength={1}
-                      name={`verification-${index}`}
-                      className="w-12 h-12 text-center border border-gray-700 rounded-lg focus:border-white focus:ring-white bg-gray-900 text-white text-xl"
-                      value={digit}
-                      onChange={(e) => handleVerificationInput(index, e.target.value)}
-                      onKeyDown={(e) => handleVerificationKeyDown(index, e)}
-                    />
-                  ))}
-                </div>
-                <div className="flex justify-between items-center mb-6">
-                  <span className="text-gray-400">
-                    남은 시간: <span className="text-red-800">{formatTime(timeLeft)}</span>
-                  </span>
-                </div>
-                {verificationMessage && (
-                  <p className={`text-sm ${verificationMessage.type === 'error' ? 'text-red-500' : 'text-green-500'}`}>
-                    {verificationMessage.text}
-                  </p>
-                )}
-                <button 
-                  className="w-full bg-red-800 text-white py-3 rounded-lg font-medium hover:bg-red-900 transition-colors disabled:bg-gray-700 disabled:cursor-not-allowed"
-                  onClick={handleVerifyCode}
-                  disabled={isVerifying}
-                >
-                  {isVerifying ? "확인 중..." : "로그인"}
-                </button>
-                <button 
-                  className="w-full text-gray-400 py-2 hover:text-white transition-colors"
-                  onClick={handleBackToEmail}
-                >
-                  이메일 다시 입력하기
-                </button>
-              </div>
-            </>
-          )}
-
-          {/* <div className="border-t border-gray-800 pt-6 mt-8">
-            <div className="flex justify-center space-x-4 text-xs text-gray-400">
-              <Link href="/privacy" className="hover:underline">
-                개인정보처리방침
-              </Link>
-              <span>•</span>
-              <Link href="#" className="hover:underline">
-                이용약관
+              {emailMessage && (
+                <p className={`text-sm ${emailMessage.type === 'error' ? 'text-red-500' : 'text-green-500'}`}>
+                  {emailMessage.text}
+                </p>
+              )}
+              <button 
+                className="w-full bg-red-800 text-white py-3 rounded-lg font-medium hover:bg-red-900 transition-colors disabled:bg-gray-700 disabled:cursor-not-allowed"
+                onClick={handleSendVerification}
+                disabled={isSending}
+              >
+                {isSending ? "전송 중..." : "인증코드 받기"}
+              </button>
+              <Link href="/signup" className="block text-center text-blue-400 text-sm hover:underline">
+                계정이 없으신가요? 가입하기
               </Link>
             </div>
-          </div> */}
-        </div>
-      </main>
+          </>
+        )}
+
+        {step === "verification" && (
+          <>
+            <p className="text-gray-400 text-center">이메일로 전송된 6자리 인증코드를 입력해 주세요</p>
+            <div className="space-y-4">
+              <div className="flex gap-2 justify-center mb-4">
+                {verificationCode.map((digit, index) => (
+                  <input
+                    key={index}
+                    type="text"
+                    maxLength={1}
+                    name={`verification-${index}`}
+                    className="w-12 h-12 text-center border border-gray-700 rounded-lg focus:border-white focus:ring-white bg-gray-900 text-white text-xl"
+                    value={digit}
+                    onChange={(e) => handleVerificationInput(index, e.target.value)}
+                    onKeyDown={(e) => handleVerificationKeyDown(index, e)}
+                  />
+                ))}
+              </div>
+              <div className="flex justify-between items-center mb-6">
+                <span className="text-gray-400">
+                  남은 시간: <span className="text-red-800">{formatTime(timeLeft)}</span>
+                </span>
+              </div>
+              {verificationMessage && (
+                <p className={`text-sm ${verificationMessage.type === 'error' ? 'text-red-500' : 'text-green-500'}`}>
+                  {verificationMessage.text}
+                </p>
+              )}
+              <button 
+                className="w-full bg-red-800 text-white py-3 rounded-lg font-medium hover:bg-red-900 transition-colors disabled:bg-gray-700 disabled:cursor-not-allowed"
+                onClick={handleVerifyCode}
+                disabled={isVerifying}
+              >
+                {isVerifying ? "확인 중..." : "로그인"}
+              </button>
+              <button 
+                className="w-full text-gray-400 py-2 hover:text-white transition-colors"
+                onClick={handleBackToEmail}
+              >
+                이메일 다시 입력하기
+              </button>
+            </div>
+          </>
+        )}
+
+        {/* <div className="border-t border-gray-800 pt-6 mt-8">
+          <div className="flex justify-center space-x-4 text-xs text-gray-400">
+            <Link href="/privacy" className="hover:underline">
+              개인정보처리방침
+            </Link>
+            <span>•</span>
+            <Link href="#" className="hover:underline">
+              이용약관
+            </Link>
+          </div>
+        </div> */}
+      </div>
     </div>
   );
 }
