@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { sendVerificationEmail, verifyCode, signup } from "@/apis/auth";
-import { useAuthStore } from '@/store/authStore';
 
 // 메시지 유형 정의
 type MessageType = "success" | "error" | "info";
@@ -17,9 +16,6 @@ interface Message {
 
 export default function SignUpForm() {
   const router = useRouter();
-  const setLoggedIn = useAuthStore((state) => state.setLoggedIn);
-  const setUser = useAuthStore((state) => state.setUser);
-  const setToken = useAuthStore((state) => state.setToken);
   const [email, setEmail] = useState("");
   const [verificationCode, setVerificationCode] = useState("");
   const [nickname, setNickname] = useState("");
@@ -113,6 +109,8 @@ export default function SignUpForm() {
 
       setSubmitMessage({ text: response.message, type: "success" });
       
+      // 자동 로그인 로직은 나중에 구현
+      /*
       // 토큰 저장 및 로그인 상태 설정
       if (response.access_token) {
         try {
@@ -138,6 +136,7 @@ export default function SignUpForm() {
           router.push("/login");
         }, 1500);
       }
+      */
       
     } catch (error) {
       setSubmitMessage({ 
