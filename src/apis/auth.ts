@@ -86,4 +86,60 @@ export const signup = async (data: SignUpRequest): Promise<SignUpResponse> => {
     console.error('회원가입 중 오류 발생:', error);
     throw error;
   }
-}; 
+};
+
+interface EmailCheckResponse {
+  exists: boolean;
+  message: string;
+}
+
+export async function checkEmail(email: string): Promise<EmailCheckResponse> {
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/check-email`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.detail || '이메일 체크에 실패했습니다.');
+    }
+
+    return await response.json();
+  } catch (error) {
+    throw error instanceof Error ? error : new Error('이메일 체크 중 오류가 발생했습니다.');
+  }
+}
+
+interface LoginResponse {
+  message: string;
+  user_id: number;
+  access_token: string;
+  token_type: string;
+  nickname: string;
+  email: string;
+}
+
+export async function login(email: string): Promise<LoginResponse> {
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.detail || '로그인에 실패했습니다.');
+    }
+
+    return await response.json();
+  } catch (error) {
+    throw error instanceof Error ? error : new Error('로그인 중 오류가 발생했습니다.');
+  }
+} 

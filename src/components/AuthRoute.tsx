@@ -10,7 +10,7 @@ interface AuthRouteProps {
 
 export default function AuthRoute({ children }: AuthRouteProps) {
   const router = useRouter();
-  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn());
 
   useEffect(() => {
     if (isLoggedIn) {

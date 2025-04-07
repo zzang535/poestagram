@@ -3,18 +3,17 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { 
-  faBars, 
   faNewspaper, 
   faPlus, 
   faUser, 
   faSignOutAlt, 
-  faArrowLeft,
   faSignInAlt,
   faUserPlus
 } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
 import "./globals.css";
 import { useAuthStore } from "@/store/authStore";
+import Header from "@/components/Header";
 
 export default function RootLayout({
   children,
@@ -44,6 +43,8 @@ export default function RootLayout({
   const isCreateActive = pathname === "/create";
   const isProfileActive = pathname === "/profile";
 
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn());
+
   const handleLogout = () => {
     useAuthStore.getState().logout();
     setIsMenuOpen(false);
@@ -62,7 +63,8 @@ export default function RootLayout({
 
   const handleNavigation = (path: string) => {
     if (path === "/create" || path === "/profile") {
-      if (useAuthStore.getState().isLoggedIn) {
+
+      if (isLoggedIn) {
         router.push(path);
       } else {
         router.push("/login");
@@ -72,41 +74,18 @@ export default function RootLayout({
     }
   };
 
-  // 로그인 상태를 Zustand store에서 가져옴
-  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
+
 
   return (
     <html lang="ko">
       <body>
         <div className="min-h-screen bg-black flex flex-col">
-          <header className="fixed top-0 left-0 right-0 bg-black border-b border-gray-800 z-20 h-16">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
-              {isUserFeedPage ? (
-                <>
-                  <button 
-                    className="text-white p-2 hover:bg-gray-800 rounded-lg transition-colors"
-                    onClick={handleBack}
-                  >
-                    <FontAwesomeIcon icon={faArrowLeft} className="text-xl" />
-                  </button>
-                  <h1 className="text-xl font-bold text-white">게시물</h1>
-                  <div className="w-8" /> {/* 오른쪽 정렬을 위한 빈 공간 */}
-                </>
-              ) : (
-                <>
-                  <h1 className="text-xl font-bold text-white flex-1">
-                    {isCreatePage ? "새 게시물" : "poe2stagram"}
-                  </h1>
-                  <button 
-                    className="text-white p-2 hover:bg-gray-800 rounded-lg transition-colors ml-auto"
-                    onClick={() => setIsMenuOpen(true)}
-                  >
-                    <FontAwesomeIcon icon={faBars} className="text-xl" />
-                  </button>
-                </>
-              )}
-            </div>
-          </header>
+          <Header 
+            isUserFeedPage={isUserFeedPage}
+            isCreatePage={isCreatePage}
+            onBack={handleBack}
+            onMenuOpen={() => setIsMenuOpen(true)}
+          />
 
           {/* 메뉴가 열려있을 때 배경을 어둡게 */}
           {isMenuOpen && (
