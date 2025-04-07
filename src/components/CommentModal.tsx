@@ -154,18 +154,21 @@ export default function CommentModal({ isOpen, onClose }: CommentModalProps) {
   return (
     <div className="fixed inset-0 z-50 h-[100dvh]">
       <div 
-        className={`fixed inset-0 bg-black transition-opacity duration-300 ${
-          isVisible ? 'bg-opacity-50' : 'bg-opacity-0'
-        }`} 
+        className="fixed inset-0 bg-black/70"
+        style={{
+          backgroundColor: isVisible ? 'rgba(0, 0, 0, 0.7)' : 'rgba(0, 0, 0, 0)',
+          opacity: isVisible ? 1 : 0,
+          transition: 'background-color 0.3s ease, opacity 0.3s ease'
+        }}
         onClick={onClose} 
       />
       <div 
-        className={`
-            fixed left-0 right-0 bottom-0 bg-black 
-            transform transition-all duration-300 
-            ase-out rounded-t-2xl mx-auto max-w-[1280px] ${
-          isVisible ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0'
-        }`}
+        className="fixed left-0 right-0 bottom-0 bg-black rounded-t-2xl mx-auto max-w-[1280px] h-[calc(100dvh-60px)]"
+        style={{
+          transform: isVisible ? 'translateY(0)' : 'translateY(100%)',
+          opacity: isVisible ? 1 : 0,
+          transition: 'transform 0.3s ease, opacity 0.3s ease'
+        }}
       >
         <div className="flex flex-col h-[100dvh]">
 

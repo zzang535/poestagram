@@ -5,6 +5,8 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { sendVerificationEmail, verifyCode, signup, checkEmail, login } from "@/apis/auth";
 import { useAuthStore } from "@/store/authStore";
+import PrivacyPolicyModal from "./PrivacyPolicyModal";
+import TermsOfServiceModal from "./TermsOfServiceModal";
 
 // 메시지 유형 정의
 type MessageType = "success" | "error" | "info";
@@ -31,6 +33,8 @@ export default function SignUpForm() {
   const [verificationMessage, setVerificationMessage] = useState<Message | null>(null);
   const [submitMessage, setSubmitMessage] = useState<Message | null>(null);
   const [isVerified, setIsVerified] = useState(false);
+  const [isPrivacyModalOpen, setIsPrivacyModalOpen] = useState(false);
+  const [isTermsModalOpen, setIsTermsModalOpen] = useState(false);
 
   useEffect(() => {
     if (step === "verification" && timeLeft > 0) {
@@ -302,34 +306,48 @@ export default function SignUpForm() {
 
               <div className="space-y-3 pt-4">
                 <div className="flex items-center justify-between">
-                  <label className="flex items-center gap-2">
+                  <label 
+                    className="flex items-center gap-2 cursor-pointer"
+                    onClick={() => setIsTermsModalOpen(true)}
+                  >
                     <input
                       type="checkbox"
                       checked={termsOfService}
-                      onChange={(e) => setTermsOfService(e.target.checked)}
                       className="w-5 h-5 border-gray-700 text-red-800 focus:ring-0 bg-gray-900"
                       required
+                      readOnly
                     />
                     <span className="text-sm text-gray-300">서비스 이용약관 동의</span>
                   </label>
-                  <button type="button" className="text-gray-400">
-                    <i className="fas fa-chevron-right text-sm"></i>
+                  <button 
+                    type="button" 
+                    className="text-gray-400 hover:text-white transition-colors"
+                    onClick={() => setIsTermsModalOpen(true)}
+                  >
+                    확인하기
                   </button>
                 </div>
 
                 <div className="flex items-center justify-between">
-                  <label className="flex items-center gap-2">
+                  <label 
+                    className="flex items-center gap-2 cursor-pointer"
+                    onClick={() => setIsPrivacyModalOpen(true)}
+                  >
                     <input
                       type="checkbox"
                       checked={privacyPolicy}
-                      onChange={(e) => setPrivacyPolicy(e.target.checked)}
                       className="w-5 h-5 border-gray-700 text-red-800 focus:ring-0 bg-gray-900"
                       required
+                      readOnly
                     />
                     <span className="text-sm text-gray-300">개인정보 처리방침 동의</span>
                   </label>
-                  <button type="button" className="text-gray-400">
-                    <i className="fas fa-chevron-right text-sm"></i>
+                  <button 
+                    type="button" 
+                    className="text-gray-400 hover:text-white transition-colors"
+                    onClick={() => setIsPrivacyModalOpen(true)}
+                  >
+                    확인하기
                   </button>
                 </div>
               </div>
@@ -351,6 +369,20 @@ export default function SignUpForm() {
           </>
         )}
       </div>
+
+      {/* 개인정보처리방침 모달 */}
+      <PrivacyPolicyModal 
+        isOpen={isPrivacyModalOpen}
+        onClose={() => setIsPrivacyModalOpen(false)}
+        onAgree={() => setPrivacyPolicy(true)}
+      />
+
+      {/* 이용약관 모달 */}
+      <TermsOfServiceModal 
+        isOpen={isTermsModalOpen}
+        onClose={() => setIsTermsModalOpen(false)}
+        onAgree={() => setTermsOfService(true)}
+      />
     </div>
   );
 } 

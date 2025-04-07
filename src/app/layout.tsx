@@ -8,12 +8,18 @@ import {
   faUser, 
   faSignOutAlt, 
   faSignInAlt,
-  faUserPlus
+  faUserPlus,
+  faHome,
+  faBars,
+  faXmark
 } from "@fortawesome/free-solid-svg-icons";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./globals.css";
 import { useAuthStore } from "@/store/authStore";
 import Header from "@/components/Header";
+import PrivacyPolicyModal from "@/components/PrivacyPolicyModal";
+import TermsOfServiceModal from "@/components/TermsOfServiceModal";
+import SlideMenu from "@/components/SlideMenu";
 
 export default function RootLayout({
   children,
@@ -35,16 +41,18 @@ export default function RootLayout({
 
   const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isPrivacyModalOpen, setIsPrivacyModalOpen] = useState(false);
+  const [isTermsModalOpen, setIsTermsModalOpen] = useState(false);
 
   // 현재 경로에 따른 네비게이션 활성화 상태
   const isFeedActive = pathname === "/feed";
   const isCreateActive = pathname === "/create";
   const isProfileActive = pathname === "/profile";
 
-  const isLoggedIn = useAuthStore((state) => state.isLoggedIn());
+  const { isLoggedIn, logout } = useAuthStore();
 
   const handleLogout = () => {
-    useAuthStore.getState().logout();
+    logout();
     setIsMenuOpen(false);
     router.push("/feed");
   };
@@ -55,11 +63,10 @@ export default function RootLayout({
     router.push("/login");
   };
 
-
   const handleNavigation = (path: string) => {
     if (path === "/create" || path === "/profile") {
 
-      if (isLoggedIn) {
+      if (isLoggedIn()) {
         router.push(path);
       } else {
         router.push("/login");
@@ -69,82 +76,17 @@ export default function RootLayout({
     }
   };
 
-
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
 
   return (
     <html lang="ko">
       <body>
         <div className="min-h-screen bg-black flex flex-col">
           <Header 
-            onMenuOpen={() => setIsMenuOpen(true)}
+            onMenuOpen={toggleMenu}
           />
-
-          {/* 메뉴가 열려있을 때 배경을 어둡게 */}
-          {isMenuOpen && (
-            <div 
-              className="fixed inset-0 bg-black bg-opacity-30 transition-opacity z-30"
-              onClick={() => setIsMenuOpen(false)}
-            />
-          )}
-
-          {/* 오른쪽 슬라이드 메뉴 */}
-          <div className={`fixed inset-y-0 right-0 w-64 bg-black border-l border-gray-800 transform transition-transform duration-300 ease-in-out z-40 ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
-            <div className="p-4 flex flex-col h-full">
-              <div className="flex justify-between items-center mb-8">
-                <h2 className="text-xl font-bold text-white">메뉴</h2>
-                <button 
-                  className="text-white p-2 hover:bg-gray-800 rounded-lg transition-colors"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  <span className="text-2xl">&times;</span>
-                </button>
-              </div>
-              <div className="space-y-4 flex-1">
-                {isLoggedIn ? (
-                  // 로그인 상태일 때 보여줄 메뉴
-                  <>
-                    <button
-                      onClick={handleLogout}
-                      className="w-full flex items-center space-x-3 text-white p-3 hover:bg-gray-800 rounded-lg transition-colors"
-                    >
-                      <FontAwesomeIcon icon={faSignOutAlt} className="text-xl" />
-                      <span>로그아웃</span>
-                    </button>
-                  </>
-                ) : (
-                  // 로그아웃 상태일 때 보여줄 메뉴
-                  <>
-                    <Link
-                      href="/login"
-                      className="w-full flex items-center space-x-3 text-white p-3 hover:bg-gray-800 rounded-lg transition-colors"
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      <FontAwesomeIcon icon={faSignInAlt} className="text-xl" />
-                      <span>로그인</span>
-                    </Link>
-                    <Link
-                      href="/signup"
-                      className="w-full flex items-center space-x-3 text-white p-3 hover:bg-gray-800 rounded-lg transition-colors"
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      <FontAwesomeIcon icon={faUserPlus} className="text-xl" />
-                      <span>회원가입</span>
-                    </Link>
-                  </>
-                )}
-              </div>
-              {isLoggedIn && (
-                <div className="pt-4 border-t border-gray-800">
-                  <button
-                    onClick={handleDeleteAccount}
-                    className="w-full text-gray-400 text-sm p-2 hover:text-white transition-colors"
-                  >
-                    회원 탈퇴
-                  </button>
-                </div>
-              )}
-            </div>
-          </div>
 
           <main className="h-[100dvh] overflow-y-auto">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -161,7 +103,7 @@ export default function RootLayout({
                     isFeedActive ? "text-red-800" : "text-white"
                   }`}
                 >
-                  <FontAwesomeIcon icon={faNewspaper} className="text-xl" />
+                  <FontAwesomeIcon icon={faHome} className="text-xl" />
                   <span className="text-xs mt-1">피드</span>
                 </button>
 
@@ -188,6 +130,28 @@ export default function RootLayout({
             </div>
           </nav>
         </div>
+
+        {/* 슬라이드 메뉴 */}
+        <SlideMenu 
+          isOpen={isMenuOpen}
+          onClose={() => setIsMenuOpen(false)}
+          isLoggedIn={isLoggedIn}
+          onLogout={handleLogout}
+          onOpenPrivacyModal={() => setIsPrivacyModalOpen(true)}
+          onOpenTermsModal={() => setIsTermsModalOpen(true)}
+        />
+
+        {/* 개인정보처리방침 모달 */}
+        <PrivacyPolicyModal 
+          isOpen={isPrivacyModalOpen}
+          onClose={() => setIsPrivacyModalOpen(false)}
+        />
+
+        {/* 이용약관 모달 */}
+        <TermsOfServiceModal 
+          isOpen={isTermsModalOpen}
+          onClose={() => setIsTermsModalOpen(false)}
+        />
       </body>
     </html>
   );
