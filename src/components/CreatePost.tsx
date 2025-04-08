@@ -36,8 +36,6 @@ export default function CreatePost() {
 
       setPreviews([...previews, ...newPreviews]);
       
-      // 업로드 성공 후 피드 페이지로 이동
-      router.push("/feed");
     } catch (error) {
       console.error("업로드 오류:", error);
       alert(error instanceof Error ? error.message : "파일 업로드 중 오류가 발생했습니다.");
