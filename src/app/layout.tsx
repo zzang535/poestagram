@@ -89,12 +89,12 @@ export default function RootLayout({
           />
 
           <main className="h-[100dvh] overflow-y-auto">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="max-w-7xl mx-auto px-6 sm:px-6 lg:px-8">
               {children}
             </div>
           </main>
 
-          <nav className="fixed bottom-0 left-0 right-0 bg-black border-t border-gray-800 z-20">
+          <nav className="fixed bottom-0 left-0 right-0 bg-black border-t border-gray-800 z-20 bg-transparent">
             <div className="max-w-7xl mx-auto">
               <div className="grid grid-cols-3 h-16">
                 <button 

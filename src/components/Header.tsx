@@ -31,7 +31,7 @@ export default function Header({ onMenuOpen }: HeaderProps) {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 bg-black border-b border-gray-800 z-20 h-16">
+    <header className="fixed top-0 left-0 right-0 bg-black border-b border-gray-800 z-20 h-16 bg-transparent">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center justify-between relative">
         <button 
           className="text-white p-2 hover:bg-gray-800 rounded-lg transition-colors absolute left-4 top-1/2 -translate-y-1/2"

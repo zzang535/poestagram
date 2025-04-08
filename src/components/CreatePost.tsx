@@ -1,23 +1,30 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCamera } from "@fortawesome/free-solid-svg-icons";
-
+import { faCamera, faChevronLeft, faChevronRight, faTrash } from "@fortawesome/free-solid-svg-icons";
 
 export default function CreatePost() {
   const [description, setDescription] = useState("");
-  const [preview, setPreview] = useState<string | null>(null);
+  const [previews, setPreviews] = useState<string[]>([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
   const [isPreviewMode, setIsPreviewMode] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
 
-    const fileURL = URL.createObjectURL(file);
-    setPreview(fileURL);
+    const newPreviews: string[] = [];
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      const fileURL = URL.createObjectURL(file);
+      newPreviews.push(fileURL);
+    }
+
+    setPreviews([...previews, ...newPreviews]);
   };
 
   const handleDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -33,15 +40,39 @@ export default function CreatePost() {
     setIsPreviewMode(false);
   };
 
+  const handleRemoveImage = (index: number) => {
+    const newPreviews = [...previews];
+    newPreviews.splice(index, 1);
+    setPreviews(newPreviews);
+    
+    if (currentIndex >= newPreviews.length) {
+      setCurrentIndex(Math.max(0, newPreviews.length - 1));
+    }
+  };
+
+  const handlePrevSlide = () => {
+    setCurrentIndex((prev) => (prev > 0 ? prev - 1 : prev));
+  };
+
+  const handleNextSlide = () => {
+    setCurrentIndex((prev) => (prev < previews.length - 1 ? prev + 1 : prev));
+  };
+
+  const handleAddMoreImages = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
   if (isPreviewMode) {
     return (
       <div className="max-w-2xl mx-auto">
         <div className="space-y-6">
           <div className="bg-black rounded-lg p-4">
             <div className="relative w-full aspect-[9/16] bg-gray-900 rounded-2xl overflow-hidden">
-              {preview && (
+              {previews.length > 0 && (
                 <img
-                  src={preview}
+                  src={previews[currentIndex]}
                   alt="미리보기"
                   className="w-full h-full object-cover"
                 />
@@ -67,73 +98,128 @@ export default function CreatePost() {
 
   return (
     <div className="
-      h-[100dvh] 
+      py-22
       max-w-2xl 
       mx-auto 
       flex 
       items-center 
       justify-center
     ">
-      {/* 가운데 박스 */}
-      <div className="space-y-6">
-        <div className="
-          bg-black 
-          rounded-lg 
-          p-6
-        ">
+      {/* 컨텐츠 전체 박스 */}
+      <div className="space-y-8 w-full">
+
+        {/* 이미지 업로드 영역 */}
+        <div className="">
+          {/* 실제 이미지 영역 */}
           <div className="
             border-2 
-            border-dashed 
             border-gray-900 
             rounded-lg 
-            p-8 
-            text-center
+            overflow-hidden
+            relative
+            aspect-[16/9]
+            bg-gray-800
+            flex
+            items-center
+            justify-center
           ">
-            <input
-              type="file"
-              id="fileUpload"
-              className="hidden"
-              accept="image/*,video/*"
-              onChange={handleFileChange}
-            />
-            <label htmlFor="fileUpload" className="cursor-pointer block">
-              <div className="
-                mx-auto 
-                w-16 
-                h-16 
-                bg-opacity-10 
-                rounded-full 
-                flex 
-                items-center 
-                justify-center 
-                mb-4
-              ">
-                <FontAwesomeIcon icon={faCamera} className="text-2xl" />
+            {previews.length > 0 ? (
+              <>
+                <img
+                  src={previews[currentIndex]}
+                  alt={`미리보기 ${currentIndex + 1}`}
+                  className="max-w-full max-h-full object-contain"
+                />
+                
+                {/* 이미지 카운터 */}
+                <div className="absolute top-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded-full">
+                  {currentIndex + 1} / {previews.length}
+                </div>
+                
+                {/* 삭제 버튼 */}
+                <button 
+                  onClick={() => handleRemoveImage(currentIndex)}
+                  className="absolute top-2 left-2 bg-black/70 text-white p-2 rounded-full hover:bg-black/90 transition-colors"
+                >
+                  <FontAwesomeIcon icon={faTrash} className="text-sm" />
+                </button>
+                
+                {/* 슬라이드 버튼 */}
+                {previews.length > 1 && (
+                  <>
+                    <button 
+                      onClick={handlePrevSlide}
+                      className={`absolute left-2 top-1/2 -translate-y-1/2 bg-black/70 text-white p-2 rounded-full hover:bg-black/90 transition-colors ${
+                        currentIndex === 0 ? 'opacity-50 cursor-not-allowed' : ''
+                      }`}
+                      disabled={currentIndex === 0}
+                    >
+                      <FontAwesomeIcon icon={faChevronLeft} />
+                    </button>
+                    <button 
+                      onClick={handleNextSlide}
+                      className={`absolute right-2 top-1/2 -translate-y-1/2 bg-black/70 text-white p-2 rounded-full hover:bg-black/90 transition-colors ${
+                        currentIndex === previews.length - 1 ? 'opacity-50 cursor-not-allowed' : ''
+                      }`}
+                      disabled={currentIndex === previews.length - 1}
+                    >
+                      <FontAwesomeIcon icon={faChevronRight} />
+                    </button>
+                  </>
+                )}
+              </>
+            ) : (
+              <div className="text-center p-8">
+                <label htmlFor="fileUpload" className="cursor-pointer block">
+                  <div className="
+                    mx-auto 
+                    w-16 
+                    h-16 
+                    bg-opacity-10 
+                    rounded-full 
+                    flex 
+                    items-center 
+                    justify-center 
+                    mb-4
+                  ">
+                    <FontAwesomeIcon icon={faCamera} className="text-2xl" />
+                  </div>
+                  <p className="
+                    text-gray-300 
+                    mb-2 
+                    text-sm
+                  ">이미지 또는 동영상을 업로드하세요</p>
+                  <p className="
+                    text-xs 
+                    text-gray-400
+                  ">지원 형식: JPG, PNG, MP4 (최대 100MB)</p>
+                </label>
               </div>
-              <p className="
-                text-gray-300 
-                mb-2 
-                text-sm
-              ">이미지 또는 동영상을 업로드하세요</p>
-              <p className="
-                text-xs 
-                text-gray-400
-              ">지원 형식: JPG, PNG, MP4 (최대 100MB)</p>
-            </label>
+            )}
           </div>
+          
+          {/* 추가 이미지 버튼 */}
+          {previews.length > 0 && (
+            <button
+              onClick={handleAddMoreImages}
+              className="mt-4 w-full bg-gray-800 text-white py-2 rounded-lg font-medium hover:bg-gray-700 transition-colors"
+            >
+              이미지 추가하기
+            </button>
+          )}
         </div>
 
+        {/* 설명 작성 영역 */}
         <div className="
           bg-black 
           rounded-lg 
-          p-4
         ">
           <h2 className="
             text-base 
             font-semibold 
             text-white 
-            mb-4
-          ">설명 작성</h2>
+            mb-2
+          ">설명</h2>
           <textarea
             className="
               text-sm
@@ -163,23 +249,38 @@ export default function CreatePost() {
           </div>
         </div>
 
+        {/* 업로드 버튼 */}
         <button
           onClick={handleUpload}
-          className="
+          disabled={previews.length === 0}
+          className={`
             w-full 
-            bg-red-800 
             text-white 
             text-base
             py-3 
             rounded-lg 
             font-medium 
-            hover:bg-red-900 
             transition-colors
-          "
+            ${previews.length > 0 
+              ? 'bg-red-800 hover:bg-red-900' 
+              : 'bg-gray-800 cursor-not-allowed'
+            }
+          `}
         >
           업로드하기
         </button>
       </div>
+      
+      {/* 파일 업로드 입력 - 항상 존재하도록 컴포넌트 최상위로 이동 */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        id="fileUpload"
+        className="hidden"
+        accept="image/*,video/*"
+        multiple={true}
+        onChange={handleFileChange}
+      />
     </div>
   );
 } 
