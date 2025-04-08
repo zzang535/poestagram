@@ -5,6 +5,14 @@ export default function WorkLogPage() {
     {
       date: "2025-04-08",
       day: "화",
+      time: "20:00-21:00",
+      hours: 1,
+      content: "• 파일 모델 생성\n• 다중 파일 업로드",
+      workers: "황윤, 클로드, gpt"
+    },
+    {
+      date: "2025-04-08",
+      day: "화",
       time: "11:30-13:30",
       hours: 2,
       content: "• 새 게시물 페이지 ui 초안\n• 파일 1장 s3 업로드 테스트",
