@@ -4,27 +4,46 @@ import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCamera, faChevronLeft, faChevronRight, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { uploadFile } from "@/apis/files";
 
 export default function CreatePost() {
   const [description, setDescription] = useState("");
   const [previews, setPreviews] = useState<string[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPreviewMode, setIsPreviewMode] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
 
-    const newPreviews: string[] = [];
-    for (let i = 0; i < files.length; i++) {
-      const file = files[i];
-      const fileURL = URL.createObjectURL(file);
-      newPreviews.push(fileURL);
-    }
+    try {
+      setIsUploading(true);
+      
+      // API 호출
+      const response = await uploadFile(files[0]);
+      console.log("업로드 성공:", response);
 
-    setPreviews([...previews, ...newPreviews]);
+      // 미리보기 생성
+      const newPreviews: string[] = [];
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const fileURL = URL.createObjectURL(file);
+        newPreviews.push(fileURL);
+      }
+
+      setPreviews([...previews, ...newPreviews]);
+      
+      // 업로드 성공 후 피드 페이지로 이동
+      router.push("/feed");
+    } catch (error) {
+      console.error("업로드 오류:", error);
+      alert(error instanceof Error ? error.message : "파일 업로드 중 오류가 발생했습니다.");
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   const handleDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -33,7 +52,6 @@ export default function CreatePost() {
 
   const handleUpload = () => {
     router.push("/feed");
-    // setIsPreviewMode(true);
   };
 
   const handleEdit = () => {
@@ -252,7 +270,7 @@ export default function CreatePost() {
         {/* 업로드 버튼 */}
         <button
           onClick={handleUpload}
-          disabled={previews.length === 0}
+          disabled={previews.length === 0 || isUploading}
           className={`
             w-full 
             text-white 
@@ -261,13 +279,13 @@ export default function CreatePost() {
             rounded-lg 
             font-medium 
             transition-colors
-            ${previews.length > 0 
+            ${previews.length > 0 && !isUploading
               ? 'bg-red-800 hover:bg-red-900' 
               : 'bg-gray-800 cursor-not-allowed'
             }
           `}
         >
-          업로드하기
+          {isUploading ? '업로드 중...' : '업로드하기'}
         </button>
       </div>
       
