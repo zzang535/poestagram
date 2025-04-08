@@ -4,10 +4,18 @@ interface UploadFileResponse {
   file_url?: string;
 }
 
-export const uploadFile = async (file: File): Promise<UploadFileResponse> => {
+export const uploadFile = async (files: File | File[]): Promise<UploadFileResponse[]> => {
   try {
     const formData = new FormData();
-    formData.append("files", file);
+    
+    // 단일 파일 또는 파일 배열 처리
+    if (Array.isArray(files)) {
+      files.forEach((file, index) => {
+        formData.append("files", file);
+      });
+    } else {
+      formData.append("files", files);
+    }
 
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/files/upload`, {
       method: "POST",
