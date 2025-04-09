@@ -5,10 +5,12 @@ import { useRouter } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCamera, faChevronLeft, faChevronRight, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { uploadFile } from "@/apis/files";
+import { createFeed } from "@/apis/feeds";
 
 interface PreviewItem {
   url: string;
   type: 'image' | 'video';
+  fileId?: number;
 }
 
 export default function CreatePost() {
@@ -34,10 +36,14 @@ export default function CreatePost() {
       const response = await uploadFile(fileArray);
       console.log("업로드 성공:", response);
 
-      // 서버에서 반환된 URL을 사용하여 미리보기 생성
+      // 서버에서 반환된 URL과 ID를 사용하여 미리보기 생성
       const newPreviews: PreviewItem[] = response.file_urls.map((url: string, index: number) => {
         const fileType = fileArray[index].type.startsWith('video/') ? 'video' : 'image';
-        return { url, type: fileType };
+        return { 
+          url, 
+          type: fileType,
+          fileId: response.uploaded_files[index].id
+        };
       });
 
       setPreviews([...previews, ...newPreviews]);
@@ -54,8 +60,31 @@ export default function CreatePost() {
     setDescription(e.target.value);
   };
 
-  const handleUpload = () => {
-    router.push("/feed");
+  const handleUpload = async () => {
+    try {
+      // 업로드된 파일 ID 추출
+      const fileIds = previews
+        .map(preview => preview.fileId)
+        .filter((id): id is number => id !== undefined);
+
+      
+      if (fileIds.length === 0) {
+        alert("업로드할 파일이 없습니다.");
+        return;
+      }
+
+      // 피드 생성 API 호출
+      const response = await createFeed({
+        description: description,
+        file_ids: fileIds
+      });
+
+      console.log("피드 생성 성공:", response);
+      
+    } catch (error) {
+      console.error("피드 업로드 오류:", error);
+      alert(error instanceof Error ? error.message : "피드 생성 중 오류가 발생했습니다.");
+    }
   };
 
   const handleEdit = () => {
@@ -407,7 +436,7 @@ export default function CreatePost() {
         {/* 업로드 버튼 */}
         <button
           onClick={handleUpload}
-          disabled={previews.length === 0 || isUploading}
+          // disabled={previews.length === 0 || isUploading}
           className={`
             w-full 
             text-white 
