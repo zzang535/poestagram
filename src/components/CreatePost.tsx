@@ -27,21 +27,18 @@ export default function CreatePost() {
     try {
       setIsUploading(true);
       
-      // 파일 배열로 변환
+      // FileList를 File[]로 변환
       const fileArray = Array.from(files);
       
-      // API 호출 - 여러 파일 업로드
-      const responses = await uploadFile(fileArray);
-      console.log("업로드 성공:", responses);
+      // API 호출
+      const response = await uploadFile(fileArray);
+      console.log("업로드 성공:", response);
 
-      // 미리보기 생성
-      const newPreviews: PreviewItem[] = [];
-      for (let i = 0; i < files.length; i++) {
-        const file = files[i];
-        const fileURL = URL.createObjectURL(file);
-        const fileType = file.type.startsWith('video/') ? 'video' : 'image';
-        newPreviews.push({ url: fileURL, type: fileType });
-      }
+      // 서버에서 반환된 URL을 사용하여 미리보기 생성
+      const newPreviews: PreviewItem[] = response.file_urls.map((url: string, index: number) => {
+        const fileType = fileArray[index].type.startsWith('video/') ? 'video' : 'image';
+        return { url, type: fileType };
+      });
 
       setPreviews([...previews, ...newPreviews]);
       
