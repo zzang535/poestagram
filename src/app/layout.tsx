@@ -47,9 +47,9 @@ export default function RootLayout({
   // 현재 경로에 따른 네비게이션 활성화 상태
   const isFeedActive = pathname === "/feed";
   const isCreateActive = pathname === "/create";
-  const isProfileActive = pathname === "/profile";
+  const isProfileActive = pathname.startsWith("/profile");
 
-  const { isLoggedIn, logout } = useAuthStore();
+  const { isLoggedIn, logout, user } = useAuthStore();
 
   const handleLogout = () => {
     logout();
@@ -64,10 +64,15 @@ export default function RootLayout({
   };
 
   const handleNavigation = (path: string) => {
-    if (path === "/create" || path === "/profile") {
-
+    if (path === "/create" ) {
       if (isLoggedIn()) {
         router.push(path);
+      } else {
+        router.push("/login");
+      }
+    } else if (path === "/profile") {
+      if (isLoggedIn()) {
+        router.push(`/profile/${user?.id}`);
       } else {
         router.push("/login");
       }

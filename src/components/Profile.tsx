@@ -1,58 +1,71 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+import { getMyFeeds } from "@/apis/feeds";
 
-export default function Profile() {
+interface ProfileProps {
+  userId: string | number;
+}
+
+interface FeedFile {
+  id: number;
+  file_name: string;
+  base_url: string;
+  s3_key: string;
+  file_type: string;
+  file_size: number;
+  created_at: string;
+  updated_at: string | null;
+}
+
+interface Feed {
+  id: number;
+  description: string;
+  user_id: number;
+  created_at: string;
+  updated_at: string | null;
+  files: FeedFile[];
+}
+
+export default function Profile({ userId }: ProfileProps) {
   const router = useRouter();
+  const [loading, setLoading] = useState(true);
+  const [feeds, setFeeds] = useState<Feed[]>([]);
+  const [totalFeeds, setTotalFeeds] = useState(0);
   
-  // 임시 데이터
+  // 임시 데이터 - 실제로는 userId를 기반으로 API에서 데이터를 가져와야 함
   const profile = {
     username: "yoonhwang",
-    postsCount: 12,
     profileImage: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop",
+    userId: userId
   };
 
-  const posts = [
-    {
-      id: 1,
-      image: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=300&h=300&fit=crop",
-      likes: 42,
-      comments: 5,
-    },
-    {
-      id: 2,
-      image: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=300&h=300&fit=crop",
-      likes: 38,
-      comments: 3,
-    },
-    {
-      id: 3,
-      image: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=300&h=300&fit=crop",
-      likes: 56,
-      comments: 8,
-    },
-    {
-      id: 4,
-      image: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=300&h=300&fit=crop",
-      likes: 29,
-      comments: 2,
-    },
-    {
-      id: 5,
-      image: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=300&h=300&fit=crop",
-      likes: 45,
-      comments: 6,
-    },
-    {
-      id: 6,
-      image: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=300&h=300&fit=crop",
-      likes: 33,
-      comments: 4,
-    },
-  ];
+  // 내 피드 불러오기
+  useEffect(() => {
+    const fetchMyFeeds = async () => {
+      try {
+        setLoading(true);
+        const response = await getMyFeeds(0, 100); // 최대 100개 가져오기
+        setFeeds(response.feeds);
+        setTotalFeeds(response.total);
+      } catch (error) {
+        console.error("피드를 불러오는 중 오류 발생:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const handlePostClick = () => {
-    router.push(`/user-feed/${profile.username}`);
+    fetchMyFeeds();
+  }, []);
+
+  const handlePostClick = (feedId: number) => {
+    router.push(`/feed/${feedId}`);
+  };
+
+  // 파일 URL 생성 함수
+  const getFileUrl = (file: FeedFile) => {
+    return `${file.base_url}/${file.s3_key}`;
   };
 
   return (
@@ -72,37 +85,62 @@ export default function Profile() {
           </div>
           <div className="flex-1">
             <h2 className="text-xl font-bold">{profile.username}</h2>
-            <p className="text-gray-400 mt-1">{profile.postsCount} 게시물</p>
+            <p className="text-gray-400 mt-1">{totalFeeds} 게시물</p>
           </div>
         </div>
       </section>
 
+      {/* 로딩 상태 표시 */}
+      {loading && (
+        <div className="flex justify-center items-center h-40">
+          <p className="text-gray-400">피드를 불러오는 중...</p>
+        </div>
+      )}
+
       {/* 게시물 그리드 */}
-      <section className="grid grid-cols-3 gap-px bg-gray-800">
-        {posts.map((post) => (
-          <div 
-            key={post.id} 
-            className="relative aspect-square group cursor-pointer"
-            onClick={handlePostClick}
-          >
-            <img
-              src={post.image}
-              alt={`게시물 ${post.id}`}
-              className="w-full h-full object-cover"
-            />
-            <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center space-x-6">
-              <div className="flex items-center space-x-1">
-                <i className="fa-solid fa-heart text-white"></i>
-                <span className="text-white font-medium">{post.likes}</span>
-              </div>
-              <div className="flex items-center space-x-1">
-                <i className="fa-solid fa-comment text-white"></i>
-                <span className="text-white font-medium">{post.comments}</span>
+      {!loading && feeds.length === 0 && (
+        <div className="flex justify-center items-center h-40">
+          <p className="text-gray-400">게시물이 없습니다.</p>
+        </div>
+      )}
+
+      {/* 게시물 그리드 */}
+      {!loading && feeds.length > 0 && (
+        <section className="grid grid-cols-3 gap-px">
+          {feeds.map((feed) => (
+            <div 
+              key={feed.id} 
+              className="relative aspect-square group cursor-pointer"
+              onClick={() => handlePostClick(feed.id)}
+            >
+              {feed.files.length > 0 && (
+                <img
+                  src={getFileUrl(feed.files[0])}
+                  alt={`게시물 ${feed.id}`}
+                  className="w-full h-full object-cover"
+                />
+              )}
+              
+              {/* 파일이 없는 경우 대체 내용 표시 */}
+              {feed.files.length === 0 && (
+                <div className="w-full h-full bg-gray-900 flex items-center justify-center">
+                  <p className="text-gray-400 text-xs p-2 text-center truncate">
+                    {feed.description || "텍스트 게시물"}
+                  </p>
+                </div>
+              )}
+              
+              <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center space-x-6">
+                {feed.files.length > 1 && (
+                  <div className="absolute top-2 right-2 text-white">
+                    <i className="fa-solid fa-images"></i>
+                  </div>
+                )}
               </div>
             </div>
-          </div>
-        ))}
-      </section>
+          ))}
+        </section>
+      )}
     </div>
   );
 } 
