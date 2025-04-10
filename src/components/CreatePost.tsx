@@ -79,7 +79,7 @@ export default function CreatePost() {
         file_ids: fileIds
       });
 
-      console.log("피드 생성 성공:", response);
+      router.push("/feed");
       
     } catch (error) {
       console.error("피드 업로드 오류:", error);
