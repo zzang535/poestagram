@@ -1,3 +1,5 @@
+import { useAuthStore } from "@/store/authStore";
+
 interface FeedCreate {
     description: string;
   file_ids: number[];
@@ -19,6 +21,7 @@ export const createFeed = async (feedData: FeedCreate): Promise<FeedResponse> =>
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "Authorization": `Bearer ${useAuthStore.getState().accessToken}`
       },
       body: JSON.stringify(feedData),
     });
