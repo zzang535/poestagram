@@ -4,6 +4,8 @@ import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { getMyFeeds } from "@/apis/feeds";
 
+import { useAuthStore } from "@/store/authStore";
+
 interface ProfileProps {
   userId: string | number;
 }
@@ -33,13 +35,6 @@ export default function Profile({ userId }: ProfileProps) {
   const [loading, setLoading] = useState(true);
   const [feeds, setFeeds] = useState<Feed[]>([]);
   const [totalFeeds, setTotalFeeds] = useState(0);
-  
-  // 임시 데이터 - 실제로는 userId를 기반으로 API에서 데이터를 가져와야 함
-  const profile = {
-    username: "yoonhwang",
-    profileImage: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop",
-    userId: userId
-  };
 
   // 내 피드 불러오기
   useEffect(() => {
@@ -75,16 +70,13 @@ export default function Profile({ userId }: ProfileProps) {
         <div className="flex items-center space-x-6">
           <div className="relative">
             <img
-              src={profile.profileImage}
-              alt={profile.username}
-              className="w-20 h-20 rounded-full object-cover"
+              src="/no-profile.svg"
+              alt="프로필 이미지"
+              className="w-20 h-20 rounded-full object-cover bg-gray-700"
             />
-            <button className="absolute bottom-0 right-0 bg-red-800 text-white p-1.5 rounded-full">
-              <i className="fa-solid fa-camera text-xs"></i>
-            </button>
           </div>
           <div className="flex-1">
-            <h2 className="text-xl font-bold">{profile.username}</h2>
+            <h2 className="text-xl font-bold">{useAuthStore.getState().user?.nickname}</h2>
             <p className="text-gray-400 mt-1">{totalFeeds} 게시물</p>
           </div>
         </div>
