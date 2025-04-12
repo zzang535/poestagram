@@ -5,6 +5,14 @@ export default function WorkLogPage() {
     {
       date: "2025-04-12",
       day: "토",
+      time: "19:30-21:30",
+      hours: 2,
+      content: "• 피드 페이지 무한 스크롤 작업\n• 업로드 더블클릭 오류 수정\n• GNB를 렌더링하는 조건 분기",
+      workers: "황윤, 클로드, gpt"
+    },
+    {
+      date: "2025-04-12",
+      day: "토",
       time: "9:00-12:00",
       hours: 3,
       content: "• 피드 업로드 애니메이션 제작\n• 게시물 페이지 api 연동\n• 게시물 페이지 분기 처리\n• 마이 피드 api 유저 단위로 수정",
