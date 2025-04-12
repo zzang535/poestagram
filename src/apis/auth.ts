@@ -5,7 +5,7 @@ interface SendVerificationEmailResponse {
 
 export const sendVerificationEmail = async (email: string): Promise<SendVerificationEmailResponse> => {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/send-verification`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/send-verification`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -32,7 +32,7 @@ interface VerifyCodeResponse {
 
 export const verifyCode = async (email: string, code: string): Promise<VerifyCodeResponse> => {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/verify-code`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/verify-code`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -68,7 +68,7 @@ interface SignUpResponse {
 
 export const signup = async (data: SignUpRequest): Promise<SignUpResponse> => {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/signup`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/signup`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -95,7 +95,7 @@ interface EmailCheckResponse {
 
 export async function checkEmail(email: string): Promise<EmailCheckResponse> {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/check-email`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/check-email`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -125,7 +125,7 @@ interface LoginResponse {
 
 export async function login(email: string): Promise<LoginResponse> {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/login`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
