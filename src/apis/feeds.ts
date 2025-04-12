@@ -69,10 +69,10 @@ export const createFeed = async (feedData: FeedCreate): Promise<FeedResponse> =>
  * @param limit 가져올 항목 수
  * @returns 피드 목록 응답
  */
-export const getMyFeeds = async (skip: number = 0, limit: number = 10): Promise<FeedListResponse> => {
+export const getUserFeeds = async (userId: number, skip: number = 0, limit: number = 10): Promise<FeedListResponse> => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/feeds/my-feeds?skip=${skip}&limit=${limit}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/api/users/${userId}/feeds?offset=${skip}&limit=${limit}`,
       {
         method: "GET",
         headers: {

@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
-import { getMyFeeds } from "@/apis/feeds";
+import { getUserFeeds } from "@/apis/feeds";
 
 import { useAuthStore } from "@/store/authStore";
 
@@ -38,10 +38,10 @@ export default function Profile({ userId }: ProfileProps) {
 
   // 내 피드 불러오기
   useEffect(() => {
-    const fetchMyFeeds = async () => {
+    const fetchFeeds = async () => {
       try {
         setLoading(true);
-        const response = await getMyFeeds(0, 100); // 최대 100개 가져오기
+        const response = await getUserFeeds(Number(userId), 0, 100); // 최대 100개 가져오기
         setFeeds(response.feeds);
         setTotalFeeds(response.total);
       } catch (error) {
@@ -51,11 +51,14 @@ export default function Profile({ userId }: ProfileProps) {
       }
     };
 
-    fetchMyFeeds();
+    fetchFeeds();
   }, []);
 
   const handlePostClick = (feedId: number) => {
-    router.push(`/feed/${feedId}`);
+    const currentUser = useAuthStore.getState().user;
+    if (currentUser) {
+      router.push(`/user/${currentUser.id}/feed`);
+    }
   };
 
   // 파일 URL 생성 함수

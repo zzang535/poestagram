@@ -51,6 +51,28 @@ export default function RootLayout({
 
   const { isLoggedIn, logout, user } = useAuthStore();
 
+  const getPageTitle = () => {
+    if (pathname === '/create') {
+      return '새 게시물';
+    } else if (pathname === '/login') {
+      return '로그인';
+    } else if (pathname === '/signup') {
+      return '회원가입';
+    } else if (pathname === '/feed') {
+      return 'poestagram';
+    } else if (pathname?.startsWith('/user/') && pathname?.endsWith('/feed')) {
+      return '게시물';
+    } else if (pathname?.startsWith('/profile/')) {
+      return '프로필';
+    } else {
+      return 'poestagram';
+    }
+  };
+
+  const shouldShowBackButton = () => {
+    return true
+  };
+
   const handleLogout = () => {
     logout();
     setIsMenuOpen(false);
@@ -76,6 +98,8 @@ export default function RootLayout({
       } else {
         router.push("/login");
       }
+    } else if (path === "/feed") {
+      router.push("/feed");
     } else {
       router.push(path);
     }
@@ -91,6 +115,8 @@ export default function RootLayout({
         <div className="min-h-screen bg-black flex flex-col">
           <Header 
             onMenuOpen={toggleMenu}
+            title={getPageTitle()}
+            showBackButton={shouldShowBackButton()}
           />
 
           <main className="h-[100dvh] overflow-y-auto">
