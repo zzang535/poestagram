@@ -70,7 +70,11 @@ export default function RootLayout({
   };
 
   const shouldShowBackButton = () => {
-    return true
+    return true;
+  };
+
+  const shouldShowGnb = () => {
+    return pathname !== '/login' && pathname !== '/signup';
   };
 
   const handleLogout = () => {
@@ -125,41 +129,43 @@ export default function RootLayout({
             </div>
           </main>
 
-          <nav className="fixed bottom-0 left-0 right-0 bg-black border-t border-gray-800 z-20">
-            <div className="max-w-7xl mx-auto">
-              <div className="grid grid-cols-3 h-16">
-                <button 
-                  onClick={() => handleNavigation("/feed")}
-                  className={`flex flex-col items-center justify-center ${
-                    isFeedActive ? "text-red-800" : "text-white"
-                  }`}
-                >
-                  <FontAwesomeIcon icon={faHome} className="text-xl" />
-                  <span className="text-xs mt-1">피드</span>
-                </button>
+          {shouldShowGnb() && (
+            <nav className="fixed bottom-0 left-0 right-0 bg-black border-t border-gray-800 z-20">
+              <div className="max-w-7xl mx-auto">
+                <div className="grid grid-cols-3 h-16">
+                  <button 
+                    onClick={() => handleNavigation("/feed")}
+                    className={`flex flex-col items-center justify-center ${
+                      isFeedActive ? "text-red-800" : "text-white"
+                    }`}
+                  >
+                    <FontAwesomeIcon icon={faHome} className="text-xl" />
+                    <span className="text-xs mt-1">피드</span>
+                  </button>
 
-                <button 
-                  onClick={() => handleNavigation("/create")}
-                  className={`flex flex-col items-center justify-center ${
-                    isCreateActive ? "text-red-800" : "text-white"
-                  }`}
-                >
-                  <FontAwesomeIcon icon={faPlus} className="text-xl" />
-                  <span className="text-xs mt-1">만들기</span>
-                </button>
+                  <button 
+                    onClick={() => handleNavigation("/create")}
+                    className={`flex flex-col items-center justify-center ${
+                      isCreateActive ? "text-red-800" : "text-white"
+                    }`}
+                  >
+                    <FontAwesomeIcon icon={faPlus} className="text-xl" />
+                    <span className="text-xs mt-1">만들기</span>
+                  </button>
 
-                <button 
-                  onClick={() => handleNavigation("/profile")}
-                  className={`flex flex-col items-center justify-center ${
-                    isProfileActive ? "text-red-800" : "text-white"
-                  }`}
-                >
-                  <FontAwesomeIcon icon={faUser} className="text-xl" />
-                  <span className="text-xs mt-1">프로필</span>
-                </button>
+                  <button 
+                    onClick={() => handleNavigation("/profile")}
+                    className={`flex flex-col items-center justify-center ${
+                      isProfileActive ? "text-red-800" : "text-white"
+                    }`}
+                  >
+                    <FontAwesomeIcon icon={faUser} className="text-xl" />
+                    <span className="text-xs mt-1">프로필</span>
+                  </button>
+                </div>
               </div>
-            </div>
-          </nav>
+            </nav>
+          )}
         </div>
 
         {/* 슬라이드 메뉴 */}

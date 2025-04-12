@@ -92,4 +92,12 @@ export const getUserFeeds = async (userId: number, skip: number = 0, limit: numb
     console.error("피드 목록을 가져오는 중 오류 발생:", error);
     throw error;
   }
+};
+
+export const getAllFeeds = async (offset: number = 0, limit: number = 20): Promise<FeedListResponse> => {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/feeds?offset=${offset}&limit=${limit}`);
+  if (!response.ok) {
+    throw new Error('피드를 불러오는 중 오류가 발생했습니다.');
+  }
+  return response.json();
 }; 

@@ -214,7 +214,13 @@ export default function CreatePost() {
 
         <button
           onClick={handleUpload}
-          className={`w-full text-white text-base py-3 rounded-lg font-medium transition-colors ${previews.length > 0 && !isFeedUploading ? 'bg-red-800 hover:bg-red-900' : 'bg-gray-800 cursor-not-allowed'}`}
+          disabled={previews.length === 0 || isFeedUploading}
+          className={`
+            w-full text-base py-3 rounded-lg font-medium transition-colors 
+            ${previews.length > 0 && !isFeedUploading ? 
+              'bg-red-800 hover:bg-red-900 text-white' : 
+              'bg-gray-800 cursor-not-allowed text-gray-500'}
+          `}
         >
           {isFeedUploading ? '업로드 중...' : '업로드하기'}
         </button>
