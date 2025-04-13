@@ -145,6 +145,14 @@ export default function WorkLogPage() {
       hours: 2,
       content: "• 피그마로 와이어프레임 작성",
       workers: "황윤"
+    },
+    {
+      date: "2025-04-13",
+      day: "일",
+      time: "11:00-14:00",
+      hours: 3,
+      content: "• 유저 피드 - 타겟 피드까지 조회 및 스크롤 이동",
+      workers: "황윤, 클로드, gpt"
     }
   ];
 
