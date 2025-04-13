@@ -100,4 +100,12 @@ export const getAllFeeds = async (offset: number = 0, limit: number = 20): Promi
     throw new Error('피드를 불러오는 중 오류가 발생했습니다.');
   }
   return response.json();
+};
+
+export const getFeedIndex = async (userId: number, feedId: number): Promise<{ index: number }> => {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/${userId}/feeds/index?feed_id=${feedId}`);
+  if (!response.ok) {
+    throw new Error('피드 인덱스를 가져오는 중 오류가 발생했습니다.');
+  }
+  return response.json();
 }; 

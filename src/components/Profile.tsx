@@ -57,7 +57,7 @@ export default function Profile({ userId }: ProfileProps) {
   const handlePostClick = (feedId: number) => {
     const currentUser = useAuthStore.getState().user;
     if (currentUser) {
-      router.push(`/user/${currentUser.id}/feed`);
+      router.push(`/user/${currentUser.id}/feed?feed_id=${feedId}`);
     }
   };
 

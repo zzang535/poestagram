@@ -40,11 +40,13 @@ export default function FeedItem({
           </div>
         </div>
         <div className="relative pb-[56.25%] mb-4">
-          <img
-            src={postImage}
-            alt="게임 포스트"
-            className="absolute top-0 left-0 w-full h-full object-contain bg-black"
-          />
+          {postImage && (
+            <img
+              src={postImage}
+              alt="게임 포스트"
+              className="absolute top-0 left-0 w-full h-full object-contain bg-black"
+            />
+          )}
         </div>
         <div className="px-4 pt-4 border-t border-gray-800">
           <div className="flex items-center justify-between mb-2">
