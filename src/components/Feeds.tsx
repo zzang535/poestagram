@@ -22,14 +22,15 @@ interface FeedsProps {
 }
 
 export default function Feeds({ userId }: FeedsProps) {
+  const searchParams = useSearchParams();
   const { user } = useAuthStore();
   const [feedData, setFeedData] = useState<FeedData[]>([]);
   const [offset, setOffset] = useState(0);
   const [limit, setLimit] = useState(3);
-  const searchParams = useSearchParams();
+  
   const feedId = searchParams.get('feed_id');
-  const scrollThrottle = useRef(false);
 
+  const scrollThrottle = useRef(false);
   const [loading, setLoading] = useState(false);
   const loadingRef = useRef(false);
   const hasMoreRef = useRef(true);
@@ -38,6 +39,7 @@ export default function Feeds({ userId }: FeedsProps) {
 
 
   useEffect(() => {
+    // 스크롤 되는 영역 찾기
     const container = document.querySelector("main");
     if (!container) return;
   
@@ -89,9 +91,19 @@ export default function Feeds({ userId }: FeedsProps) {
 
   useEffect(() => {
     if (isReady && targetFeedRef.current) {
-      targetFeedRef.current.scrollIntoView({
-        behavior: "auto", // 또는 "smooth"
-        block: "start",   // 상단 정렬
+      // 스크롤 되는 영역 찾기
+      const container = document.querySelector("main");
+      if (!container) return;
+  
+      const containerTop = container.getBoundingClientRect().top;
+      const targetTop = targetFeedRef.current.getBoundingClientRect().top;
+      const headerHeight = 64;
+  
+      const scrollPosition = targetTop - containerTop + container.scrollTop - headerHeight - 12;
+  
+      container.scrollTo({
+        top: scrollPosition,
+        behavior: "auto",
       });
     }
   }, [isReady]);
@@ -141,7 +153,9 @@ export default function Feeds({ userId }: FeedsProps) {
     return (
       <div className="min-h-screen bg-black text-white p-4 py-20">
         <div className="max-w-4xl mx-auto">
-          <p className="text-center text-gray-400">피드를 불러오는 중...</p>
+          <div className="flex flex-col items-center justify-center space-y-4">
+            <div className="w-8 h-8 border-4 border-gray-300 border-t-white rounded-full animate-spin"></div>
+          </div>
         </div>
       </div>
     );
@@ -151,9 +165,7 @@ export default function Feeds({ userId }: FeedsProps) {
     <div className="min-h-screen bg-black text-white p-4 py-20">
       <div className="max-w-4xl mx-auto">
         {/* 피드 내용 */}
-        <div 
-          className="space-y-4"  
-        >
+        <div className="space-y-4">
           {feedData.map((feed, index) => (
             <div key={index} ref={feed.id === Number(feedId) ? targetFeedRef : null}>
               <FeedItem
@@ -168,9 +180,9 @@ export default function Feeds({ userId }: FeedsProps) {
             </div>
           ))}
         </div>
-          {loading && feedData.length > 0 && (
-          <div className="text-center text-gray-400 mt-4">
-            <p>더 많은 피드를 불러오는 중...</p>
+        {loading && feedData.length > 0 && (
+          <div className="flex flex-col items-center justify-center space-y-4 mt-4">
+            <div className="w-8 h-8 border-4 border-gray-300 border-t-white rounded-full animate-spin"></div>
           </div>
         )}
       </div>
