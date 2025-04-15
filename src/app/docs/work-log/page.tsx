@@ -3,6 +3,22 @@
 export default function WorkLogPage() {
   const workLogs = [
     {
+      date: "2025-04-15",
+      day: "화",
+      time: "15:30-16:30",
+      hours: 1,
+      content: "• useSearchParams 컴포넌트 내 사용법 오류 수정\n• 헤더, GNB backdrop 효과 적용\n• 내 피드 클릭시 위치 확보가 안되는 오류 수정\n• 무한스크롤 시 스피너 UI 적용",
+      workers: "황윤, 클로드, gpt"
+    },
+    {
+      date: "2025-04-13",
+      day: "일",
+      time: "11:00-14:00",
+      hours: 3,
+      content: "• 유저 피드 - 타겟 피드까지 조회 및 스크롤 이동",
+      workers: "황윤, 클로드, gpt"
+    },
+    {
       date: "2025-04-12",
       day: "토",
       time: "19:30-21:30",
@@ -145,14 +161,6 @@ export default function WorkLogPage() {
       hours: 2,
       content: "• 피그마로 와이어프레임 작성",
       workers: "황윤"
-    },
-    {
-      date: "2025-04-13",
-      day: "일",
-      time: "11:00-14:00",
-      hours: 3,
-      content: "• 유저 피드 - 타겟 피드까지 조회 및 스크롤 이동",
-      workers: "황윤, 클로드, gpt"
     }
   ];
 
