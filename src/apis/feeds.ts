@@ -1,7 +1,7 @@
 import { useAuthStore } from "@/store/authStore";
 
 interface FeedCreate {
-    description: string;
+  description: string;
   file_ids: number[];
 }
 

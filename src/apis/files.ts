@@ -1,19 +1,22 @@
-interface UploadFileResponse {
-  message: string;
-  file_urls: string[];
-  uploaded_files: {
-    file_name: string;
-    base_url: string;
-    s3_key: string;
-    file_type: string;
-    file_size: number;
-    id: number;
-    created_at: string;
-    updated_at: string | null;
-  }[];
+export interface UploadedFile {
+  file_name: string;
+  base_url: string;
+  s3_key: string;
+  file_type: string;
+  file_size: number;
+  id: number;
+  created_at: string;
+  updated_at: string | null;
+  width?: number;
+  height?: number;
 }
 
-export const uploadFile = async (files: File | File[]): Promise<UploadFileResponse> => {
+export interface UploadResponse {
+  file_urls: string[];
+  uploaded_files: UploadedFile[];
+}
+
+export const uploadFile = async (files: File | File[]): Promise<UploadResponse> => {
   try {
     const formData = new FormData();
     
