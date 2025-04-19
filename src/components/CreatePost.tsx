@@ -145,10 +145,14 @@ export default function CreatePost() {
         return;
       }
 
+      // frame_ratio 계산
+      const frameRatio = frameSize ? frameSize.height / frameSize.width : 1;
+
       // 피드 생성 API 호출
       const response = await createFeed({
         description: description,
-        file_ids: fileIds
+        file_ids: fileIds,
+        frame_ratio: frameRatio
       });
 
       router.push("/feed");
@@ -221,22 +225,14 @@ export default function CreatePost() {
                         if (!currentImage.width || !currentImage.height) return 'contain';
 
                         if(frameSize?.width && frameSize?.height) {
-                          if(frameSize.width > frameSize.height) {
-                            if(frameSize.width / frameSize.height >= 1.85) { // cover 발생
-                              return "cover"
-                            } else {
-                              return "contain"
-                            }
+
+                          const frameRatio = frameSize.height / frameSize.width;
+                          const imageRatio = currentImage.height / currentImage.width;
+
+                          if(imageRatio > frameRatio) {
+                            return "cover";
                           } else {
-                            if(frameSize.height / frameSize.width >= 1.25) { // cover 발생
-                              if(currentImage.height / currentImage.width > 1.25) {
-                                return "cover"
-                              } else {
-                                return "contain"
-                              }
-                            } else {
-                              return "contain"
-                            }
+                            return "contain";
                           }
                         }
                         return 'contain';

@@ -2,13 +2,15 @@
 
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faXmark } from "@fortawesome/free-solid-svg-icons";
+import { faXmark, faChevronLeft, faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import CommentModal from "./CommentModal";
+import { FeedFile } from "@/apis/feeds";
 
 interface FeedItemProps {
   userImage: string;
   userRole: string;
-  postImage: string;
+  files: FeedFile[];
+  frame_ratio: number;
   likes: number;
   username: string;
   content: string;
@@ -18,13 +20,23 @@ interface FeedItemProps {
 export default function FeedItem({
   userImage,
   userRole,
-  postImage,
+  files,
+  frame_ratio,
   likes,
   username,
   content,
   comments,
 }: FeedItemProps) {
   const [isCommentModalOpen, setIsCommentModalOpen] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  const handlePrevImage = () => {
+    setCurrentImageIndex((prev) => (prev > 0 ? prev - 1 : prev));
+  };
+
+  const handleNextImage = () => {
+    setCurrentImageIndex((prev) => (prev < files.length - 1 ? prev + 1 : prev));
+  };
 
   return (
     <>
@@ -39,13 +51,53 @@ export default function FeedItem({
             <p className="text-xs text-gray-400">{userRole}</p>
           </div>
         </div>
-        <div className="relative pb-[56.25%] mb-4">
-          {postImage && (
-            <img
-              src={postImage}
-              alt="게임 포스트"
-              className="absolute top-0 left-0 w-full h-full object-contain bg-black"
-            />
+        <div 
+          className="relative"
+          style={{
+            aspectRatio: `1/${frame_ratio}`
+          }}
+        >
+          {files.length > 0 && (
+            <>
+              <img
+                src={`${files[currentImageIndex].base_url}/${files[currentImageIndex].s3_key}`}
+                alt="게임 포스트"
+                className="absolute top-0 left-0 w-full h-full bg-black"
+                style={{
+                  objectFit: (() => {
+                    const ratio = frame_ratio;
+                    const imageRatio = files[currentImageIndex].height / files[currentImageIndex].width;
+                    
+                    if(imageRatio > ratio) {
+                      return "cover";
+                    } else {
+                      return "contain";
+                    }
+                  })()
+                }}
+              />
+              {files.length > 1 && (
+                <>
+                  <button
+                    onClick={handlePrevImage}
+                    className={`absolute left-2 top-1/2 -translate-y-1/2 bg-black/70 text-white p-2 rounded-full hover:bg-black/90 transition-colors ${currentImageIndex === 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    disabled={currentImageIndex === 0}
+                  >
+                    <FontAwesomeIcon icon={faChevronLeft} />
+                  </button>
+                  <button
+                    onClick={handleNextImage}
+                    className={`absolute right-2 top-1/2 -translate-y-1/2 bg-black/70 text-white p-2 rounded-full hover:bg-black/90 transition-colors ${currentImageIndex === files.length - 1 ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    disabled={currentImageIndex === files.length - 1}
+                  >
+                    <FontAwesomeIcon icon={faChevronRight} />
+                  </button>
+                  <div className="absolute bottom-2 left-1/2 -translate-x-1/2 bg-black/70 text-white text-xs px-2 py-1 rounded-full">
+                    {currentImageIndex + 1} / {files.length}
+                  </div>
+                </>
+              )}
+            </>
           )}
         </div>
         <div className="px-4 pt-4 border-t border-gray-800">

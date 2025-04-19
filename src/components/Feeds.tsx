@@ -10,7 +10,8 @@ interface FeedData {
   id: number;
   userImage: string;
   userRole: string;
-  postImage: string;
+  files: FeedFile[];
+  frame_ratio: number;
   likes: number;
   username: string;
   content: string;
@@ -74,7 +75,8 @@ export default function Feeds({ userId }: FeedsProps) {
         id: feed.id,
         userImage: "/no-profile.svg",
         userRole: "게이머",
-        postImage: feed.files.length > 0 ? `${feed.files[0].base_url}/${feed.files[0].s3_key}` : "",
+        files: feed.files,
+        frame_ratio: feed.frame_ratio || 1,
         likes: 0,
         username: user?.nickname || "익명",
         content: feed.description,
@@ -130,7 +132,8 @@ export default function Feeds({ userId }: FeedsProps) {
           id: feed.id,
           userImage: "/no-profile.svg",
           userRole: "게이머",
-          postImage: feed.files.length > 0 ? `${feed.files[0].base_url}/${feed.files[0].s3_key}` : "",
+          files: feed.files,
+          frame_ratio: feed.frame_ratio || 1,
           likes: 0,
           username: user?.nickname || "익명",
           content: feed.description,
@@ -169,9 +172,11 @@ export default function Feeds({ userId }: FeedsProps) {
           {feedData.map((feed, index) => (
             <div key={index} ref={feed.id === Number(feedId) ? targetFeedRef : null}>
               <FeedItem
+                key={feed.id}
                 userImage={feed.userImage}
                 userRole={feed.userRole}
-                postImage={feed.postImage}
+                files={feed.files}
+                frame_ratio={feed.frame_ratio}
                 likes={feed.likes}
                 username={feed.username}
                 content={feed.content}
