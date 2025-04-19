@@ -3,6 +3,14 @@
 export default function WorkLogPage() {
   const workLogs = [
     {
+      date: "2025-04-19",
+      day: "토",
+      time: "10:00-14:00",
+      hours: 4,
+      content: "• 피드 이미지 업로드시 프레임 생성\n• 프레임 최대 최소 비율 및 표현방식 설정\n• 세로 비율 제한: 1:1.25\n• 가로 비율 제한: 1.85:1\n• 이미지 표시 방식: cover/contain 분기 처리",
+      workers: "황윤, 클로드, gpt"
+    },
+    {
       date: "2025-04-15",
       day: "화",
       time: "15:30-16:30",
