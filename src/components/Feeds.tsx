@@ -116,7 +116,7 @@ export default function Feeds({ userId }: FeedsProps) {
         loadingRef.current = true;
 
         // ✅ 1초(1000ms) 지연
-        await new Promise(resolve => setTimeout(resolve, 2000));
+        await new Promise(resolve => setTimeout(resolve, 1000));
 
         let response;
         if (userId) {
@@ -162,7 +162,7 @@ export default function Feeds({ userId }: FeedsProps) {
   }
 
   return (
-    <div className="min-h-screen bg-black text-white p-4 py-20">
+    <div className="min-h-screen bg-black text-white pt-[64px] pb-[78px]">
       <div className="max-w-4xl mx-auto">
         {/* 피드 내용 */}
         <div className="space-y-4">
