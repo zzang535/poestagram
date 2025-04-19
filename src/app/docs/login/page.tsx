@@ -7,7 +7,7 @@ export default function LoginPageSpec() {
 
       <section className="mb-10">
         <h2 className="text-xl font-semibold mb-2">화면 명</h2>
-        <p>로그인 화면 (Login Page)</p>
+        <p>로그인 페이지 (Login Page)</p>
       </section>
 
       <section className="mb-10">

@@ -3,7 +3,7 @@
 export default function AccessControlPage() {
   return (
     <div className="p-8">
-      <h1 className="text-3xl font-bold mb-8">접근 권한 기획서</h1>
+      <h1 className="text-3xl font-bold mb-8">페이지별 접근 권한</h1>
 
       <section className="mb-8">
         <h2 className="text-2xl font-semibold mb-4">1. 현재 상태</h2>

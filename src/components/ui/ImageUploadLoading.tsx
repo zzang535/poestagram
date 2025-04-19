@@ -29,7 +29,7 @@ export default function ImageUploadLoading({ className = "" }: ImageUploadLoadin
   }, []);
 
   return (
-    <div ref={containerRef} className="relative w-full aspect-[16/9] bg-gray-800 overflow-hidden">
+    <div ref={containerRef} className="relative w-full aspect-square bg-gray-800 overflow-hidden">
       <div 
         ref={boxRef} 
         className="absolute left-0 top-0 h-full bg-black rounded"

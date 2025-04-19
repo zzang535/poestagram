@@ -121,7 +121,7 @@ export default function CreatePost() {
         
 
         <div className="">
-          <div className="border-2 border-gray-900 rounded-lg overflow-hidden relative aspect-[16/9] bg-gray-800 flex items-center justify-center">
+          <div className="border-2 border-gray-900 rounded-lg overflow-hidden relative aspect-square bg-gray-800 flex items-center justify-center">
 
             {isImageUploading && <ImageUploadLoading />}
             {!isImageUploading && previews.length > 0 && (
@@ -129,7 +129,7 @@ export default function CreatePost() {
                 {previews[currentIndex].type === 'video' ? (
                   <video
                     src={previews[currentIndex].url}
-                    className="max-w-full max-h-full object-contain"
+                    className="w-full h-full object-cover"
                     controls
                     autoPlay
                     loop
@@ -139,7 +139,7 @@ export default function CreatePost() {
                   <img
                     src={previews[currentIndex].url}
                     alt={`미리보기 ${currentIndex + 1}`}
-                    className="max-w-full max-h-full object-contain"
+                    className="w-full h-full object-cover"
                   />
                 )}
                 
