@@ -17,6 +17,7 @@ export interface FeedFile {
   base_url: string;
   s3_key: string;
   file_type: string;
+  content_type: string;
   file_size: number;
   width: number;
   height: number;

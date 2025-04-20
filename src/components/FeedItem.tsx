@@ -59,23 +59,35 @@ export default function FeedItem({
         >
           {files.length > 0 && (
             <>
-              <img
-                src={`${files[currentImageIndex].base_url}/${files[currentImageIndex].s3_key}`}
-                alt="게임 포스트"
-                className="absolute top-0 left-0 w-full h-full bg-black"
-                style={{
-                  objectFit: (() => {
-                    const ratio = frame_ratio;
-                    const imageRatio = files[currentImageIndex].height / files[currentImageIndex].width;
-                    
-                    if(imageRatio > ratio) {
-                      return "cover";
-                    } else {
-                      return "contain";
-                    }
-                  })()
-                }}
-              />
+              {files[currentImageIndex].content_type.startsWith("image") && (
+                <img
+                  src={`${files[currentImageIndex].base_url}/${files[currentImageIndex].s3_key}`}
+                  alt="게임 포스트"
+                  className="absolute top-0 left-0 w-full h-full bg-black"
+                  style={{
+                    objectFit: (() => {
+                      const ratio = frame_ratio;
+                      const imageRatio = files[currentImageIndex].height / files[currentImageIndex].width;
+                      
+                      if(imageRatio > ratio) {
+                        return "cover";
+                      } else {
+                        return "contain";
+                      }
+                    })()
+                  }}
+                />
+              )}
+              {files[currentImageIndex].content_type.startsWith("video") && (
+                <video
+                  src={`${files[currentImageIndex].base_url}/${files[currentImageIndex].s3_key}`}
+                  className="absolute top-0 left-0 w-full h-full bg-black"
+                  controls
+                  autoPlay
+                  loop
+                  muted
+                />
+              )}
               {files.length > 1 && (
                 <>
                   <button
