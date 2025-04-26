@@ -4,7 +4,7 @@ import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark, faChevronLeft, faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import CommentModal from "./CommentModal";
-import { FeedFile } from "@/apis/feeds";
+import { FeedFile } from "@/types/feeds";
 
 interface FeedItemProps {
   userImage: string;

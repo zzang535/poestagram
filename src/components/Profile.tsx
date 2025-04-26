@@ -3,31 +3,11 @@
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { getUserFeeds } from "@/apis/feeds";
-
+import { Feed, FeedFile } from "@/types/feeds";
 import { useAuthStore } from "@/store/authStore";
 
 interface ProfileProps {
   userId: string | number;
-}
-
-interface FeedFile {
-  id: number;
-  file_name: string;
-  base_url: string;
-  s3_key: string;
-  file_type: string;
-  file_size: number;
-  created_at: string;
-  updated_at: string | null;
-}
-
-interface Feed {
-  id: number;
-  description: string;
-  user_id: number;
-  created_at: string;
-  updated_at: string | null;
-  files: FeedFile[];
 }
 
 export default function Profile({ userId }: ProfileProps) {
@@ -35,6 +15,14 @@ export default function Profile({ userId }: ProfileProps) {
   const [loading, setLoading] = useState(true);
   const [feeds, setFeeds] = useState<Feed[]>([]);
   const [totalFeeds, setTotalFeeds] = useState(0);
+  const [currentUser, setCurrentUser] = useState<{ id: number; nickname: string } | null>(null);
+
+  useEffect(() => {
+    const user = useAuthStore.getState().user;
+    if (user) {
+      setCurrentUser(user);
+    }
+  }, []);
 
   // 내 피드 불러오기
   useEffect(() => {
@@ -66,6 +54,11 @@ export default function Profile({ userId }: ProfileProps) {
     return `${file.base_url}/${file.s3_key}`;
   };
 
+  // 썸네일 URL 생성 함수
+  const getThumbnailUrl = (file: FeedFile) => {
+    return file.s3_key_thumbnail ? `${file.base_url}/${file.s3_key_thumbnail}` : getFileUrl(file);
+  };
+
   return (
     <div className="bg-gray-950 text-white py-[73px]">
       {/* 프로필 정보 섹션 */}
@@ -79,7 +72,7 @@ export default function Profile({ userId }: ProfileProps) {
             />
           </div>
           <div className="flex-1">
-            <h2 className="text-xl font-bold">{useAuthStore.getState().user?.nickname}</h2>
+            <h2 className="text-xl font-bold">{currentUser?.nickname || "익명"}</h2>
             <p className="text-gray-400 mt-1">{totalFeeds} 게시물</p>
           </div>
         </div>
@@ -110,7 +103,9 @@ export default function Profile({ userId }: ProfileProps) {
             >
               {feed.files.length > 0 && (
                 <img
-                  src={getFileUrl(feed.files[0])}
+                  src={feed.files[0].content_type.startsWith('video') 
+                    ? getThumbnailUrl(feed.files[0])
+                    : getFileUrl(feed.files[0])}
                   alt={`게시물 ${feed.id}`}
                   className="w-full h-full object-cover"
                 />

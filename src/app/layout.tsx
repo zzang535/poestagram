@@ -70,7 +70,7 @@ export default function RootLayout({
   };
 
   const shouldShowBackButton = () => {
-    return true;
+    return pathname === '/feed' ? false : true;
   };
 
   const shouldShowGnb = () => {
@@ -150,7 +150,6 @@ export default function RootLayout({
                     }`}
                   >
                     <FontAwesomeIcon icon={faHome} className="text-xl" />
-                    <span className="text-xs mt-1">피드</span>
                   </button>
 
                   <button 
@@ -160,7 +159,6 @@ export default function RootLayout({
                     }`}
                   >
                     <FontAwesomeIcon icon={faPlus} className="text-xl" />
-                    <span className="text-xs mt-1">만들기</span>
                   </button>
 
                   <button 
@@ -170,7 +168,6 @@ export default function RootLayout({
                     }`}
                   >
                     <FontAwesomeIcon icon={faUser} className="text-xl" />
-                    <span className="text-xs mt-1">프로필</span>
                   </button>
                 </div>
               </div>
