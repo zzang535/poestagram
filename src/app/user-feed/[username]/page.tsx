@@ -2,7 +2,7 @@
 
 import { useParams } from "next/navigation";
 import FeedItem from "@/components/FeedItem";
-import { FeedFile } from "@/apis/feeds";
+import { FeedFile } from "@/types/feeds";
 
 export default function UserFeedPage() {
   const params = useParams();
