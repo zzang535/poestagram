@@ -3,7 +3,8 @@
 import { useState, useEffect, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import FeedItem from "@/components/FeedItem";
-import { getUserFeeds, getAllFeeds, getFeedIndex, FeedFile } from "@/apis/feeds";
+import { getUserFeeds, getAllFeeds, getFeedIndex } from "@/apis/feeds";
+import { FeedFile } from "@/types/feeds";
 
 interface FeedData {
   id: number;
