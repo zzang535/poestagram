@@ -86,6 +86,18 @@ export default function FeedItem({
                   autoPlay
                   loop
                   muted
+                  style={{
+                    objectFit: (() => {
+                      const ratio = frame_ratio;
+                      const imageRatio = files[currentImageIndex].height / files[currentImageIndex].width;
+                      
+                      if(imageRatio > ratio) {
+                        return "cover";
+                      } else {
+                        return "contain";
+                      }
+                    })()
+                  }}
                 />
               )}
               {files.length > 1 && (

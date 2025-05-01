@@ -95,7 +95,7 @@ export default function Profile({ userId }: ProfileProps) {
       {/* 게시물 그리드 */}
       {!loading && feeds.length > 0 && (
         <section className="grid grid-cols-3 gap-px">
-          {feeds.map((feed) => (
+          {feeds.map((feed, index) => (
             <div 
               key={feed.id} 
               className="relative aspect-square group cursor-pointer"
