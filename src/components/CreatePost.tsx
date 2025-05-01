@@ -213,6 +213,28 @@ export default function CreatePost() {
                     autoPlay
                     loop
                     muted
+                    style={{
+                      objectFit: (() => {
+                        const currentImage = previews[currentIndex];
+                        if (!currentImage.width || !currentImage.height) return 'contain';
+
+                        if(frameSize?.width && frameSize?.height) {
+
+                          const frameRatio = frameSize.height / frameSize.width;
+                          const imageRatio = currentImage.height / currentImage.width;
+
+                          if(imageRatio > frameRatio) {
+                            return "cover";
+                          } else {
+                            return "contain";
+                          }
+                        }
+                        return 'contain';
+                        
+                      })(),
+                      maxHeight: '100%',
+                      maxWidth: '100%'
+                    }}
                   />
                 ) : (
                   <img
