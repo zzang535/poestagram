@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faXmark, faChevronLeft, faChevronRight } from "@fortawesome/free-solid-svg-icons";
+import { faChevronLeft, faChevronRight, faHeart as faSolidHeart } from "@fortawesome/free-solid-svg-icons";
+import { faHeart as faRegularHeart, faComment, faBookmark } from "@fortawesome/free-regular-svg-icons";
 import CommentModal from "./CommentModal";
 import { FeedFile } from "@/types/feeds";
 
@@ -29,6 +30,7 @@ export default function FeedItem({
 }: FeedItemProps) {
   const [isCommentModalOpen, setIsCommentModalOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isLiked, setIsLiked] = useState(false);
 
   const handlePrevImage = () => {
     setCurrentImageIndex((prev) => (prev > 0 ? prev - 1 : prev));
@@ -126,31 +128,37 @@ export default function FeedItem({
         </div>
         <div className="px-4 pt-4 border-t border-gray-800">
           <div className="flex items-center justify-between mb-2">
-            <div className="flex space-x-4">
-              <button className="text-2xl text-white">
-                <i className="far fa-heart"></i>
+            <div className="flex gap-3">
+              <button 
+                className="flex items-center gap-[5px] text-2xl text-white"
+                onClick={() => {
+                  setIsLiked(!isLiked);
+                }}
+              >
+                <FontAwesomeIcon 
+                  icon={isLiked ? faSolidHeart : faRegularHeart}
+                  className={isLiked ? "text-red-500" : ""}
+                />
+                {/* {likes > 0 && <span className="text-sm">{likes}</span>} */}
+                <span className="text-sm">15</span>
               </button>
               <button 
-                className="text-2xl text-white"
+                className="flex items-center gap-[5px] text-2xl text-white"
                 onClick={() => setIsCommentModalOpen(true)}
               >
-                <i className="far fa-comment"></i>
+                <FontAwesomeIcon icon={faComment} />
+                {/* {comments > 0 && <span className="text-sm">{comments}</span>} */}
+                <span className="text-sm">600</span>
               </button>
             </div>
-            <button className="text-2xl text-white">
-              <i className="far fa-bookmark"></i>
-            </button>
+            {/* 북마크 - 추후 구현 */}
+            {/* <button className="text-2xl text-white">
+              <FontAwesomeIcon icon={faBookmark} />
+            </button> */}
           </div>
-          <p className="text-sm font-semibold mb-1 text-white">좋아요 {likes}개</p>
           <p className="text-sm text-white">
             <span className="font-semibold">{username}</span> {content}
           </p>
-          <button 
-            className="text-xs text-gray-400 mt-1 hover:text-white"
-            onClick={() => setIsCommentModalOpen(true)}
-          >
-            댓글 {comments}개 모두 보기
-          </button>
         </div>
       </article>
 
