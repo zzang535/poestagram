@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import FeedItem from "@/components/FeedItem";
 import { getUserFeeds, getAllFeeds, getFeedIndex } from "@/apis/feeds";
-import { FeedFile, FeedItemProps } from "@/types/feeds";
+import { Feed, FeedItemProps } from "@/types/feeds";
 
 interface FeedsProps {
   userId?: number;
@@ -61,23 +61,18 @@ export default function Feeds({ userId }: FeedsProps) {
         ? await getUserFeeds(userId, offsetVal, limitVal)
         : await getAllFeeds(offsetVal, limitVal);
 
-        const transformed = res.feeds.map((feed: FeedItemProps): FeedItemProps => ({
-          id: feed.id,
-          files: feed.files,
-          frame_ratio: feed.frame_ratio ?? 1,
-          likes: feed.likes ?? 0,
-          username: feed.username ?? "익명",
-          content: feed.content ?? "",         // content 필드도 채워야 함
-          comments: feed.comments ?? 0,
-          is_liked: feed.is_liked ?? false,
-          description: feed.description ?? "",
-          user: {
-            id: feed.user?.id ?? 0,
-            username: feed.user?.username ?? "익명",
-            profile_image_url: feed.user?.profile_image_url ?? null,
-            role: feed.user?.role ?? "게이머",
-          }
-        }));
+      console.log(res);
+
+      const transformed = res.feeds.map((feed: Feed): FeedItemProps => ({
+        id: feed.id,
+        description: feed.description,
+        frame_ratio: feed.frame_ratio,
+        created_at: feed.created_at,
+        updated_at: feed.updated_at,
+        files: feed.files,
+        is_liked: feed.is_liked,
+        user: feed.user,
+      }));
 
       setFeedData(prev => [...prev, ...transformed]);
       setHasMore(res.feeds.length == limitVal);
@@ -164,15 +159,12 @@ export default function Feeds({ userId }: FeedsProps) {
             {feedData.map((feed, index) => (
               <div key={index} ref={feed.id === Number(feedId) ? targetFeedRef : null}>
                 <FeedItem
-                  key={feed.id}
                   id={feed.id}
                   files={feed.files}
-                  frame_ratio={feed.frame_ratio}
-                  likes={feed.likes}
-                  username={feed.username}
-                  content={feed.content}
                   description={feed.description}
-                  comments={feed.comments}
+                  frame_ratio={feed.frame_ratio}
+                  created_at={feed.created_at}
+                  updated_at={feed.updated_at}
                   is_liked={feed.is_liked}
                   user={feed.user}
                 />

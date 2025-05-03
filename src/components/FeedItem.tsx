@@ -11,15 +11,15 @@ import { likeFeedApi } from "@/apis/feeds";
 
 export default function FeedItem({
   id,
-  user,
   files,
-  frame_ratio,
-  is_liked,
   description,
+  frame_ratio,
+  created_at,
+  updated_at,
+  is_liked,
+  user,
 }: FeedItemProps) {
 
-  console.log(is_liked);
-  console.log(description);
   const [isCommentModalOpen, setIsCommentModalOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [currentIsLiked, setCurrentIsLiked] = useState(is_liked);
@@ -38,13 +38,13 @@ export default function FeedItem({
       <article className="bg-black rounded-lg mb-4 overflow-hidden">
         <div className="flex items-center p-4 border-b border-gray-800">
           <img
-            src={user?.profile_image_url || "/no-profile.svg"}
-            alt={`${user?.username} 프로필`}
+            src={"/no-profile.svg"}
+            alt={`${user?.nickname} 프로필`}
             className="w-10 h-10 rounded-full"
           />
           <div className="ml-3">
-            <p className="text-sm font-semibold text-white">{user?.username}</p>
-            <p className="text-xs text-gray-400">{user?.role}</p>
+            <p className="text-sm font-semibold text-white">{user?.nickname}</p>
+            <p className="text-xs text-gray-400">{user?.nickname}</p>
           </div>
         </div>
         <div 
@@ -148,7 +148,7 @@ export default function FeedItem({
             </div>
           </div>
           <p className="text-sm text-white mt-2">
-            <span className="font-semibold mr-1">{user?.username}</span>
+            <span className="font-semibold mr-1">{user.nickname}</span>
             {description}
           </p>
         </div>
