@@ -5,32 +5,25 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronLeft, faChevronRight, faHeart as faSolidHeart } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as faRegularHeart, faComment, faBookmark } from "@fortawesome/free-regular-svg-icons";
 import CommentModal from "./CommentModal";
-import { FeedFile } from "@/types/feeds";
+import { FeedItemProps } from "@/types/feeds";
+import { likeFeedApi } from "@/apis/feeds";
 
-interface FeedItemProps {
-  userImage: string;
-  userRole: string;
-  files: FeedFile[];
-  frame_ratio: number;
-  likes: number;
-  username: string;
-  content: string;
-  comments: number;
-}
 
 export default function FeedItem({
-  userImage,
-  userRole,
+  id,
+  user,
   files,
   frame_ratio,
-  likes,
-  username,
-  content,
-  comments,
+  is_liked,
+  description,
 }: FeedItemProps) {
+
+  console.log(is_liked);
+  console.log(description);
   const [isCommentModalOpen, setIsCommentModalOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [isLiked, setIsLiked] = useState(false);
+  const [currentIsLiked, setCurrentIsLiked] = useState(is_liked);
+  const [currentLikesCount, setCurrentLikesCount] = useState(0);
 
   const handlePrevImage = () => {
     setCurrentImageIndex((prev) => (prev > 0 ? prev - 1 : prev));
@@ -45,12 +38,13 @@ export default function FeedItem({
       <article className="bg-black rounded-lg mb-4 overflow-hidden">
         <div className="flex items-center p-4 border-b border-gray-800">
           <img
-            src={userImage}
-            alt="유저"
+            src={user?.profile_image_url || "/no-profile.svg"}
+            alt={`${user?.username} 프로필`}
             className="w-10 h-10 rounded-full"
           />
           <div className="ml-3">
-            <p className="text-xs text-gray-400">{userRole}</p>
+            <p className="text-sm font-semibold text-white">{user?.username}</p>
+            <p className="text-xs text-gray-400">{user?.role}</p>
           </div>
         </div>
         <div 
@@ -126,38 +120,36 @@ export default function FeedItem({
             </>
           )}
         </div>
-        <div className="px-4 pt-4 border-t border-gray-800">
+        <div className="px-4 pt-4 pb-3 border-t border-gray-800">
           <div className="flex items-center justify-between mb-2">
             <div className="flex gap-3">
-              <button 
+              <button
                 className="flex items-center gap-[5px] text-2xl text-white"
                 onClick={() => {
-                  setIsLiked(!isLiked);
+                  const newIsLiked = !currentIsLiked;
+                  const newLikeCount = newIsLiked ? currentLikesCount + 1 : currentLikesCount - 1;
+                  setCurrentIsLiked(newIsLiked);
+                  setCurrentLikesCount(newLikeCount);
+                  likeFeedApi(id);
                 }}
               >
-                <FontAwesomeIcon 
-                  icon={isLiked ? faSolidHeart : faRegularHeart}
-                  className={isLiked ? "text-red-500" : ""}
+                <FontAwesomeIcon
+                  icon={is_liked ? faSolidHeart : faRegularHeart}
+                  className={is_liked ? "text-red-500" : ""}
                 />
-                {/* {likes > 0 && <span className="text-sm">{likes}</span>} */}
-                <span className="text-sm">15</span>
+                {currentLikesCount > 0 && <span className="text-sm">{currentLikesCount}</span>}
               </button>
               <button 
                 className="flex items-center gap-[5px] text-2xl text-white"
                 onClick={() => setIsCommentModalOpen(true)}
               >
                 <FontAwesomeIcon icon={faComment} />
-                {/* {comments > 0 && <span className="text-sm">{comments}</span>} */}
-                <span className="text-sm">600</span>
               </button>
             </div>
-            {/* 북마크 - 추후 구현 */}
-            {/* <button className="text-2xl text-white">
-              <FontAwesomeIcon icon={faBookmark} />
-            </button> */}
           </div>
-          <p className="text-sm text-white">
-            <span className="font-semibold">{username}</span> {content}
+          <p className="text-sm text-white mt-2">
+            <span className="font-semibold mr-1">{user?.username}</span>
+            {description}
           </p>
         </div>
       </article>

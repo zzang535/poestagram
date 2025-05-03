@@ -4,19 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import FeedItem from "@/components/FeedItem";
 import { getUserFeeds, getAllFeeds, getFeedIndex } from "@/apis/feeds";
-import { FeedFile } from "@/types/feeds";
-
-interface FeedData {
-  id: number;
-  userImage: string;
-  userRole: string;
-  files: FeedFile[];
-  frame_ratio: number;
-  likes: number;
-  username: string;
-  content: string;
-  comments: number;
-}
+import { FeedFile, FeedItemProps } from "@/types/feeds";
 
 interface FeedsProps {
   userId?: number;
@@ -24,7 +12,7 @@ interface FeedsProps {
 
 export default function Feeds({ userId }: FeedsProps) {
   const searchParams = useSearchParams();
-  const [feedData, setFeedData] = useState<FeedData[]>([]);
+  const [feedData, setFeedData] = useState<FeedItemProps[]>([]);
   const [offset, setOffset] = useState(0);
   const limit = 3;
 
@@ -73,17 +61,23 @@ export default function Feeds({ userId }: FeedsProps) {
         ? await getUserFeeds(userId, offsetVal, limitVal)
         : await getAllFeeds(offsetVal, limitVal);
 
-      const transformed = res.feeds.map(feed => ({
-        id: feed.id,
-        userImage: "/no-profile.svg",
-        userRole: "게이머",
-        files: feed.files,
-        frame_ratio: feed.frame_ratio || 1,
-        likes: 0,
-        username: "익명",
-        content: feed.description,
-        comments: 0
-      }));
+        const transformed = res.feeds.map((feed: FeedItemProps): FeedItemProps => ({
+          id: feed.id,
+          files: feed.files,
+          frame_ratio: feed.frame_ratio ?? 1,
+          likes: feed.likes ?? 0,
+          username: feed.username ?? "익명",
+          content: feed.content ?? "",         // content 필드도 채워야 함
+          comments: feed.comments ?? 0,
+          is_liked: feed.is_liked ?? false,
+          description: feed.description ?? "",
+          user: {
+            id: feed.user?.id ?? 0,
+            username: feed.user?.username ?? "익명",
+            profile_image_url: feed.user?.profile_image_url ?? null,
+            role: feed.user?.role ?? "게이머",
+          }
+        }));
 
       setFeedData(prev => [...prev, ...transformed]);
       setHasMore(res.feeds.length == limitVal);
@@ -171,14 +165,16 @@ export default function Feeds({ userId }: FeedsProps) {
               <div key={index} ref={feed.id === Number(feedId) ? targetFeedRef : null}>
                 <FeedItem
                   key={feed.id}
-                  userImage={feed.userImage}
-                  userRole={feed.userRole}
+                  id={feed.id}
                   files={feed.files}
                   frame_ratio={feed.frame_ratio}
                   likes={feed.likes}
                   username={feed.username}
                   content={feed.content}
+                  description={feed.description}
                   comments={feed.comments}
+                  is_liked={feed.is_liked}
+                  user={feed.user}
                 />
               </div>
             ))}

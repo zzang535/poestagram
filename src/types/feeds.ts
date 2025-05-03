@@ -1,3 +1,21 @@
+export interface FeedItemProps {
+  id: number;
+  files: FeedFile[];
+  frame_ratio: number;
+  likes?: number;
+  username?: string;
+  content?: string;
+  comments?: number;
+  is_liked?: boolean;
+  description: string;
+  user: {
+    id: number;
+    username: string;
+    profile_image_url: string | null;
+    role: string;
+  };
+}
+
 export interface FeedFile {
   id: number;
   file_name: string;
@@ -21,6 +39,13 @@ export interface Feed {
   created_at: string;
   updated_at: string | null;
   files: FeedFile[];
+  user: {
+    id: number;
+    username: string;
+    profile_image_url: string | null;
+    role: string;
+  };
+  likes_count: number;
 }
 
 export interface FeedCreate {
