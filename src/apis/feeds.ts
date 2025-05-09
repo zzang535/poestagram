@@ -102,25 +102,26 @@ export const getFeedIndex = async (userId: number, feedId: number): Promise<{ in
   return response.json();
 };
 
-export async function likeFeedApi(feedId: number) {
+export async function toggleLikeFeedApi(feedId: number, currentIsLiked: boolean) {
+  const method = currentIsLiked ? 'DELETE' : 'POST';
+  const action = currentIsLiked ? '좋아요 취소' : '좋아요 추가';
+
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/feeds/${feedId}/like`, {
-      method: 'POST',
+      method: method,
       headers: {
-        "Authorization": `Bearer ${useAuthStore.getState().accessToken}`
+        "Authorization": `Bearer ${useAuthStore.getState().accessToken}`,
       },
     });
 
     if (!response.ok) {
-      const errorData = await response.json();
-      // 실패 시 에러 로그만 남김 (UI 롤백 안 함)
-      console.error('좋아요 API 실패:', errorData.detail || '알 수 없는 오류');
-      return; // 실패 시 여기서 중단
+      const errorData = await response.json().catch(() => ({ detail: `알 수 없는 ${action} 오류` }));
+      console.error(`${action} API 실패:`, errorData.detail);
+      return;
     }
-    console.log('좋아요 API 성공');
+    console.log(`${action} API 성공`);
 
   } catch (error) {
-    // 네트워크 오류 등
-    console.error('좋아요 API 호출 오류:', error);
+    console.error(`${action} API 호출 오류:`, error);
   }
 }

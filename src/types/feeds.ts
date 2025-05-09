@@ -7,6 +7,7 @@ export interface Feed {
   updated_at: string | null;
   is_liked: boolean;
   user: User;
+  likes_count: number;
 }
 
 
@@ -34,6 +35,7 @@ export interface FeedItemProps {
   updated_at: string | null;
   is_liked: boolean;
   user: User;
+  likes_count: number;
 }
 
 export interface FeedCreate {

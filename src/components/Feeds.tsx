@@ -72,6 +72,7 @@ export default function Feeds({ userId }: FeedsProps) {
         files: feed.files,
         is_liked: feed.is_liked,
         user: feed.user,
+        likes_count: feed.likes_count,
       }));
 
       setFeedData(prev => [...prev, ...transformed]);
@@ -167,6 +168,7 @@ export default function Feeds({ userId }: FeedsProps) {
                   updated_at={feed.updated_at}
                   is_liked={feed.is_liked}
                   user={feed.user}
+                  likes_count={feed.likes_count}
                 />
               </div>
             ))}

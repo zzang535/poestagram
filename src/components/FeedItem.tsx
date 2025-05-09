@@ -6,7 +6,7 @@ import { faChevronLeft, faChevronRight, faHeart as faSolidHeart } from "@fortawe
 import { faHeart as faRegularHeart, faComment, faBookmark } from "@fortawesome/free-regular-svg-icons";
 import CommentModal from "./CommentModal";
 import { FeedItemProps } from "@/types/feeds";
-import { likeFeedApi } from "@/apis/feeds";
+import { toggleLikeFeedApi } from "@/apis/feeds";
 
 
 export default function FeedItem({
@@ -18,12 +18,13 @@ export default function FeedItem({
   updated_at,
   is_liked,
   user,
+  likes_count,
 }: FeedItemProps) {
 
   const [isCommentModalOpen, setIsCommentModalOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [currentIsLiked, setCurrentIsLiked] = useState(is_liked);
-  const [currentLikesCount, setCurrentLikesCount] = useState(0);
+  const [currentLikesCount, setCurrentLikesCount] = useState(likes_count || 0);
 
   const handlePrevImage = () => {
     setCurrentImageIndex((prev) => (prev > 0 ? prev - 1 : prev));
@@ -100,19 +101,22 @@ export default function FeedItem({
                 <>
                   <button
                     onClick={handlePrevImage}
-                    className={`absolute left-2 top-1/2 -translate-y-1/2 bg-black/70 text-white p-2 rounded-full hover:bg-black/90 transition-colors ${currentImageIndex === 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    className={`
+                        absolute left-2 top-1/2 -translate-y-1/2 bg-black/70 text-white p-2 rounded-full hover:bg-black/90 transition-colors ${currentImageIndex === 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
                     disabled={currentImageIndex === 0}
                   >
                     <FontAwesomeIcon icon={faChevronLeft} />
                   </button>
                   <button
                     onClick={handleNextImage}
-                    className={`absolute right-2 top-1/2 -translate-y-1/2 bg-black/70 text-white p-2 rounded-full hover:bg-black/90 transition-colors ${currentImageIndex === files.length - 1 ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    className={`
+                        absolute right-2 top-1/2 -translate-y-1/2 bg-black/70 text-white p-2 rounded-full hover:bg-black/90 transition-colors ${currentImageIndex === files.length - 1 ? 'opacity-50 cursor-not-allowed' : ''}`}
                     disabled={currentImageIndex === files.length - 1}
                   >
                     <FontAwesomeIcon icon={faChevronRight} />
                   </button>
-                  <div className="absolute bottom-2 left-1/2 -translate-x-1/2 bg-black/70 text-white text-xs px-2 py-1 rounded-full">
+                  <div className="
+                        absolute bottom-2 left-1/2 -translate-x-1/2 bg-black/70 text-white text-xs px-2 py-1 rounded-full">
                     {currentImageIndex + 1} / {files.length}
                   </div>
                 </>
@@ -126,16 +130,16 @@ export default function FeedItem({
               <button
                 className="flex items-center gap-[5px] text-2xl text-white"
                 onClick={() => {
-                  const newIsLiked = !currentIsLiked;
-                  const newLikeCount = newIsLiked ? currentLikesCount + 1 : currentLikesCount - 1;
-                  setCurrentIsLiked(newIsLiked);
+                  const newIsLikedState = !currentIsLiked;
+                  const newLikeCount = newIsLikedState ? currentLikesCount + 1 : currentLikesCount - 1;
+                  setCurrentIsLiked(newIsLikedState);
                   setCurrentLikesCount(newLikeCount);
-                  likeFeedApi(id);
+                  toggleLikeFeedApi(id, currentIsLiked);
                 }}
               >
                 <FontAwesomeIcon
-                  icon={is_liked ? faSolidHeart : faRegularHeart}
-                  className={is_liked ? "text-red-500" : ""}
+                  icon={currentIsLiked ? faSolidHeart : faRegularHeart}
+                  className={currentIsLiked ? "text-red-500" : ""}
                 />
                 {currentLikesCount > 0 && <span className="text-sm">{currentLikesCount}</span>}
               </button>
