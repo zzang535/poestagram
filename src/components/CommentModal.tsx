@@ -54,13 +54,20 @@ export default function CommentModal({ isOpen, onClose }: CommentModalProps) {
 
   // 드래그 시작
   const handleDragStart = (e: React.TouchEvent | React.MouseEvent) => {
+    if ('touches' in e) {
+      e.preventDefault(); // 모바일에서 기본 스크롤 방지
+    }
     const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
     setDragStartY(clientY);
   };
 
   // 드래그 중
   const handleDrag = (e: TouchEvent | MouseEvent) => {
+
     if (dragStartY === null) return;
+    if ('touches' in e) {
+      e.preventDefault(); // 모바일에서 기본 스크롤 방지
+    }
     
     let clientY = 0;
     if (e instanceof TouchEvent) {
@@ -97,7 +104,7 @@ export default function CommentModal({ isOpen, onClose }: CommentModalProps) {
   useEffect(() => {
     if (dragStartY !== null) {
       window.addEventListener('mousemove', handleDrag);
-      window.addEventListener('touchmove', handleDrag);
+      window.addEventListener('touchmove', handleDrag, { passive: false });
       window.addEventListener('mouseup', handleDragEnd);
       window.addEventListener('touchend', handleDragEnd);
 
