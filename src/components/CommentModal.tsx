@@ -31,7 +31,10 @@ export default function CommentModal({ isOpen, onClose }: CommentModalProps) {
         setIsVisible(true);
       }, 100);
 
-      setTranslateY(0);
+      // setTranslateY(0);
+      if (modalRef.current) {
+        modalRef.current.style.transform = `translateY(0px)`;
+      }
       translateYRef.current = 0;
       setComments(dummyComments);
     } else {
@@ -58,10 +61,21 @@ export default function CommentModal({ isOpen, onClose }: CommentModalProps) {
   // 드래그 중
   const handleDrag = (e: TouchEvent | MouseEvent) => {
     if (dragStartY === null) return;
-    const clientY = 'touches' in e ? (e as TouchEvent).touches[0].clientY : (e as MouseEvent).clientY;
+    
+    let clientY = 0;
+    if (e instanceof TouchEvent) {
+      clientY = e.touches[0].clientY;
+    } else if (e instanceof MouseEvent) {
+      clientY = e.clientY;
+    } else {
+      return;
+    }
+
     const deltaY = clientY - dragStartY;
     if (deltaY > 0) {
-      setTranslateY(deltaY); // translateY 값 업데이트
+      if (modalRef.current) {
+        modalRef.current.style.transform = `translateY(${deltaY}px)`;
+      }
       translateYRef.current = deltaY;
     }
   };
@@ -72,7 +86,9 @@ export default function CommentModal({ isOpen, onClose }: CommentModalProps) {
       onClose();
       translateYRef.current = 0;
     } else {
-      setTranslateY(0); // 100px 미만 드래그 시 원래 위치로 복귀
+      if (modalRef.current) {
+        modalRef.current.style.transform = `translateY(0px)`;
+      }
       translateYRef.current = 0;
     }
     setDragStartY(null);
@@ -161,7 +177,7 @@ export default function CommentModal({ isOpen, onClose }: CommentModalProps) {
             </div>
           </div>
 
-          <div className="flex-1 overflow-y-auto py-[80px]">
+          <div className="flex-1 overflow-y-auto pt-[80px] pb-[110px]">
             {comments.map((comment) => (
               <div key={comment.id} className="p-[16px]">
                 <div className="flex items-start gap-[10px]">
@@ -205,6 +221,7 @@ export default function CommentModal({ isOpen, onClose }: CommentModalProps) {
                 fixed bottom-0 left-0 right-0 p-4 
                 border-t border-gray-800 z-50
                 bg-zinc-900
+                w-fullq
               ">
             <div className="flex items-center gap-[10px]">
               <div className="flex-shrink-0">
