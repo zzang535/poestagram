@@ -154,19 +154,24 @@ export default function CommentModal({ isOpen, onClose }: CommentModalProps) {
                 className="w-[40px] h-[40px] rounded-full"
               />
             </div>
-            <input
-              type="text"
-              placeholder="댓글을 입력하세요..."
-              className="
-                flex-1 bg-zinc-900 text-white rounded-full 
-                px-4 py-2 
-                focus:outline-none focus:ring-1 focus:ring-red-500"
-            />
-            <button className="bg-red-500 text-white rounded-full p-2 flex-shrink-0">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z" clipRule="evenodd" />
-              </svg>
-            </button>
+            <div className="flex-1">
+              <input
+                type="text"
+                placeholder="댓글을 입력하세요..."
+                className="
+                  w-full
+                  px-4 py-2 
+                  bg-zinc-900 text-white rounded-full 
+                  focus:outline-none focus:ring-1 focus:ring-red-500"
+              />
+            </div>
+            <div className="flex-shrink-0">
+              <button className="bg-red-500 text-white rounded-full p-2">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z" clipRule="evenodd" />
+                </svg>
+              </button>
+            </div>
           </div>
 
 
