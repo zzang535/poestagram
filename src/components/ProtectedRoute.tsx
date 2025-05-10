@@ -10,15 +10,16 @@ interface ProtectedRouteProps {
 
 export default function ProtectedRoute({ children }: ProtectedRouteProps) {
   const router = useRouter();
-  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
+  const accessToken = useAuthStore((s) => s.accessToken);
+
 
   useEffect(() => {
-    if (!isLoggedIn) {
+    if (!accessToken) {
       router.push('/login');
     }
-  }, [isLoggedIn, router]);
+  }, [accessToken, router]);
 
-  if (!isLoggedIn) {
+  if (!accessToken) {
     return null;
   }
 

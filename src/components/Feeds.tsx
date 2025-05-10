@@ -5,18 +5,20 @@ import { useSearchParams } from "next/navigation";
 import FeedItem from "@/components/FeedItem";
 import { getUserFeeds, getAllFeeds, getFeedIndex } from "@/apis/feeds";
 import { Feed, FeedItemProps } from "@/types/feeds";
-
+import { useAuthStore } from "@/store/authStore";
 interface FeedsProps {
   userId?: number;
 }
 
 export default function Feeds({ userId }: FeedsProps) {
+  
   const searchParams = useSearchParams();
+  const limit = 3;
+  
   const [feedData, setFeedData] = useState<FeedItemProps[]>([]);
   const [offset, setOffset] = useState(0);
-  const limit = 3;
-
   const [initDone, setInitDone] = useState(false);
+
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const loadingRef = useRef(false);
@@ -25,8 +27,20 @@ export default function Feeds({ userId }: FeedsProps) {
 
   // 유저 피드 플로우에 필요한 데이터
   const feedId = searchParams.get('feed_id');
+  const accessToken = useAuthStore((s) => s.accessToken);
   const targetFeedRef = useRef<HTMLDivElement | null>(null);
   const [targetFeedIndex, setTargetFeedIndex] = useState(0);
+
+
+  // feed 페이지에서 로그아웃 되는 경우 대응
+  useEffect(() => {
+    setOffset(0);
+    setFeedData([]);
+    setInitDone(false);
+    setLoading(false);
+    setHasMore(true);
+    didInitRef.current = false;
+  }, [accessToken]); 
 
   // 첫 로딩
   useEffect(() => {
@@ -48,7 +62,7 @@ export default function Feeds({ userId }: FeedsProps) {
       setInitDone(true);
     };
     init();
-  }, []);
+  }, [accessToken]);
 
 
   const fetchFeeds = async (offsetVal: number, limitVal: number) => {
@@ -89,6 +103,7 @@ export default function Feeds({ userId }: FeedsProps) {
 
   // 무한 스크롤
   useEffect(() => {
+
     if (!initDone) return;
 
     const container = document.querySelector("main");
@@ -117,6 +132,7 @@ export default function Feeds({ userId }: FeedsProps) {
   }, [offset, initDone]);
 
   useEffect(() => {
+
     if (initDone && targetFeedRef.current) {
       const container = document.querySelector("main");
       if (!container) return;
@@ -139,6 +155,8 @@ export default function Feeds({ userId }: FeedsProps) {
   useEffect(() => {
     hasMoreRef.current = hasMore;
   }, [hasMore]);
+
+ 
 
   
   if (!initDone) {

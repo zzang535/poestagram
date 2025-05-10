@@ -7,9 +7,9 @@ import { useParams } from 'next/navigation';
 export default function UserFeed() {
   const params = useParams();
   const userId = Number(params.userId);
-  const isLoggedIn = useAuthStore((state) => state.isLoggedIn());
+  const accessToken = useAuthStore((s) => s.accessToken);
 
-  if (!isLoggedIn) {
+  if (!accessToken) {
     return (
       <div className="min-h-screen bg-black text-white p-4 py-20">
         <div className="max-w-4xl mx-auto">

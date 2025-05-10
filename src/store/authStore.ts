@@ -12,7 +12,6 @@ interface AuthState {
   accessToken: string | null;
   login: (response: { access_token: string; user: User }) => void;
   logout: () => void;
-  isLoggedIn: () => boolean;
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -25,9 +24,6 @@ export const useAuthStore = create<AuthState>()(
       },
       logout: () => {
         set({ user: null, accessToken: null });
-      },
-      isLoggedIn: () => {
-        return get().accessToken !== null;
       },
     }),
     {

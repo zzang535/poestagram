@@ -7,6 +7,8 @@ import { faHeart as faRegularHeart, faComment, faBookmark } from "@fortawesome/f
 import CommentModal from "./CommentModal";
 import { FeedItemProps } from "@/types/feeds";
 import { toggleLikeFeedApi } from "@/apis/feeds";
+import { useAuthStore } from "@/store/authStore";
+import { useRouter } from "next/navigation";
 
 
 export default function FeedItem({
@@ -21,6 +23,10 @@ export default function FeedItem({
   likes_count,
 }: FeedItemProps) {
 
+  const router = useRouter();
+  const accessToken = useAuthStore((s) => s.accessToken);
+
+
   const [isCommentModalOpen, setIsCommentModalOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [currentIsLiked, setCurrentIsLiked] = useState(is_liked);
@@ -33,6 +39,19 @@ export default function FeedItem({
   const handleNextImage = () => {
     setCurrentImageIndex((prev) => (prev < files.length - 1 ? prev + 1 : prev));
   };
+
+
+  const onClickLike = () => {
+    if(!accessToken) {
+      router.push("/login");
+      return;
+    }
+    const newIsLikedState = !currentIsLiked;
+    const newLikeCount = newIsLikedState ? currentLikesCount + 1 : currentLikesCount - 1;
+    setCurrentIsLiked(newIsLikedState);
+    setCurrentLikesCount(newLikeCount);
+    toggleLikeFeedApi(id, currentIsLiked);
+  }
 
   return (
     <>
@@ -129,13 +148,7 @@ export default function FeedItem({
             <div className="flex gap-3">
               <button
                 className="flex items-center gap-[5px] text-2xl text-white"
-                onClick={() => {
-                  const newIsLikedState = !currentIsLiked;
-                  const newLikeCount = newIsLikedState ? currentLikesCount + 1 : currentLikesCount - 1;
-                  setCurrentIsLiked(newIsLikedState);
-                  setCurrentLikesCount(newLikeCount);
-                  toggleLikeFeedApi(id, currentIsLiked);
-                }}
+                onClick={onClickLike}
               >
                 <FontAwesomeIcon
                   icon={currentIsLiked ? faSolidHeart : faRegularHeart}

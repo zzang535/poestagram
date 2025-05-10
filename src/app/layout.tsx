@@ -49,7 +49,8 @@ export default function RootLayout({
   const isCreateActive = pathname === "/create";
   const isProfileActive = pathname.startsWith("/profile");
 
-  const { isLoggedIn, logout, user } = useAuthStore();
+  const accessToken = useAuthStore((s) => s.accessToken);
+  const { logout, user } = useAuthStore();
 
   const getPageTitle = () => {
     if (pathname === '/create') {
@@ -91,13 +92,13 @@ export default function RootLayout({
 
   const handleNavigation = (path: string) => {
     if (path === "/create" ) {
-      if (isLoggedIn()) {
+      if (accessToken) {
         router.push(path);
       } else {
         router.push("/login");
       }
     } else if (path === "/profile") {
-      if (isLoggedIn()) {
+      if (accessToken) {
         router.push(`/profile/${user?.id}`);
       } else {
         router.push("/login");
@@ -179,7 +180,7 @@ export default function RootLayout({
         <SlideMenu 
           isOpen={isMenuOpen}
           onClose={() => setIsMenuOpen(false)}
-          isLoggedIn={isLoggedIn}
+          accessToken={accessToken}
           onLogout={handleLogout}
           onOpenPrivacyModal={() => setIsPrivacyModalOpen(true)}
           onOpenTermsModal={() => setIsTermsModalOpen(true)}

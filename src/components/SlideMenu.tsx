@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 interface SlideMenuProps {
   isOpen: boolean;
   onClose: () => void;
-  isLoggedIn: () => boolean;
+  accessToken: string | null;
   onLogout: () => void;
   onOpenPrivacyModal: () => void;
   onOpenTermsModal: () => void;
@@ -15,7 +15,7 @@ interface SlideMenuProps {
 export default function SlideMenu({ 
   isOpen, 
   onClose, 
-  isLoggedIn, 
+  accessToken, 
   onLogout,
   onOpenPrivacyModal,
   onOpenTermsModal
@@ -83,7 +83,7 @@ export default function SlideMenu({
             </button>
           </div>
           <div className="space-y-4 flex-1">
-            {isLoggedIn() ? (
+            {accessToken ? (
               // 로그인 상태일 때 보여줄 메뉴
               <>
                 <button

@@ -10,15 +10,16 @@ interface AuthRouteProps {
 
 export default function AuthRoute({ children }: AuthRouteProps) {
   const router = useRouter();
-  const isLoggedIn = useAuthStore((state) => state.isLoggedIn());
+  const accessToken = useAuthStore((s) => s.accessToken);
+
 
   useEffect(() => {
-    if (isLoggedIn) {
+    if (accessToken) {
       router.push('/feed');
     }
-  }, [isLoggedIn, router]);
+  }, [accessToken, router]);
 
-  if (isLoggedIn) {
+  if (accessToken) {
     return null;
   }
 
