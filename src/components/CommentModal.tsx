@@ -1,14 +1,9 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
-import { useEffect, useState } from "react";
-
-interface Comment {
-  id: number;
-  username: string;
-  content: string;
-  createdAt: string;
-  profileImage: string;
-}
+import { faHeart as faSolidHeart } from "@fortawesome/free-solid-svg-icons";
+import { faHeart as faRegularHeart } from "@fortawesome/free-regular-svg-icons";
+import { useEffect, useState, useRef } from "react";
+import { Comment, dummyComments } from "@/data/dummy-comments";
 
 interface CommentModalProps {
   isOpen: boolean;
@@ -18,20 +13,34 @@ interface CommentModalProps {
 export default function CommentModal({ isOpen, onClose }: CommentModalProps) {
   const [isVisible, setIsVisible] = useState(false);
   const [shouldRender, setShouldRender] = useState(false);
+  const [comments, setComments] = useState<Comment[]>([]);
+
+  const [translateY, setTranslateY] = useState(0);
+  const [dragStartY, setDragStartY] = useState<number | null>(null);
+  
+  const modalRef = useRef<HTMLDivElement>(null);
+  const translateYRef = useRef(0);
 
   useEffect(() => {
     if (isOpen) {
       setShouldRender(true);
-      document.body.style.overflow = 'hidden';
-      // 모달이 열릴 때 약간의 지연 후 애니메이션 시작
-      setTimeout(() => setIsVisible(true), 100);
+      document.body.style.overflow = 'hidden'; // 모달 열리면 스크롤 방지
+
+      // 모달 애니메이션 처리
+      setTimeout(() => {
+        setIsVisible(true);
+      }, 100);
+
+      setTranslateY(0);
+      translateYRef.current = 0;
+      setComments(dummyComments);
     } else {
       setIsVisible(false);
-      document.body.style.overflow = 'unset';
-      // 애니메이션이 완료된 후 컴포넌트 제거
+      document.body.style.overflow = 'unset'; // 모달 닫히면 스크롤 허용
+
       const timer = setTimeout(() => {
         setShouldRender(false);
-      }, 300); // transition duration과 동일하게 설정
+      }, 300);
       return () => clearTimeout(timer);
     }
 
@@ -40,116 +49,67 @@ export default function CommentModal({ isOpen, onClose }: CommentModalProps) {
     };
   }, [isOpen]);
 
-  if (!shouldRender) return null;
+  // 드래그 시작
+  const handleDragStart = (e: React.TouchEvent | React.MouseEvent) => {
+    const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
+    setDragStartY(clientY);
+  };
 
-  // 임시 댓글 데이터
-  const dummyComments = [
-    {
-      id: 1,
-      username: "user1",
-      content: "정말 멋진 경기였네요!",
-      createdAt: "2024-03-30 14:30",
-      profileImage: "https://i.pravatar.cc/40?img=1",
-    },
-    {
-      id: 2,
-      username: "user2",
-      content: "다음 경기도 기대됩니다.",
-      createdAt: "2024-03-30 14:35",
-      profileImage: "https://i.pravatar.cc/40?img=2",
-    },
-    {
-      id: 3,
-      username: "user3",
-      content: "이번 시즌은 정말 좋은 경기들이 많네요.",
-      createdAt: "2024-03-30 14:40",
-      profileImage: "https://i.pravatar.cc/40?img=3",
-    },
-    {
-      id: 4,
-      username: "user4",
-      content: "선수분들 정말 수고 많으셨습니다!",
-      createdAt: "2024-03-30 14:45",
-      profileImage: "https://i.pravatar.cc/40?img=4",
-    },
-    {
-      id: 5,
-      username: "user5",
-      content: "다음 경기에서도 좋은 모습 보여주세요!",
-      createdAt: "2024-03-30 14:50",
-      profileImage: "https://i.pravatar.cc/40?img=5",
-    },
-    {
-      id: 6,
-      username: "user6",
-      content: "이번 경기 MVP는 누구인가요?",
-      createdAt: "2024-03-30 14:55",
-      profileImage: "https://i.pravatar.cc/40?img=6",
-    },
-    {
-      id: 7,
-      username: "user7",
-      content: "정말 긴장감 넘치는 경기였습니다.",
-      createdAt: "2024-03-30 15:00",
-      profileImage: "https://i.pravatar.cc/40?img=7",
-    },
-    {
-      id: 8,
-      username: "user8",
-      content: "다음 경기 일정은 언제인가요?",
-      createdAt: "2024-03-30 15:05",
-      profileImage: "https://i.pravatar.cc/40?img=8",
-    },
-    {
-      id: 9,
-      username: "user9",
-      content: "이번 시즌 우승은 누구일까요?",
-      createdAt: "2024-03-30 15:10",
-      profileImage: "https://i.pravatar.cc/40?img=9",
-    },
-    {
-      id: 10,
-      username: "user10",
-      content: "선수분들 모두 최고입니다!",
-      createdAt: "2024-03-30 15:15",
-      profileImage: "https://i.pravatar.cc/40?img=10",
-    },
-    {
-      id: 11,
-      username: "user11",
-      content: "다음 경기에서도 좋은 모습 기대합니다.",
-      createdAt: "2024-03-30 15:20",
-      profileImage: "https://i.pravatar.cc/40?img=11",
-    },
-    {
-      id: 12,
-      username: "user12",
-      content: "이번 경기 MVP는 정말 실력이 좋네요.",
-      createdAt: "2024-03-30 15:25",
-      profileImage: "https://i.pravatar.cc/40?img=12",
-    },
-    {
-      id: 13,
-      username: "user13",
-      content: "다음 경기에서도 좋은 모습 보여주세요!",
-      createdAt: "2024-03-30 15:30",
-      profileImage: "https://i.pravatar.cc/40?img=13",
-    },
-    {
-      id: 14,
-      username: "user14",
-      content: "이번 시즌 우승은 누구일까요?",
-      createdAt: "2024-03-30 15:35",
-      profileImage: "https://i.pravatar.cc/40?img=14",
-    },
-    {
-      id: 15,
-      username: "user15",
-      content: "선수분들 모두 최고입니다!",
-      createdAt: "2024-03-30 15:40",
-      profileImage: "https://i.pravatar.cc/40?img=15",
-    },
-  ];
+  // 드래그 중
+  const handleDrag = (e: TouchEvent | MouseEvent) => {
+    if (dragStartY === null) return;
+    const clientY = 'touches' in e ? (e as TouchEvent).touches[0].clientY : (e as MouseEvent).clientY;
+    const deltaY = clientY - dragStartY;
+    if (deltaY > 0) {
+      setTranslateY(deltaY); // translateY 값 업데이트
+      translateYRef.current = deltaY;
+    }
+  };
+
+  // 드래그 끝
+  const handleDragEnd = () => {
+    if (translateYRef.current > 100) { // 100px 이상 드래그 시 닫기
+      onClose();
+      translateYRef.current = 0;
+    } else {
+      setTranslateY(0); // 100px 미만 드래그 시 원래 위치로 복귀
+      translateYRef.current = 0;
+    }
+    setDragStartY(null);
+  };
+
+  useEffect(() => {
+    if (dragStartY !== null) {
+      window.addEventListener('mousemove', handleDrag);
+      window.addEventListener('touchmove', handleDrag);
+      window.addEventListener('mouseup', handleDragEnd);
+      window.addEventListener('touchend', handleDragEnd);
+
+      return () => {
+        window.removeEventListener('mousemove', handleDrag);
+        window.removeEventListener('touchmove', handleDrag);
+        window.removeEventListener('mouseup', handleDragEnd);
+        window.removeEventListener('touchend', handleDragEnd);
+      };
+    }
+  }, [dragStartY]);
+
+  const toggleLike = (commentId: number) => {
+    setComments(prevComments => 
+      prevComments.map(comment => {
+        if (comment.id === commentId) {
+          return {
+            ...comment,
+            isLiked: !comment.isLiked,
+            likeCount: comment.isLiked ? comment.likeCount - 1 : comment.likeCount + 1,
+          };
+        }
+        return comment;
+      })
+    );
+  };
+
+  if (!shouldRender) return null;
 
   return (
     <div className="fixed inset-0 z-50 h-[100dvh]">
@@ -163,42 +123,77 @@ export default function CommentModal({ isOpen, onClose }: CommentModalProps) {
         onClick={onClose} 
       />
       <div 
-        className="fixed left-0 right-0 bottom-0 bg-black rounded-t-2xl mx-auto max-w-[1280px] h-[calc(100dvh-60px)]"
+        ref={modalRef}
+        className="
+          fixed left-0 right-0 bottom-0 bg-zinc-900 
+          rounded-t-[10px] mx-auto max-w-[1280px] 
+          h-[calc(100dvh-30px)]
+        "
         style={{
-          transform: isVisible ? 'translateY(0)' : 'translateY(100%)',
+          transform: `translateY(${translateY}px) ${!isVisible ? 'translateY(100%)' : ''}`,
           opacity: isVisible ? 1 : 0,
-          transition: 'transform 0.3s ease, opacity 0.3s ease'
+          transition: dragStartY === null ? 'transform 0.3s ease, opacity 0.3s ease' : 'none'
         }}
       >
         <div className="flex flex-col h-[100dvh]">
-
           {/* 댓글 헤더  */}
-          <div className="
-                  fixed top-0 left-0 right-0 
-                  flex items-center justify-between p-4 
-                  border-b border-gray-800 bg-black
-                ">
-            <h2 className="text-lg font-semibold text-white">댓글</h2>
-            <button onClick={onClose} className="text-gray-400 hover:text-white">
-              <FontAwesomeIcon icon={faXmark} className="text-xl" />
-            </button>
+          <div 
+            className="
+              fixed top-0 left-0 right-0 
+              flex flex-col items-center 
+              border-b border-gray-800 bg-zinc-900
+              rounded-t-[10px]
+              pt-2 pb-3
+              cursor-grab active:cursor-grabbing
+            "
+            onMouseDown={handleDragStart}
+            onTouchStart={handleDragStart}
+          >
+            {/* Drawer Handle */}
+            <div className="w-[36px] h-[4px] bg-gray-600 rounded-full mb-4" />
+            
+            <div className="w-full px-[16px] flex items-center justify-between">
+              <div className="w-[24px]" /> {/* 좌측 여백 */}
+              <h2 className="text-lg font-semibold text-white">댓글</h2>
+              <button onClick={onClose} className="text-gray-400 hover:text-white w-[24px]">
+                <FontAwesomeIcon icon={faXmark} className="text-xl" />
+              </button>
+            </div>
           </div>
 
-          <div className="flex-1 overflow-y-auto py-[60px]">
-            {dummyComments.map((comment) => (
-              <div key={comment.id} className="p-4 border-b border-gray-800">
-                <div className="flex items-start space-x-3">
-                  <img 
-                    src={comment.profileImage} 
-                    alt={`${comment.username}의 프로필`}
-                    className="w-10 h-10 rounded-full"
-                  />
-                  <div className="flex-1">
-                    <div className="flex items-center mb-2">
-                      <span className="font-semibold text-white">{comment.username}</span>
-                      <span className="text-xs text-gray-400 ml-2">{comment.createdAt}</span>
+          <div className="flex-1 overflow-y-auto py-[80px]">
+            {comments.map((comment) => (
+              <div key={comment.id} className="p-[16px]">
+                <div className="flex items-start gap-[10px]">
+                  <div className="flex-shrink-0">
+                    <img 
+                      src={comment.profileImage} 
+                      alt={`${comment.username}의 프로필`}
+                      className="w-[40px] h-[40px] rounded-full"
+                    />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center mb-[2px]">
+                      <span className="text-sm font-semibold text-white">{comment.username}</span>
+                      <span className="ml-[6px] text-xs text-gray-400">{comment.createdAt}</span>
                     </div>
-                    <p className="text-white">{comment.content}</p>
+                    <p className="text-white text-sm break-keep">{comment.content}</p>
+                  </div>
+                  <div className="flex flex-col items-center flex-shrink-0 pt-[6px]">
+                    <button 
+                      onClick={() => toggleLike(comment.id)}
+                      className="text-sm"
+                    >
+                      <FontAwesomeIcon 
+                        icon={comment.isLiked ? faSolidHeart : faRegularHeart} 
+                        className={comment.isLiked ? "text-red-500" : "text-gray-400"}
+                      />
+                    </button>
+                    {comment.likeCount > 0 && (
+                      <span className="text-xs text-gray-400">
+                        {comment.likeCount}
+                      </span>
+                    )}
                   </div>
                 </div>
               </div>
@@ -209,15 +204,29 @@ export default function CommentModal({ isOpen, onClose }: CommentModalProps) {
           <div className="
                 fixed bottom-0 left-0 right-0 p-4 
                 border-t border-gray-800 z-50
-                bg-black
+                bg-zinc-900
               ">
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center gap-[10px]">
+              <div className="flex-shrink-0">
+                <img 
+                  src="https://i.pravatar.cc/40?img=1" 
+                  alt="내 프로필"
+                  className="w-[40px] h-[40px] rounded-full"
+                />
+              </div>
               <input
                 type="text"
                 placeholder="댓글을 입력하세요..."
-                className="flex-1 bg-gray-900 text-white rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-500"
+                className="
+                  flex-1 bg-zinc-900 text-white rounded-full 
+                  px-4 py-2 
+                  focus:outline-none focus:ring-1 focus:ring-red-500"
               />
-              <button className="text-red-500 font-semibold px-4 py-2">게시</button>
+              <button className="bg-red-500 text-white rounded-full p-2 flex-shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z" clipRule="evenodd" />
+                </svg>
+              </button>
             </div>
           </div>
         </div>

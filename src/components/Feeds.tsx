@@ -156,8 +156,6 @@ export default function Feeds({ userId }: FeedsProps) {
     hasMoreRef.current = hasMore;
   }, [hasMore]);
 
- 
-
   
   if (!initDone) {
     return (
