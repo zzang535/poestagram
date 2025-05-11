@@ -4,19 +4,23 @@ import { faHeart as faSolidHeart } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as faRegularHeart } from "@fortawesome/free-regular-svg-icons";
 import { useEffect, useState, useRef } from "react";
 import { Comment, dummyComments } from "@/data/dummy-comments";
+import { createComment } from "@/apis/feeds";
 
 interface CommentModalProps {
   isOpen: boolean;
   onClose: () => void;
+  feedId: number;
 }
 
-export default function CommentModal({ isOpen, onClose }: CommentModalProps) {
+export default function CommentModal({ isOpen, onClose, feedId }: CommentModalProps) {
   const [isVisible, setIsVisible] = useState(false);
   const [shouldRender, setShouldRender] = useState(false);
   const [comments, setComments] = useState<Comment[]>([]);
-
+  const [commentInput, setCommentInput] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   
   const modalRef = useRef<HTMLDivElement>(null);
+  console.log(feedId)
 
   useEffect(() => {
     if (isOpen) {
@@ -62,6 +66,35 @@ export default function CommentModal({ isOpen, onClose }: CommentModalProps) {
         return comment;
       })
     );
+  };
+
+  const handleSubmitComment = async () => {
+    if (!commentInput.trim() || isSubmitting) return;
+
+    try {
+      setIsSubmitting(true);
+      const newComment = await createComment(feedId, commentInput.trim());
+
+      // 낙관적 업데이트
+      setComments(prev => [newComment, ...prev]);
+      setCommentInput("");
+
+      // 서버 동기화 로직 추가
+      // ..
+      // ..
+    } catch (error) {
+      console.error("Failed to create comment:", error);
+      // TODO: 에러 처리
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSubmitComment();
+    }
   };
 
   if (!shouldRender) return null;
@@ -112,7 +145,7 @@ export default function CommentModal({ isOpen, onClose }: CommentModalProps) {
                 <div className="flex items-start gap-[10px]">
                   <div className="flex-shrink-0">
                     <img 
-                      src={comment.profileImage} 
+                      src={comment.profileImage || "/default-profile.svg"} 
                       alt={`${comment.username}의 프로필`}
                       className="w-[40px] h-[40px] rounded-full"
                     />
@@ -158,6 +191,9 @@ export default function CommentModal({ isOpen, onClose }: CommentModalProps) {
               <input
                 type="text"
                 placeholder="댓글을 입력하세요..."
+                value={commentInput}
+                onChange={(e) => setCommentInput(e.target.value)}
+                onKeyPress={handleKeyPress}
                 className="
                   w-full
                   px-4 py-2 
@@ -166,7 +202,18 @@ export default function CommentModal({ isOpen, onClose }: CommentModalProps) {
               />
             </div>
             <div className="flex-shrink-0">
-              <button className="bg-red-500 text-white rounded-full p-2">
+              <button 
+                className={`
+                  rounded-full p-2
+                  ${isSubmitting || !commentInput.trim() 
+                    ? 'bg-zinc-700 cursor-not-allowed' 
+                    : 'bg-red-500 hover:bg-red-600'
+                  }
+                  text-white transition-colors
+                `}
+                onClick={handleSubmitComment}
+                disabled={isSubmitting || !commentInput.trim()}
+              >
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z" clipRule="evenodd" />
                 </svg>

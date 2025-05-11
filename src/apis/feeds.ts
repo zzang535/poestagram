@@ -1,5 +1,6 @@
 import { useAuthStore } from "@/store/authStore";
 import { FeedCreate, FeedResponse, FeedListResponse } from "@/types/feeds";
+import { CommentCreate, CommentResponse } from "@/types/comments";
 
 // --- 단일 피드 상세 정보 타입 (가정) ---
 // 실제 API 응답 구조에 맞게 수정 필요
@@ -125,3 +126,23 @@ export async function toggleLikeFeedApi(feedId: number, currentIsLiked: boolean)
     console.error(`${action} API 호출 오류:`, error);
   }
 }
+
+
+
+
+export async function createComment(feedId: number, content: string): Promise<CommentResponse> {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/feeds/${feedId}/comments`, {
+    method: 'POST',
+    headers: {
+      "Authorization": `Bearer ${useAuthStore.getState().accessToken}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ content }),
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to create comment');
+  }
+
+  return response.json();
+} 

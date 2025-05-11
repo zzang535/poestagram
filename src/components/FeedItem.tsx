@@ -58,7 +58,7 @@ export default function FeedItem({
       <article className="bg-black rounded-lg mb-4 overflow-hidden">
         <div className="flex items-center p-4 border-b border-gray-800">
           <img
-            src={"/no-profile.svg"}
+            src={"/default-profile.svg"}
             alt={`${user?.nickname} 프로필`}
             className="w-10 h-10 rounded-full"
           />
@@ -172,6 +172,7 @@ export default function FeedItem({
       </article>
 
       <CommentModal
+        feedId={id}
         isOpen={isCommentModalOpen}
         onClose={() => setIsCommentModalOpen(false)}
       />

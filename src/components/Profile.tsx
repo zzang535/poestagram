@@ -66,7 +66,7 @@ export default function Profile({ userId }: ProfileProps) {
         <div className="flex items-center space-x-6">
           <div className="relative">
             <img
-              src="/no-profile.svg"
+              src="/default-profile.svg"
               alt="프로필 이미지"
               className="w-20 h-20 rounded-full object-cover bg-gray-700"
             />
