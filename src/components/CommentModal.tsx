@@ -5,7 +5,8 @@ import { faHeart as faRegularHeart } from "@fortawesome/free-regular-svg-icons";
 import { useEffect, useState, useRef } from "react";
 import { Comment, dummyComments } from "@/data/dummy-comments";
 import { createComment } from "@/apis/feeds";
-
+import { useAuthStore } from "@/store/authStore";
+import { useRouter } from "next/navigation";
 interface CommentModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -13,6 +14,8 @@ interface CommentModalProps {
 }
 
 export default function CommentModal({ isOpen, onClose, feedId }: CommentModalProps) {
+  const accessToken = useAuthStore((s) => s.accessToken);
+  const router = useRouter();
   const [isVisible, setIsVisible] = useState(false);
   const [shouldRender, setShouldRender] = useState(false);
   const [comments, setComments] = useState<Comment[]>([]);
@@ -54,6 +57,10 @@ export default function CommentModal({ isOpen, onClose, feedId }: CommentModalPr
 
 
   const toggleLike = (commentId: number) => {
+    if(!accessToken) {
+      router.push("/login");
+      return;
+    }
     setComments(prevComments => 
       prevComments.map(comment => {
         if (comment.id === commentId) {
@@ -179,9 +186,10 @@ export default function CommentModal({ isOpen, onClose, feedId }: CommentModalPr
           </div>
 
           {/* 댓글 입력 영역 */}
-          <div className="flex items-center gap-[10px] p-4">
-            <div className="flex-shrink-0">
-              <img 
+          {accessToken && (
+            <div className="flex items-center gap-[10px] p-4">
+              <div className="flex-shrink-0">
+                <img 
                 src="https://i.pravatar.cc/40?img=1" 
                 alt="내 프로필"
                 className="w-[40px] h-[40px] rounded-full"
@@ -220,6 +228,7 @@ export default function CommentModal({ isOpen, onClose, feedId }: CommentModalPr
               </button>
             </div>
           </div>
+          )}
 
 
           </div>

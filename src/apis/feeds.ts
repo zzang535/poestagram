@@ -1,6 +1,7 @@
 import { useAuthStore } from "@/store/authStore";
 import { FeedCreate, FeedResponse, FeedListResponse } from "@/types/feeds";
 import { CommentCreate, CommentResponse } from "@/types/comments";
+import { handleResponse } from "./handleResponse";
 
 // --- 단일 피드 상세 정보 타입 (가정) ---
 // 실제 API 응답 구조에 맞게 수정 필요
@@ -20,7 +21,6 @@ interface FeedDetails {
  * @returns 피드 생성 응답
  */
 export const createFeed = async (feedData: FeedCreate): Promise<FeedResponse> => {
-  try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/feeds`, {
       method: "POST",
       headers: {
@@ -29,17 +29,7 @@ export const createFeed = async (feedData: FeedCreate): Promise<FeedResponse> =>
       },
       body: JSON.stringify(feedData),
     });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.detail || "피드 생성 중 오류가 발생했습니다.");
-    }
-
-    return await response.json();
-  } catch (error) {
-    console.error("피드 생성 중 오류 발생:", error);
-    throw error;
-  }
+    return handleResponse(response, "피드 생성 중 오류 발생");
 };
 
 /**
@@ -49,7 +39,6 @@ export const createFeed = async (feedData: FeedCreate): Promise<FeedResponse> =>
  * @returns 피드 목록 응답
  */
 export const getUserFeeds = async (userId: number, skip: number = 0, limit: number = 10): Promise<FeedListResponse> => {
-  try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/api/users/${userId}/feeds?offset=${skip}&limit=${limit}`,
       {
@@ -60,17 +49,7 @@ export const getUserFeeds = async (userId: number, skip: number = 0, limit: numb
         },
       }
     );
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.detail || "피드 목록을 가져오는 중 오류가 발생했습니다.");
-    }
-
-    return await response.json();
-  } catch (error) {
-    console.error("피드 목록을 가져오는 중 오류 발생:", error);
-    throw error;
-  }
+    return handleResponse(response, "피드 목록을 가져오는 중 오류가 발생했습니다.");
 };
 
 export const getAllFeeds = async (offset: number = 0, limit: number = 20): Promise<FeedListResponse> => {
@@ -88,11 +67,7 @@ export const getAllFeeds = async (offset: number = 0, limit: number = 20): Promi
     headers: headers
   });
 
-  if (!response.ok) {
-    const errorData = await response.json().catch(() => ({ detail: response.statusText }));
-    throw new Error(errorData.detail || '피드를 불러오는 중 오류가 발생했습니다.');
-  }
-  return response.json();
+  return handleResponse(response, "피드를 불러오는 중 오류가 발생했습니다.");
 };
 
 export const getFeedIndex = async (userId: number, feedId: number): Promise<{ index: number }> => {
@@ -139,10 +114,5 @@ export async function createComment(feedId: number, content: string): Promise<Co
     },
     body: JSON.stringify({ content }),
   });
-
-  if (!response.ok) {
-    throw new Error('Failed to create comment');
-  }
-
-  return response.json();
+  return handleResponse(response, "댓글 생성 중 오류가 발생했습니다.");
 } 
