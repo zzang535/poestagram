@@ -1,13 +1,17 @@
+import { useEffect, useState, useRef } from "react";
+import { useRouter } from "next/navigation";
+
+import { createComment, getComments, deleteComment } from "@/apis/feeds";
+import { useAuthStore } from "@/store/authStore";
+import { Comment } from "@/types/comments";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as faSolidHeart } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as faRegularHeart } from "@fortawesome/free-regular-svg-icons";
-import { useEffect, useState, useRef } from "react";
+import { faEllipsis } from "@fortawesome/free-solid-svg-icons";
+
 import { dummyComments } from "@/data/dummy-comments";
-import { Comment } from "@/types/comments";
-import { createComment, getComments } from "@/apis/feeds";
-import { useAuthStore } from "@/store/authStore";
-import { useRouter } from "next/navigation";
 
 
 const topBarHeight = 60;
@@ -20,6 +24,7 @@ interface CommentModalProps {
 
 export default function CommentModal({ isOpen, onClose, feedId }: CommentModalProps) {
   const accessToken = useAuthStore((s) => s.accessToken);
+  const user = useAuthStore((s) => s.user);
   const router = useRouter();
   const [isVisible, setIsVisible] = useState(false);
   const [shouldRender, setShouldRender] = useState(false);
@@ -28,8 +33,24 @@ export default function CommentModal({ isOpen, onClose, feedId }: CommentModalPr
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [activeMenuCommentId, setActiveMenuCommentId] = useState<number | null>(null);
   
   const modalRef = useRef<HTMLDivElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  // 메뉴 외부 클릭 감지
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setActiveMenuCommentId(null);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   // 댓글 목록 가져오기
   const fetchComments = async () => {
@@ -133,6 +154,23 @@ export default function CommentModal({ isOpen, onClose, feedId }: CommentModalPr
     }
   };
 
+  // 댓글 삭제 함수
+  const handleDeleteComment = async (commentId: number) => {
+    try {
+      // 삭제 API 호출
+      await deleteComment(commentId);
+      
+      // 삭제 후 목록 갱신
+      await fetchComments();
+      
+      // 메뉴 닫기
+      setActiveMenuCommentId(null);
+    } catch (error) {
+      console.error("댓글 삭제 실패:", error);
+      alert("댓글 삭제 중 오류가 발생했습니다.");
+    }
+  };
+
   if (!shouldRender) return null;
 
   return (
@@ -211,27 +249,53 @@ export default function CommentModal({ isOpen, onClose, feedId }: CommentModalPr
                     />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center mb-[2px]">
+                    <div className="flex justify-between items-center mb-[2px]">
                       <span className="text-sm font-semibold text-white">{comment.user.nickname}</span>
-                      <span className="ml-[6px] text-xs text-gray-400">{comment.created_at}</span>
+                      {accessToken && user && user.id === comment.user.id && (
+                        <div className="relative">
+                          <button 
+                            className="text-gray-400 hover:text-white"
+                            onClick={() => setActiveMenuCommentId(activeMenuCommentId === comment.id ? null : comment.id)}
+                          >
+                            <FontAwesomeIcon icon={faEllipsis} className="text-sm" />
+                          </button>
+                          
+                          {activeMenuCommentId === comment.id && (
+                            <div 
+                              ref={menuRef}
+                              className="absolute right-0 mt-1 w-24 bg-zinc-800 rounded-md shadow-lg z-10 overflow-hidden"
+                            >
+                              <button
+                                onClick={() => handleDeleteComment(comment.id)}
+                                className="w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-zinc-700 transition-colors"
+                              >
+                                삭제
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                      )}
                     </div>
                     <p className="text-white text-sm break-keep">{comment.content}</p>
-                  </div>
-                  <div className="flex flex-col items-center flex-shrink-0 pt-[6px]">
-                    <button 
-                      onClick={() => toggleLike(comment.id)}
-                      className="text-sm"
-                    >
-                      <FontAwesomeIcon 
-                        icon={comment.isLiked ? faSolidHeart : faRegularHeart} 
-                        className={comment.isLiked ? "text-red-500" : "text-gray-400"}
-                      />
-                    </button>
-                    {comment.likeCount > 0 && (
-                      <span className="text-xs text-gray-400">
-                        {comment.likeCount}
-                      </span>
-                    )}
+                    <div className="flex justify-between items-center">
+                      <span className="text-xs text-gray-400">{comment.created_at}</span>
+                      <div>
+                        <button 
+                          onClick={() => toggleLike(comment.id)}
+                          className="text-sm"
+                        >
+                          <FontAwesomeIcon 
+                            icon={comment.isLiked ? faSolidHeart : faRegularHeart} 
+                            className={comment.isLiked ? "text-red-500" : "text-gray-400"}
+                          />
+                        </button>
+                         {comment.likeCount > 0 && (
+                            <span className="text-xs text-gray-400">
+                              {comment.likeCount}
+                            </span>
+                          )}
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>

@@ -133,4 +133,26 @@ export async function getComments(feedId: number, skip: number = 0, limit: numbe
     console.error('Error fetching comments:', error);
     throw error;
   }
+}
+
+// 댓글 삭제 함수
+export async function deleteComment(commentId: number) {
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/comments/${commentId}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${useAuthStore.getState().accessToken}`,
+      },
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({ detail: "댓글 삭제 중 오류가 발생했습니다." }));
+      throw new Error(errorData.detail || "댓글 삭제 중 오류가 발생했습니다.");
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('댓글 삭제 오류:', error);
+    throw error;
+  }
 } 
