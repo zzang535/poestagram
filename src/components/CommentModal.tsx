@@ -3,10 +3,15 @@ import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as faSolidHeart } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as faRegularHeart } from "@fortawesome/free-regular-svg-icons";
 import { useEffect, useState, useRef } from "react";
-import { Comment, dummyComments } from "@/data/dummy-comments";
-import { createComment } from "@/apis/feeds";
+import { dummyComments } from "@/data/dummy-comments";
+import { Comment } from "@/types/comments";
+import { createComment, getComments } from "@/apis/feeds";
 import { useAuthStore } from "@/store/authStore";
 import { useRouter } from "next/navigation";
+
+
+const topBarHeight = 60;
+
 interface CommentModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -21,9 +26,33 @@ export default function CommentModal({ isOpen, onClose, feedId }: CommentModalPr
   const [comments, setComments] = useState<Comment[]>([]);
   const [commentInput, setCommentInput] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   
   const modalRef = useRef<HTMLDivElement>(null);
-  console.log(feedId)
+
+  // 댓글 목록 가져오기
+  const fetchComments = async () => {
+    if (!feedId) return;
+
+    try {
+      setIsLoading(true);
+      setError(null);
+      const response = await getComments(feedId);
+      setComments(response.comments);
+    } catch (error) {
+      console.error("댓글 로딩 실패:", error);
+      setError("댓글을 불러오는 중 오류가 발생했습니다.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (isOpen && feedId) {
+      fetchComments();
+    }
+  }, [isOpen, feedId]);
 
   useEffect(() => {
     if (isOpen) {
@@ -35,11 +64,9 @@ export default function CommentModal({ isOpen, onClose, feedId }: CommentModalPr
         setIsVisible(true);
       }, 100);
 
-      // setTranslateY(0);
       if (modalRef.current) {
         modalRef.current.style.transform = `translateY(0px)`;
       }
-      setComments(dummyComments);
     } else {
       setIsVisible(false);
       document.body.style.overflow = 'unset'; // 모달 닫히면 스크롤 허용
@@ -78,20 +105,22 @@ export default function CommentModal({ isOpen, onClose, feedId }: CommentModalPr
   const handleSubmitComment = async () => {
     if (!commentInput.trim() || isSubmitting) return;
 
+    if (!accessToken) {
+      router.push("/login");
+      return;
+    }
+
     try {
       setIsSubmitting(true);
-      const newComment = await createComment(feedId, commentInput.trim());
-
-      // 낙관적 업데이트
-      setComments(prev => [newComment, ...prev]);
+      await createComment(feedId, commentInput.trim());
+      
+      // 댓글 입력 초기화
       setCommentInput("");
-
-      // 서버 동기화 로직 추가
-      // ..
-      // ..
+      
+      // 댓글 목록 새로 불러오기
+      await fetchComments();
     } catch (error) {
       console.error("Failed to create comment:", error);
-      // TODO: 에러 처리
     } finally {
       setIsSubmitting(false);
     }
@@ -124,12 +153,12 @@ export default function CommentModal({ isOpen, onClose, feedId }: CommentModalPr
           absolute left-0 right-0 bottom-0
           bg-zinc-900 
           rounded-t-[20px] mx-auto max-w-[1280px] 
-          h-[calc(100dvh-30px)]
         "
         style={{
           transform: `${!isVisible ? 'translateY(100%)' : ''}`,
           opacity: isVisible ? 1 : 0,
-          transition: 'transform 0.3s ease, opacity 0.3s ease'
+          transition: 'transform 0.3s ease, opacity 0.3s ease',
+          height: `calc(100dvh - ${topBarHeight}px)`
         }}
       >
         <div className="flex flex-col h-full">
@@ -147,20 +176,44 @@ export default function CommentModal({ isOpen, onClose, feedId }: CommentModalPr
                 flex-1 
                 overflow-y-auto 
               ">
+            {isLoading && (
+              <div className="flex items-center justify-center h-40">
+                <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-red-500"></div>
+              </div>
+            )}
+
+            {error && (
+              <div className="p-4 text-center text-red-500">
+                {error}
+                <button
+                  onClick={fetchComments}
+                  className="ml-2 underline hover:text-red-400"
+                >
+                  다시 시도
+                </button>
+              </div>
+            )}
+
+            {!isLoading && !error && comments.length === 0 && (
+              <div className="p-4 text-center text-gray-400">
+                첫 댓글을 남겨보세요.
+              </div>
+            )}
+
             {comments.map((comment) => (
               <div key={comment.id} className="p-[16px]">
                 <div className="flex items-start gap-[10px]">
                   <div className="flex-shrink-0">
                     <img 
-                      src={comment.profileImage || "/default-profile.svg"} 
-                      alt={`${comment.username}의 프로필`}
+                      src={comment.user.profileImage || "/default-profile.svg"} 
+                      alt={`${comment.user.nickname}의 프로필`}
                       className="w-[40px] h-[40px] rounded-full"
                     />
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center mb-[2px]">
-                      <span className="text-sm font-semibold text-white">{comment.username}</span>
-                      <span className="ml-[6px] text-xs text-gray-400">{comment.createdAt}</span>
+                      <span className="text-sm font-semibold text-white">{comment.user.nickname}</span>
+                      <span className="ml-[6px] text-xs text-gray-400">{comment.created_at}</span>
                     </div>
                     <p className="text-white text-sm break-keep">{comment.content}</p>
                   </div>
@@ -229,7 +282,6 @@ export default function CommentModal({ isOpen, onClose, feedId }: CommentModalPr
             </div>
           </div>
           )}
-
 
           </div>
         </div>

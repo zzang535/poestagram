@@ -11,3 +11,16 @@ export interface CommentResponse {
   likeCount: number;
   isLiked: boolean;
 }
+
+export interface Comment {
+  id: number;
+  content: string;
+  created_at: string;
+  likeCount: number;
+  isLiked: boolean;
+  user: {
+    id: number;
+    nickname: string;
+    profileImage: string;
+  };
+}

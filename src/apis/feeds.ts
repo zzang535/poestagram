@@ -102,9 +102,6 @@ export async function toggleLikeFeedApi(feedId: number, currentIsLiked: boolean)
   }
 }
 
-
-
-
 export async function createComment(feedId: number, content: string): Promise<CommentResponse> {
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/feeds/${feedId}/comments`, {
     method: 'POST',
@@ -115,4 +112,25 @@ export async function createComment(feedId: number, content: string): Promise<Co
     body: JSON.stringify({ content }),
   });
   return handleResponse(response, "댓글 생성 중 오류가 발생했습니다.");
+}
+
+// 댓글 관련 함수
+export async function getComments(feedId: number, skip: number = 0, limit: number = 50) {
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/feeds/${feedId}/comments?skip=${skip}&limit=${limit}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch comments');
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching comments:', error);
+    throw error;
+  }
 } 
