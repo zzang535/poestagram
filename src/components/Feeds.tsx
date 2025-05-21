@@ -1,11 +1,11 @@
 "use client";
-
 import { useState, useEffect, useRef } from "react";
 import { useSearchParams } from "next/navigation";
-import FeedItem from "@/components/FeedItem";
 import { getUserFeeds, getAllFeeds, getFeedIndex } from "@/apis/feeds";
-import { Feed, FeedItemProps } from "@/types/feeds";
 import { useAuthStore } from "@/store/authStore";
+import FeedItem from "@/components/FeedItem";
+import { Feed, FeedItemProps } from "@/types/feeds";
+import { fetchWithRetry } from "@/utils/ferch-utils";
 interface FeedsProps {
   userId?: number;
 }
@@ -71,9 +71,16 @@ export default function Feeds({ userId }: FeedsProps) {
     await new Promise(resolve => setTimeout(resolve, 1000));
 
     try {
-      const res = userId
-        ? await getUserFeeds(userId, offsetVal, limitVal)
-        : await getAllFeeds(offsetVal, limitVal);
+      const fetchFn = () => {
+        if (userId) {
+          return getUserFeeds(userId, offsetVal, limitVal);
+        } else {
+          return getAllFeeds(offsetVal, limitVal);
+        }
+      };
+  
+      // fetch 실패한 경우 1번더 시도
+      const res = await fetchWithRetry(fetchFn);
 
       console.log(res);
 
