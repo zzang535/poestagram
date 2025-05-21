@@ -16,8 +16,8 @@ export interface Comment {
   id: number;
   content: string;
   created_at: string;
-  likeCount: number;
-  isLiked: boolean;
+  likes_count: number;
+  is_liked: boolean;
   user: {
     id: number;
     nickname: string;

@@ -1,7 +1,7 @@
 import { useAuthStore } from "@/store/authStore";
 import { FeedCreate, FeedResponse, FeedListResponse } from "@/types/feeds";
-import { CommentCreate, CommentResponse } from "@/types/comments";
 import { handleResponse } from "./handleResponse";
+import { fetchWithRetry } from "@/utils/ferch-utils";
 
 // --- 단일 피드 상세 정보 타입 (가정) ---
 // 실제 API 응답 구조에 맞게 수정 필요
@@ -102,57 +102,4 @@ export async function toggleLikeFeedApi(feedId: number, currentIsLiked: boolean)
   }
 }
 
-export async function createComment(feedId: number, content: string): Promise<CommentResponse> {
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/feeds/${feedId}/comments`, {
-    method: 'POST',
-    headers: {
-      "Authorization": `Bearer ${useAuthStore.getState().accessToken}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ content }),
-  });
-  return handleResponse(response, "댓글 생성 중 오류가 발생했습니다.");
-}
-
-// 댓글 관련 함수
-export async function getComments(feedId: number, skip: number = 0, limit: number = 50) {
-  try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/feeds/${feedId}/comments?skip=${skip}&limit=${limit}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error('Failed to fetch comments');
-    }
-
-    return await response.json();
-  } catch (error) {
-    console.error('Error fetching comments:', error);
-    throw error;
-  }
-}
-
-// 댓글 삭제 함수
-export async function deleteComment(commentId: number) {
-  try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/comments/${commentId}`, {
-      method: 'DELETE',
-      headers: {
-        'Authorization': `Bearer ${useAuthStore.getState().accessToken}`,
-      },
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({ detail: "댓글 삭제 중 오류가 발생했습니다." }));
-      throw new Error(errorData.detail || "댓글 삭제 중 오류가 발생했습니다.");
-    }
-
-    return await response.json();
-  } catch (error) {
-    console.error('댓글 삭제 오류:', error);
-    throw error;
-  }
-} 
+ 

@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 
-import { createComment, getComments, deleteComment } from "@/apis/feeds";
+import { createComment, getComments, deleteComment, toggleCommentLikeApi } from "@/apis/comments";
 import { useAuthStore } from "@/store/authStore";
 import { Comment } from "@/types/comments";
 
@@ -60,6 +60,7 @@ export default function CommentModal({ isOpen, onClose, feedId }: CommentModalPr
       setIsLoading(true);
       setError(null);
       const response = await getComments(feedId);
+      console.log(response);
       setComments(response.comments);
     } catch (error) {
       console.error("댓글 로딩 실패:", error);
@@ -104,23 +105,50 @@ export default function CommentModal({ isOpen, onClose, feedId }: CommentModalPr
   }, [isOpen]);
 
 
+  // 낙관적 업데이트를 적용한 좋아요 토글 함수
   const toggleLike = (commentId: number) => {
     if(!accessToken) {
       router.push("/login");
       return;
     }
+    
+    // 현재 상태 확인
+    const comment = comments.find(c => c.id === commentId);
+    if (!comment) return;
+    
+    // 낙관적 업데이트
     setComments(prevComments => 
       prevComments.map(comment => {
         if (comment.id === commentId) {
           return {
             ...comment,
-            isLiked: !comment.isLiked,
-            likeCount: comment.isLiked ? comment.likeCount - 1 : comment.likeCount + 1,
+            is_liked: !comment.is_liked,
+            likes_count: comment.is_liked ? comment.likes_count - 1 : comment.likes_count + 1,
           };
         }
         return comment;
       })
     );
+    
+    // API 호출
+    toggleCommentLikeApi(commentId, comment.is_liked)
+      .then(success => {
+        if (!success) {
+          // API 호출 실패 시 원래 상태로 되돌림
+          setComments(prevComments => 
+            prevComments.map(c => {
+              if (c.id === commentId) {
+                return {
+                  ...c,
+                  is_liked: comment.is_liked,
+                  likes_count: comment.likes_count,
+                };
+              }
+              return c;
+            })
+          );
+        }
+      });
   };
 
   const handleSubmitComment = async () => {
@@ -276,24 +304,24 @@ export default function CommentModal({ isOpen, onClose, feedId }: CommentModalPr
                         </div>
                       )}
                     </div>
-                    <p className="text-white text-sm break-keep">{comment.content}</p>
-                    <div className="flex justify-between items-center">
-                      <span className="text-xs text-gray-400">{comment.created_at}</span>
+                    <div className="flex justify-between items-center gap-[10px]">
                       <div>
+                        <p className="text-white text-sm break-keep">{comment.content}</p>
+                        <span className="text-xs text-gray-400">{comment.created_at}</span>
+                      </div>
+                      <div className="flex flex-col gap-[2px]">
                         <button 
                           onClick={() => toggleLike(comment.id)}
                           className="text-sm"
                         >
                           <FontAwesomeIcon 
-                            icon={comment.isLiked ? faSolidHeart : faRegularHeart} 
-                            className={comment.isLiked ? "text-red-500" : "text-gray-400"}
+                            icon={comment.is_liked ? faSolidHeart : faRegularHeart} 
+                            className={comment.is_liked ? "text-red-500" : "text-gray-400"}
                           />
                         </button>
-                         {comment.likeCount > 0 && (
-                            <span className="text-xs text-gray-400">
-                              {comment.likeCount}
-                            </span>
-                          )}
+                        <span className="text-xs text-gray-400 h-[16px] min-w-[14px] text-center">
+                          {comment.likes_count > 0 ? comment.likes_count : ''}
+                        </span>
                       </div>
                     </div>
                   </div>
