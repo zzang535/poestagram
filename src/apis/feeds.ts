@@ -72,10 +72,7 @@ export const getAllFeeds = async (offset: number = 0, limit: number = 20): Promi
 
 export const getFeedIndex = async (userId: number, feedId: number): Promise<{ index: number }> => {
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/${userId}/feeds/index?feed_id=${feedId}`);
-  if (!response.ok) {
-    throw new Error('피드 인덱스를 가져오는 중 오류가 발생했습니다.');
-  }
-  return response.json();
+  return handleResponse(response, '피드 인덱스를 가져오는 중 오류가 발생했습니다.');
 };
 
 export async function toggleLikeFeedApi(feedId: number, currentIsLiked: boolean) {
@@ -90,15 +87,10 @@ export async function toggleLikeFeedApi(feedId: number, currentIsLiked: boolean)
       },
     });
 
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({ detail: `알 수 없는 ${action} 오류` }));
-      console.error(`${action} API 실패:`, errorData.detail);
-      return;
-    }
-    console.log(`${action} API 성공`);
-
+    return handleResponse(response, `${action} 중 오류가 발생했습니다.`);
   } catch (error) {
     console.error(`${action} API 호출 오류:`, error);
+    throw error;
   }
 }
 

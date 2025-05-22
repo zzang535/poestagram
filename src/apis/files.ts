@@ -1,3 +1,5 @@
+import { handleResponse } from "./handleResponse";
+
 export interface UploadedFile {
   file_name: string;
   base_url: string;
@@ -34,12 +36,7 @@ export const uploadFile = async (files: File | File[]): Promise<UploadResponse> 
       body: formData,
     });
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.detail || "파일 업로드 중 오류가 발생했습니다.");
-    }
-
-    return await response.json();
+    return handleResponse(response, "파일 업로드 중 오류가 발생했습니다.");
   } catch (error) {
     console.error("파일 업로드 중 오류 발생:", error);
     throw error;

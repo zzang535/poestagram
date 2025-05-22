@@ -24,3 +24,8 @@ export interface Comment {
     profileImage: string;
   };
 }
+
+export interface CommentListResponse {
+  comments: Comment[];
+  total: number;
+}

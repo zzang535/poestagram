@@ -1,5 +1,6 @@
 import { useAuthStore } from "@/store/authStore";
 
+// response 공통 처리 함수
 export async function handleResponse<T>(response: Response, defaultErrorMessage = "요청 중 오류 발생"): Promise<T> {
   if (response.status === 401) {
     console.warn("401 발생 - 로그아웃 처리 및 리디렉션");
