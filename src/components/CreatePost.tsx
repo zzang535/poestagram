@@ -27,6 +27,8 @@ export default function CreatePost() {
   const uploadBoxRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
+  const MAX_FILE_SIZE_MB = 200;
+
   // 가장 긴 세로 이미지 찾기
   const findTallestImage = (images: PreviewImage[]) => {
     return images.reduce((tallest, current) => {
@@ -95,6 +97,13 @@ export default function CreatePost() {
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
+
+    // 파일 크기 검사
+    const oversizedFiles = Array.from(files).filter(file => file.size > MAX_FILE_SIZE_MB * 1024 * 1024);
+    if (oversizedFiles.length > 0) {
+      alert(`파일 크기가 ${MAX_FILE_SIZE_MB}MB를 초과했습니다. 업로드할 수 없습니다.`);
+      return;
+    }
 
     try {
       setIsImageUploading(true);
@@ -309,7 +318,7 @@ export default function CreatePost() {
                   <FontAwesomeIcon icon={faCamera} className="text-2xl" />
                 </div>
                 <p className="text-gray-300 mb-2 text-sm">이미지 또는 동영상을 업로드하세요</p>
-                <p className="text-xs text-gray-400">지원 형식: JPG, PNG, MP4 (최대 100MB)</p>
+                <p className="text-xs text-gray-400">지원 형식: JPG, PNG, MP4 (최대 200MB)</p>
               </label>
             </div>
           )}
