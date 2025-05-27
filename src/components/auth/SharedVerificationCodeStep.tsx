@@ -1,44 +1,39 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { verifyCode } from "@/apis/auth";
+import { verifyCode, sendVerificationEmail } from "@/apis/auth";
 
 interface Message {
   text: string;
   type: "success" | "error" | "info";
 }
 
-interface VerificationStepProps {
+interface SharedVerificationCodeStepProps {
   email: string;
-  onNext: () => void;
+  onNext: (code: string) => void; // SignUpForm에서는 code를 사용하지 않음
   onBack: () => void;
 }
 
-export default function VerificationStep({ email, onNext, onBack }: VerificationStepProps) {
+export default function SharedVerificationCodeStep({ email, onNext, onBack }: SharedVerificationCodeStepProps) {
   const [verificationCode, setVerificationCode] = useState(["", "", "", "", "", ""]);
   const [timeLeft, setTimeLeft] = useState(180);
   const [isVerifying, setIsVerifying] = useState(false);
+  const [isResending, setIsResending] = useState(false);
   const [verificationMessage, setVerificationMessage] = useState<Message | null>(null);
 
   useEffect(() => {
     if (timeLeft > 0) {
-      const timer = setInterval(() => {
-        setTimeLeft((prev) => prev - 1);
-      }, 1000);
+      const timer = setInterval(() => setTimeLeft((prev) => prev - 1), 1000);
       return () => clearInterval(timer);
     }
   }, [timeLeft]);
 
   const getMessageColor = (type: string): string => {
     switch (type) {
-      case "success":
-        return "text-green-500";
-      case "error":
-        return "text-red-500";
-      case "info":
-        return "text-blue-400";
-      default:
-        return "text-gray-400";
+      case "success": return "text-green-500";
+      case "error": return "text-red-500";
+      case "info": return "text-blue-400";
+      default: return "text-gray-400";
     }
   };
 
@@ -71,17 +66,15 @@ export default function VerificationStep({ email, onNext, onBack }: Verification
       setVerificationMessage({ text: "6자리 인증번호를 모두 입력해주세요.", type: "error" });
       return;
     }
-
     setIsVerifying(true);
     setVerificationMessage(null);
-
     try {
       const response = await verifyCode(email, code);
       if (response.is_verified) {
         setVerificationMessage({ text: "인증이 완료되었습니다.", type: "success" });
-        onNext();
+        onNext(code); // ResetPasswordForm에서는 code를 사용, SignUpForm에서는 사용 안 함
       } else {
-        setVerificationMessage({ text: "인증번호가 일치하지 않습니다.", type: "error" });
+        setVerificationMessage({ text: response.message || "인증번호가 일치하지 않습니다.", type: "error" });
       }
     } catch (error) {
       setVerificationMessage({ 
@@ -90,6 +83,20 @@ export default function VerificationStep({ email, onNext, onBack }: Verification
       });
     } finally {
       setIsVerifying(false);
+    }
+  };
+
+  const handleResendCode = async () => {
+    setIsResending(true);
+    setVerificationMessage(null);
+    try {
+      await sendVerificationEmail(email); // 공용 API 사용
+      setVerificationMessage({ text: "인증번호가 재전송되었습니다.", type: "info"});
+      setTimeLeft(180);
+    } catch (error) {
+      setVerificationMessage({ text: "인증번호 재전송에 실패했습니다.", type: "error"});
+    } finally {
+      setIsResending(false);
     }
   };
 
@@ -112,9 +119,16 @@ export default function VerificationStep({ email, onNext, onBack }: Verification
           ))}
         </div>
         <div className="flex justify-between items-center mb-6">
-          <span className="text-gray-400">
-            남은 시간: <span className="text-red-800">{formatTime(timeLeft)}</span>
+          <span className={`text-sm ${timeLeft === 0 ? 'text-red-500' : 'text-gray-400'}`}>
+            남은 시간: <span className={timeLeft === 0 ? '' : 'text-red-800'}>{formatTime(timeLeft)}</span>
           </span>
+          <button 
+            className="text-sm text-blue-400 hover:underline disabled:text-gray-500 disabled:no-underline"
+            onClick={handleResendCode}
+            disabled={isResending || timeLeft > 0}
+          >
+            {isResending ? "재전송 중..." : "인증코드 재전송"}
+          </button>
         </div>
         {verificationMessage && (
           <p className={`text-sm ${getMessageColor(verificationMessage.type)}`}>
@@ -124,7 +138,7 @@ export default function VerificationStep({ email, onNext, onBack }: Verification
         <button 
           className="w-full bg-red-800 text-white py-3 rounded-lg font-medium hover:bg-red-900 transition-colors disabled:bg-gray-700 disabled:cursor-not-allowed"
           onClick={handleVerifyCode}
-          disabled={isVerifying}
+          disabled={isVerifying || verificationCode.join('').length !== 6}
         >
           {isVerifying ? "확인 중..." : "인증하기"}
         </button>

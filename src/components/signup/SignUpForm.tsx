@@ -1,11 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import EmailStep from "./signup/EmailStep";
-import VerificationStep from "./signup/VerificationStep";
-import UsernameStep from "./signup/UsernameStep";
-import PasswordStep from "./signup/PasswordStep";
-import InfoStep from "./signup/InfoStep";
+import EmailStep from "./EmailStep";
+import UsernameStep from "./UsernameStep";
+import PasswordStep from "./PasswordStep";
+import InfoStep from "./InfoStep";
+import SharedVerificationCodeStep from "../auth/SharedVerificationCodeStep";
 
 export default function SignUpForm() {
   const [step, setStep] = useState<"email" | "verification" | "username" | "password" | "info">("email");
@@ -18,7 +18,7 @@ export default function SignUpForm() {
     setStep("verification");
   };
 
-  const handleVerificationNext = () => {
+  const handleVerificationNext = (/* code: string */) => {
     setStep("username");
   };
 
@@ -47,7 +47,7 @@ export default function SignUpForm() {
         )}
 
         {step === "verification" && (
-          <VerificationStep 
+          <SharedVerificationCodeStep 
             email={email}
             onNext={handleVerificationNext}
             onBack={handleBackToEmail}

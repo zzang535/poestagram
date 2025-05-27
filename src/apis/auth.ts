@@ -127,9 +127,9 @@ interface LoginResponse {
   email: string;
 }
 
-export async function login(identifier: string, password?: string): Promise<LoginResponse> {
+export async function login(identifier: string, password: string): Promise<LoginResponse> {
   try {
-    const body = password ? { username: identifier, password } : { email: identifier };
+    const body = { identifier, password };
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/login`, {
       method: 'POST',
       headers: {
@@ -142,4 +142,31 @@ export async function login(identifier: string, password?: string): Promise<Logi
   } catch (error) {
     throw error instanceof Error ? error : new Error('로그인 중 오류가 발생했습니다.');
   }
-} 
+}
+
+interface PasswordResetRequest {
+  email: string;
+  code: string;
+  new_password: string;
+}
+
+interface PasswordResetResponse {
+  message: string;
+}
+
+export const resetPasswordApi = async (data: PasswordResetRequest): Promise<PasswordResetResponse> => {
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/reset-password`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+
+    return handleResponse(response, '비밀번호 변경에 실패했습니다.');
+  } catch (error) {
+    console.error('비밀번호 변경 중 오류 발생:', error);
+    throw error;
+  }
+}; 

@@ -32,8 +32,8 @@ export default function UsernameStep({ onNext }: UsernameStepProps) {
   };
 
   const validateUsername = (value: string): boolean => {
-    // 영문소문자, -, _ 만 허용, 4-20글자
-    const usernameRegex = /^[a-z_-]{4,20}$/;
+    // 영문소문자, 숫자 만 허용, 4-20글자
+    const usernameRegex = /^[a-z0-9]{4,20}$/;
     return usernameRegex.test(value);
   };
 
@@ -51,14 +51,17 @@ export default function UsernameStep({ onNext }: UsernameStepProps) {
       setUsernameMessage({ text: "사용자명은 4글자 이상이어야 합니다.", type: "error" });
     } else if (value.length > 20) {
       setUsernameMessage({ text: "사용자명은 20글자 이하여야 합니다.", type: "error" });
-    } else if (!/^[a-z_-]*$/.test(value)) {
-      setUsernameMessage({ text: "영문 소문자, -, _ 만 사용할 수 있습니다.", type: "error" });
+    } else if (!/^[a-z0-9]*$/.test(value)) {
+      setUsernameMessage({ text: "영문 소문자와 숫자만 사용할 수 있습니다.", type: "error" });
     } else if (validateUsername(value)) {
       setUsernameMessage({ text: "형식이 올바릅니다.", type: "info" });
+    } else {
+      // validateUsername(value)가 false인 경우는 정규식은 통과했으나 길이가 맞지 않는 경우인데,
+      // 위에서 길이 체크를 이미 했으므로 이 경우는 발생하지 않아야 함.
+      // 하지만 방어적으로 메시지 초기화
+      setUsernameMessage(null);
     }
   };
-
-
 
   const handleNext = async () => {
     if (!username) {
@@ -111,14 +114,14 @@ export default function UsernameStep({ onNext }: UsernameStepProps) {
           <input
             type="text"
             className="w-full px-4 py-3 border border-gray-700 rounded-lg text-sm focus:border-white focus:ring-white bg-gray-900 text-white"
-            placeholder="사용자명 (영문소문자, -, _ 허용, 4-20글자)"
+            placeholder="사용자명 (영문소문자, 숫자 허용, 4-20글자)"
             value={username}
             onChange={handleUsernameChange}
           />
         </div>
         
         <div className="text-xs text-gray-500 space-y-1">
-          <p>• 영문 소문자, -, _ 만 사용 가능</p>
+          <p>• 영문 소문자와 숫자만 사용 가능</p>
           <p>• 4글자 이상 20글자 이하</p>
         </div>
 
