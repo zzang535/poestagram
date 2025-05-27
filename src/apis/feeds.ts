@@ -94,4 +94,20 @@ export async function toggleLikeFeedApi(feedId: number, currentIsLiked: boolean)
   }
 }
 
+export async function deleteFeed(feedId: number): Promise<{ message: string }> {
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/feeds/${feedId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${useAuthStore.getState().accessToken}`,
+      },
+    });
+    return handleResponse(response, "피드 삭제 중 오류가 발생했습니다.");
+  } catch (error) {
+    console.error("피드 삭제 API 호출 오류:", error);
+    throw error;
+  }
+}
+
  

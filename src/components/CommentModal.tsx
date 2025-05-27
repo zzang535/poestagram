@@ -11,9 +11,6 @@ import { faHeart as faSolidHeart } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as faRegularHeart } from "@fortawesome/free-regular-svg-icons";
 import { faEllipsis } from "@fortawesome/free-solid-svg-icons";
 
-import { dummyComments } from "@/data/dummy-comments";
-
-
 const topBarHeight = 60;
 
 interface CommentModalProps {

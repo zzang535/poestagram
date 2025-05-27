@@ -31,6 +31,10 @@ export default function Feeds({ userId }: FeedsProps) {
   const targetFeedRef = useRef<HTMLDivElement | null>(null);
   const [targetFeedIndex, setTargetFeedIndex] = useState(0);
 
+  // 피드 아이템 삭제 핸들러
+  const handleDeleteFeedItem = (feedIdToDelete: number) => {
+    setFeedData(prevFeedData => prevFeedData.filter(feed => feed.id !== feedIdToDelete));
+  };
 
   // feed 페이지에서 로그아웃 되는 경우 대응
   useEffect(() => {
@@ -192,6 +196,7 @@ export default function Feeds({ userId }: FeedsProps) {
                   is_liked={feed.is_liked}
                   user={feed.user}
                   likes_count={feed.likes_count}
+                  onDeleteSuccess={handleDeleteFeedItem}
                 />
               </div>
             ))}

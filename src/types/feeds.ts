@@ -36,6 +36,7 @@ export interface FeedItemProps {
   is_liked: boolean;
   user: User;
   likes_count: number;
+  onDeleteSuccess?: (feedId: number) => void;
 }
 
 export interface FeedCreate {
@@ -57,4 +58,5 @@ export interface FeedListResponse {
 export interface User {
   id: number;
   username: string;
+  profileImage?: string;
 }

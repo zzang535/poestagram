@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronLeft, faChevronRight, faHeart as faSolidHeart } from "@fortawesome/free-solid-svg-icons";
+import { faChevronLeft, faChevronRight, faHeart as faSolidHeart, faEllipsis } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as faRegularHeart, faComment, faBookmark } from "@fortawesome/free-regular-svg-icons";
 import CommentModal from "./CommentModal";
+import ConfirmModal from "./shared/ConfirmModal";
 import { FeedItemProps } from "@/types/feeds";
-import { toggleLikeFeedApi } from "@/apis/feeds";
+import { toggleLikeFeedApi, deleteFeed } from "@/apis/feeds";
 import { useAuthStore } from "@/store/authStore";
 import { useRouter } from "next/navigation";
 
@@ -21,15 +22,32 @@ export default function FeedItem({
   is_liked,
   user,
   likes_count,
-}: FeedItemProps) {
+  onDeleteSuccess,
+}: FeedItemProps & { onDeleteSuccess?: (feedId: number) => void }) {
 
   const router = useRouter();
   const accessToken = useAuthStore((s) => s.accessToken);
+  const currentUser = useAuthStore((s) => s.user);
 
   const [isCommentModalOpen, setIsCommentModalOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [currentIsLiked, setCurrentIsLiked] = useState(is_liked);
   const [currentLikesCount, setCurrentLikesCount] = useState(likes_count || 0);
+  const [activeMenuFeedId, setActiveMenuFeedId] = useState<number | null>(null);
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setActiveMenuFeedId(null);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   const handlePrevImage = () => {
     setCurrentImageIndex((prev) => (prev > 0 ? prev - 1 : prev));
@@ -52,19 +70,65 @@ export default function FeedItem({
     toggleLikeFeedApi(id, currentIsLiked);
   }
 
+  const handleDeleteFeed = async () => {
+    if (!currentUser || currentUser.id !== user.id) {
+      alert("삭제 권한이 없습니다.");
+      return;
+    }
+    setIsConfirmModalOpen(true);
+  };
+
+  const executeDeleteFeed = async () => {
+    try {
+      await deleteFeed(id);
+      setActiveMenuFeedId(null);
+      if (onDeleteSuccess) {
+        onDeleteSuccess(id);
+      }
+    } catch (error) {
+      console.error("피드 삭제 실패:", error);
+      alert(error instanceof Error ? error.message : "피드 삭제 중 오류가 발생했습니다.");
+    }
+  };
+
   return (
     <>
       <article className="bg-black rounded-lg mb-4 overflow-hidden">
-        <div className="flex items-center p-4 border-b border-gray-800">
-          <img
-            src={"/default-profile.svg"}
-            alt={`${user?.username} 프로필`}
-            className="w-10 h-10 rounded-full"
-          />
-          <div className="ml-3">
-            <p className="text-sm font-semibold text-white">{user?.username}</p>
-            <p className="text-xs text-gray-400">{user?.username}</p>
+        <div className="flex items-center justify-between p-4 border-b border-gray-800">
+          <div className="flex items-center">
+            <img
+              src={user?.profileImage || "/default-profile.svg"}
+              alt={`${user?.username} 프로필`}
+              className="w-10 h-10 rounded-full"
+            />
+            <div className="ml-3">
+              <p className="text-sm font-semibold text-white">{user?.username}</p>
+              <p className="text-xs text-gray-400">{user?.username}</p>
+            </div>
           </div>
+          {currentUser && currentUser.id === user.id && (
+            <div className="relative">
+              <button 
+                className="text-gray-400 hover:text-white p-2"
+                onClick={() => setActiveMenuFeedId(activeMenuFeedId === id ? null : id)}
+              >
+                <FontAwesomeIcon icon={faEllipsis} className="text-lg" />
+              </button>
+              {activeMenuFeedId === id && (
+                <div 
+                  ref={menuRef}
+                  className="absolute right-0 mt-1 w-24 bg-zinc-800 rounded-md shadow-lg z-10 overflow-hidden"
+                >
+                  <button
+                    onClick={handleDeleteFeed}
+                    className="w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-zinc-700 transition-colors"
+                  >
+                    삭제
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
         </div>
         <div 
           className="relative"
@@ -174,6 +238,13 @@ export default function FeedItem({
         feedId={id}
         isOpen={isCommentModalOpen}
         onClose={() => setIsCommentModalOpen(false)}
+      />
+      <ConfirmModal 
+        isOpen={isConfirmModalOpen}
+        onClose={() => setIsConfirmModalOpen(false)}
+        onConfirm={executeDeleteFeed}
+        title="게시물 삭제"
+        message="이 게시물을 삭제하시겠어요?"
       />
     </>
   );
