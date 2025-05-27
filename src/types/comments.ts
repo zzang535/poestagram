@@ -20,7 +20,7 @@ export interface Comment {
   is_liked: boolean;
   user: {
     id: number;
-    nickname: string;
+    username: string;
     profileImage: string;
   };
 }

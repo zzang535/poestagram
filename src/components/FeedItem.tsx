@@ -26,7 +26,6 @@ export default function FeedItem({
   const router = useRouter();
   const accessToken = useAuthStore((s) => s.accessToken);
 
-
   const [isCommentModalOpen, setIsCommentModalOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [currentIsLiked, setCurrentIsLiked] = useState(is_liked);
@@ -165,7 +164,7 @@ export default function FeedItem({
             </div>
           </div>
           <p className="text-sm text-white mt-2">
-            <span className="font-semibold mr-1">{user.nickname}</span>
+            <span className="font-semibold mr-1">{user.username}</span>
             {description}
           </p>
         </div>

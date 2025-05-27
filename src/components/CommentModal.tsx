@@ -272,13 +272,13 @@ export default function CommentModal({ isOpen, onClose, feedId }: CommentModalPr
                   <div className="flex-shrink-0">
                     <img 
                       src={comment.user.profileImage || "/default-profile.svg"} 
-                      alt={`${comment.user.nickname}의 프로필`}
+                      alt={`${comment.user.username}의 프로필`}
                       className="w-[40px] h-[40px] rounded-full"
                     />
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex justify-between items-center mb-[2px]">
-                      <span className="text-sm font-semibold text-white">{comment.user.nickname}</span>
+                      <span className="text-sm font-semibold text-white">{comment.user.username}</span>
                       {accessToken && user && user.id === comment.user.id && (
                         <div className="relative">
                           <button 
