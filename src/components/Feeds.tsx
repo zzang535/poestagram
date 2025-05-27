@@ -34,6 +34,7 @@ export default function Feeds({ userId }: FeedsProps) {
   // 피드 아이템 삭제 핸들러
   const handleDeleteFeedItem = (feedIdToDelete: number) => {
     setFeedData(prevFeedData => prevFeedData.filter(feed => feed.id !== feedIdToDelete));
+    setOffset(prevOffset => Math.max(0, prevOffset - 1));
   };
 
   // feed 페이지에서 로그아웃 되는 경우 대응
