@@ -56,6 +56,5 @@ export interface FeedListResponse {
 
 export interface User {
   id: number;
-  nickname: string;
   username: string;
 }

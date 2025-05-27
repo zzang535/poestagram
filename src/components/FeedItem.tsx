@@ -58,12 +58,12 @@ export default function FeedItem({
         <div className="flex items-center p-4 border-b border-gray-800">
           <img
             src={"/default-profile.svg"}
-            alt={`${user?.nickname} 프로필`}
+            alt={`${user?.username} 프로필`}
             className="w-10 h-10 rounded-full"
           />
           <div className="ml-3">
-            <p className="text-sm font-semibold text-white">{user?.nickname}</p>
-            <p className="text-xs text-gray-400">{user?.nickname}</p>
+            <p className="text-sm font-semibold text-white">{user?.username}</p>
+            <p className="text-xs text-gray-400">{user?.username}</p>
           </div>
         </div>
         <div 

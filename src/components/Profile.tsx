@@ -15,7 +15,7 @@ export default function Profile({ userId }: ProfileProps) {
   const [loading, setLoading] = useState(true);
   const [feeds, setFeeds] = useState<Feed[]>([]);
   const [totalFeeds, setTotalFeeds] = useState(0);
-  const [currentUser, setCurrentUser] = useState<{ id: number; nickname: string } | null>(null);
+  const [currentUser, setCurrentUser] = useState<{ id: number; username: string } | null>(null);
 
   useEffect(() => {
     const user = useAuthStore.getState().user;
@@ -72,7 +72,7 @@ export default function Profile({ userId }: ProfileProps) {
             />
           </div>
           <div className="flex-1">
-            <h2 className="text-xl font-bold">{currentUser?.nickname || "익명"}</h2>
+            <h2 className="text-xl font-bold">{currentUser?.username || "익명"}</h2>
             <p className="text-gray-400 mt-1">{totalFeeds} 게시물</p>
           </div>
         </div>

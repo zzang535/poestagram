@@ -48,7 +48,6 @@ interface SignUpRequest {
   email: string;
   username: string;
   password: string;
-  // nickname: string; // 닉네임 필드 제거 또는 주석 처리
   terms_of_service: boolean;
   privacy_policy: boolean;
 }
