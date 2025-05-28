@@ -34,6 +34,12 @@ export default function Feeds({ userId }: FeedsProps) {
   // 피드 아이템 삭제 핸들러
   const handleDeleteFeedItem = (feedIdToDelete: number) => {
     setFeedData(prevFeedData => prevFeedData.filter(feed => feed.id !== feedIdToDelete));
+    console.log("offset", offset);
+    // TODO 
+    // 본인의 게시물 리스트 첫 페이지에서 삭제한 경우,
+    // offset 이 0 이라서, 1을 뺀다고 해도 여전히 offset 이 0이라서 문제가 생김.
+    // 이유는 본인의 게시물인 경우 limit 를 조정해서 게시물을 불러오고 있기 때문
+    // 방향성은 전체 피드 페이지와, 본인 게시물 페이지를 따로 관리하는 것이 좋을 듯.
     setOffset(prevOffset => Math.max(0, prevOffset - 1));
   };
 
