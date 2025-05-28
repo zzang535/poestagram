@@ -8,10 +8,9 @@ import { Feed, FeedFile } from "@/types/feeds";
 import { UserProfile } from "@/types/users";
 import { useAuthStore } from "@/store/authStore";
 
-export default function Profile() {
+export default function Profile({ userId }: { userId: string }) {
   const router = useRouter();
   const params = useParams();
-  const userIdFromParams = params.userId as string;
 
   const [profileLoading, setProfileLoading] = useState(true);
   const [feedsLoading, setFeedsLoading] = useState(true);
@@ -20,11 +19,11 @@ export default function Profile() {
   const authUser = useAuthStore.getState().user;
 
   useEffect(() => {
-    if (!userIdFromParams) return;
+    if (!userId) return;
     const fetchUserProfile = async () => {
       try {
         setProfileLoading(true);
-        const profileData = await getUserProfile(userIdFromParams);
+        const profileData = await getUserProfile(userId);
         setUserProfile(profileData);
       } catch (error) {
         console.error("사용자 프로필 정보를 불러오는 중 오류 발생:", error);
@@ -34,14 +33,14 @@ export default function Profile() {
       }
     };
     fetchUserProfile();
-  }, [userIdFromParams, router]);
+  }, [userId, router]);
 
   useEffect(() => {
-    if (!userIdFromParams) return;
+    if (!userId) return;
     const fetchUserFeeds = async () => {
       try {
         setFeedsLoading(true);
-        const response = await getUserFeeds(Number(userIdFromParams), 0, 100);
+        const response = await getUserFeeds(Number(userId), 0, 100);
         setFeeds(response.feeds);
       } catch (error) {
         console.error("피드를 불러오는 중 오류 발생:", error);
@@ -50,11 +49,11 @@ export default function Profile() {
       }
     };
     fetchUserFeeds();
-  }, [userIdFromParams]);
+  }, [userId]);
 
   const handlePostClick = (feedId: number) => {
-    if (userIdFromParams) {
-      router.push(`/user/${userIdFromParams}/feed?feed_id=${feedId}`);
+    if (userId) {
+      router.push(`/user/${userId}/feed?feed_id=${feedId}`);
     }
   };
 
