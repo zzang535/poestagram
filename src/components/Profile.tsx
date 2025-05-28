@@ -89,14 +89,14 @@ export default function Profile({ userId }: { userId: string }) {
         <div className="flex items-center space-x-6">
           <div className="relative">
             <img
-              src={userProfile.profileImage || "/default-profile.svg"}
+              src={userProfile.profile_image || "/default-profile.svg"}
               alt={`${userProfile.username} 프로필 이미지`}
               className="w-20 h-20 rounded-full object-cover bg-gray-700"
             />
           </div>
           <div className="flex-1">
             <h2 className="text-xl font-bold">{userProfile.username}</h2>
-            <p className="text-gray-400 mt-1">{userProfile.postCount} 게시물</p>
+            <p className="text-gray-400 mt-1">{userProfile.feeds_count} 게시물</p>
           </div>
         </div>
       </section>
