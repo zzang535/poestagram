@@ -95,7 +95,9 @@ export default function FeedItem({
     <>
       <article className="bg-black rounded-lg mb-4 overflow-hidden">
         <div className="flex items-center justify-between p-4 border-b border-gray-800">
-          <div className="flex items-center">
+          <div className="flex items-center"
+            onClick={() => router.push(`/profile/${user.id}`)}
+          >
             <img
               src={user?.profileImage || "/default-profile.svg"}
               alt={`${user?.username} 프로필`}

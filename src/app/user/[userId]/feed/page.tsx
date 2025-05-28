@@ -7,17 +7,16 @@ import { useParams } from 'next/navigation';
 export default function UserFeed() {
   const params = useParams();
   const userId = Number(params.userId);
-  const accessToken = useAuthStore((s) => s.accessToken);
-
-  if (!accessToken) {
-    return (
-      <div className="min-h-screen bg-black text-white p-4 py-20">
-        <div className="max-w-4xl mx-auto">
-          <p className="text-center text-gray-400">로그인이 필요합니다.</p>
-        </div>
-      </div>
-    );
-  }
+  // const accessToken = useAuthStore((s) => s.accessToken);
+  // if (!accessToken) {
+  //   return (
+  //     <div className="min-h-screen bg-black text-white p-4 py-20">
+  //       <div className="max-w-4xl mx-auto">
+  //         <p className="text-center text-gray-400">로그인이 필요합니다.</p>
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
   if (isNaN(userId)) {
     return (
