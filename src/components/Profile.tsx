@@ -16,7 +16,10 @@ export default function Profile({ userId }: { userId: string }) {
   const [feedsLoading, setFeedsLoading] = useState(true);
   const [feeds, setFeeds] = useState<Feed[]>([]);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
-  const authUser = useAuthStore.getState().user;
+  const authUser = useAuthStore((s) => s.user);
+
+  // 현재 프로필이 로그인한 유저의 것인지 확인
+  const isOwnProfile = authUser && userProfile && authUser.id === Number(userId);
 
   useEffect(() => {
     if (!userId) return;
@@ -89,7 +92,7 @@ export default function Profile({ userId }: { userId: string }) {
         <div className="flex items-center space-x-6">
           <div className="relative">
             <img
-              src={userProfile.profile_image || "/default-profile.svg"}
+              src={userProfile.profile_image_url || "/default-profile.svg"}
               alt={`${userProfile.username} 프로필 이미지`}
               className="w-20 h-20 rounded-full object-cover bg-gray-700"
             />
@@ -97,8 +100,22 @@ export default function Profile({ userId }: { userId: string }) {
           <div className="flex-1">
             <h2 className="text-xl font-bold">{userProfile.username}</h2>
             <p className="text-gray-400 mt-1">{userProfile.feeds_count} 게시물</p>
+            {userProfile.bio && (
+              <p className="text-gray-300 mt-2 text-sm">{userProfile.bio}</p>
+            )}
           </div>
         </div>
+        {/* 본인 프로필인 경우 프로필 편집 버튼 표시 */}
+        {isOwnProfile && (
+          <div className="mt-4">
+            <button
+              onClick={() => router.push('/profile/edit')}
+              className="w-full px-4 py-2 bg-zinc-700 text-white text-sm rounded-lg hover:bg-zinc-600 transition-colors"
+            >
+              프로필 편집
+            </button>
+          </div>
+        )}
       </section>
 
       {feedsLoading && feeds.length === 0 && (

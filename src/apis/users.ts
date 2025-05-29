@@ -22,4 +22,30 @@ export async function getUserProfile(userId: string | number): Promise<UserProfi
     console.error("사용자 프로필 조회 API 호출 오류:", error);
     throw error;
   }
-} 
+}
+
+export async function updateProfileImage(imageBlob: Blob): Promise<{ profile_image_url: string }> {
+  const accessToken = useAuthStore.getState().accessToken;
+  
+  if (!accessToken) {
+    throw new Error("로그인이 필요합니다.");
+  }
+
+  const formData = new FormData();
+  formData.append('file', imageBlob, 'profile.jpg');
+
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/profile-image`, {
+      method: "PUT",
+      headers: {
+        "Authorization": `Bearer ${accessToken}`,
+      },
+      body: formData,
+    });
+    
+    return handleResponse(response, "프로필 이미지 업로드에 실패했습니다.");
+  } catch (error) {
+    console.error("프로필 이미지 업로드 API 호출 오류:", error);
+    throw error;
+  }
+}
