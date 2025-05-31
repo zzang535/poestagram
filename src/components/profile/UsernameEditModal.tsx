@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import Modal from "@/components/shared/Modal";
-import Input from "@/components/shared/Input";
+import Modal from "@/components/ui/Modal";
+import Input from "@/components/ui/Input";
 import { updateUsername } from "@/apis/users";
 
 interface UsernameEditModalProps {
@@ -98,7 +98,6 @@ export default function UsernameEditModal({
           placeholder="새로운 사용자명을 입력하세요"
           error={error}
           disabled={isSubmitting}
-          autoFocus
         />
       </div>
     </Modal>

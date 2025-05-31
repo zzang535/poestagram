@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import Modal from "@/components/shared/Modal";
-import TextArea from "@/components/shared/TextArea";
+import Modal from "@/components/ui/Modal";
+import TextArea from "@/components/ui/TextArea";
 import { updateBio } from "@/apis/users";
 
 interface BioEditModalProps {
@@ -93,7 +93,6 @@ export default function BioEditModal({
           disabled={isSubmitting}
           maxLength={MAX_BIO_LENGTH}
           showCharCount={true}
-          autoFocus
         />
       </div>
     </Modal>

@@ -1,7 +1,7 @@
 "use client";
 
-import CreatePost from "@/components/CreatePost";
-import ProtectedRoute from "@/components/ProtectedRoute";
+import CreatePost from "@/components/post/CreatePost";
+import ProtectedRoute from "@/components/layout/ProtectedRoute";
 
 export default function CreatePage() {
   return (

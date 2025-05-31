@@ -10,7 +10,7 @@ import { faHeart as faSolidHeart } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as faRegularHeart } from "@fortawesome/free-regular-svg-icons";
 import { faEllipsis } from "@fortawesome/free-solid-svg-icons";
 
-import Modal from "@/components/shared/Modal";
+import Modal from "@/components/ui/Modal";
 
 interface CommentModalProps {
   isOpen: boolean;
@@ -28,8 +28,12 @@ export default function CommentModal({ isOpen, onClose, feedId }: CommentModalPr
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [activeMenuCommentId, setActiveMenuCommentId] = useState<number | null>(null);
+  const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
   
   const menuRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const commentsContainerRef = useRef<HTMLDivElement>(null);
+  const scrollPositionRef = useRef<number>(0);
 
   // 메뉴 외부 클릭 감지
   useEffect(() => {
@@ -44,6 +48,46 @@ export default function CommentModal({ isOpen, onClose, feedId }: CommentModalPr
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
+
+  // 키보드 상태 감지 및 스크롤 위치 보존
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleVisualViewportChange = () => {
+      if (window.visualViewport) {
+        const keyboardHeight = window.innerHeight - window.visualViewport.height;
+        const wasKeyboardVisible = isKeyboardVisible;
+        const isNowKeyboardVisible = keyboardHeight > 0;
+        
+        if (!wasKeyboardVisible && isNowKeyboardVisible) {
+          // 키보드가 올라올 때 현재 스크롤 위치 저장
+          if (commentsContainerRef.current) {
+            scrollPositionRef.current = commentsContainerRef.current.scrollTop;
+          }
+        } else if (wasKeyboardVisible && !isNowKeyboardVisible) {
+          // 키보드가 내려갈 때 스크롤 위치 복원
+          setTimeout(() => {
+            if (commentsContainerRef.current) {
+              commentsContainerRef.current.scrollTop = scrollPositionRef.current;
+            }
+          }, 100);
+        }
+        
+        setIsKeyboardVisible(isNowKeyboardVisible);
+      }
+    };
+
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', handleVisualViewportChange);
+    }
+
+    return () => {
+      if (window.visualViewport) {
+        window.visualViewport.removeEventListener('resize', handleVisualViewportChange);
+      }
+      setIsKeyboardVisible(false);
+    };
+  }, [isOpen, isKeyboardVisible]);
 
   // 댓글 목록 가져오기
   const fetchComments = async () => {
@@ -132,6 +176,13 @@ export default function CommentModal({ isOpen, onClose, feedId }: CommentModalPr
       
       // 댓글 목록 새로 불러오기
       await fetchComments();
+      
+      // 새 댓글이 추가되면 맨 위로 스크롤하여 내가 작성한 댓글 확인
+      setTimeout(() => {
+        if (commentsContainerRef.current) {
+          commentsContainerRef.current.scrollTop = 0;
+        }
+      }, 100);
     } catch (error) {
       console.error("Failed to create comment:", error);
     } finally {
@@ -143,6 +194,17 @@ export default function CommentModal({ isOpen, onClose, feedId }: CommentModalPr
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       handleSubmitComment();
+    }
+  };
+
+  const handleInputFocus = () => {
+    // 모바일에서 입력창 포커스 시 약간의 지연 후 스크롤 조정
+    if (window.innerWidth <= 768) {
+      setTimeout(() => {
+        if (inputRef.current) {
+          inputRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+      }, 300);
     }
   };
 
@@ -168,6 +230,7 @@ export default function CommentModal({ isOpen, onClose, feedId }: CommentModalPr
       isOpen={isOpen} 
       onClose={onClose} 
       title="댓글"
+      enableKeyboardAdjustment={true}
       footer={accessToken ? (
         <div className="bg-zinc-900 border-t border-zinc-700 flex items-center gap-[10px] px-4 h-full">
           <div className="flex-shrink-0">
@@ -179,11 +242,13 @@ export default function CommentModal({ isOpen, onClose, feedId }: CommentModalPr
           </div>
           <div className="flex-1">
             <input
+              ref={inputRef}
               type="text"
               placeholder="댓글을 입력하세요..."
               value={commentInput}
               onChange={(e) => setCommentInput(e.target.value)}
               onKeyPress={handleKeyPress}
+              onFocus={handleInputFocus}
               className="
                 w-full
                 px-3 py-2 
@@ -213,7 +278,7 @@ export default function CommentModal({ isOpen, onClose, feedId }: CommentModalPr
       ) : undefined}
     >
       {/* 댓글 목록 */}
-      <div>
+      <div ref={commentsContainerRef} className="h-full overflow-y-auto">
         {isLoading && (
           <div className="flex items-center justify-center h-40">
             <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-red-500"></div>

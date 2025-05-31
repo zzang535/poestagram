@@ -7,7 +7,7 @@ import { useAuthStore } from "@/store/authStore";
 import { login } from "@/apis/auth"; // login API만 사용
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
-import TextButton from "@/components/shared/TextButton";
+import TextButton from "@/components/ui/TextButton";
 
 export default function LoginForm() {
   const router = useRouter();

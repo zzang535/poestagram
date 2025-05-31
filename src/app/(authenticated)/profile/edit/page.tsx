@@ -1,7 +1,7 @@
 "use client";
 
-import ProfileEdit from "@/components/ProfileEdit";
-import ProtectedRoute from "@/components/ProtectedRoute";
+import ProfileEdit from "@/components/profile/ProfileEdit";
+import ProtectedRoute from "@/components/layout/ProtectedRoute";
 
 export default function ProfileEditPage() {
   return (

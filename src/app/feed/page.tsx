@@ -1,8 +1,7 @@
 "use client";
 
 import { Suspense } from 'react';
-import { useAuthStore } from '@/store/authStore';
-import Feeds from "@/components/Feeds";
+import AllFeeds from "@/components/feed/AllFeeds";
 
 export default function Feed() {
   return (
@@ -14,7 +13,7 @@ export default function Feed() {
         </div>
       </div>
     </div>}>
-      <Feeds />
+      <AllFeeds />
     </Suspense>
   );
 } 

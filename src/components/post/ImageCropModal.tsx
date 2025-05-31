@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import Modal from "@/components/shared/Modal";
+import Modal from "@/components/ui/Modal";
 import ImageCropView, { ImageCropViewRef } from "./ImageCropView";
 
 interface ImageCropModalProps {

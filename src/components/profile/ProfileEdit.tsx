@@ -7,12 +7,12 @@ import { getUserProfile, updateProfileImage } from "@/apis/users";
 import { UserProfile } from "@/types/users";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
-import ImageCropModal from "./ImageCropModal";
+import ImageCropModal from "@/components/post/ImageCropModal";
 import UsernameEditModal from "./UsernameEditModal";
 import BioEditModal from "./BioEditModal";
-import TextButton from "@/components/shared/TextButton";
-import Input from "@/components/shared/Input";
-import TextArea from "@/components/shared/TextArea";
+import TextButton from "@/components/ui/TextButton";
+import Input from "@/components/ui/Input";
+import TextArea from "@/components/ui/TextArea";
 
 type ViewState = "profile" | "imageCrop";
 

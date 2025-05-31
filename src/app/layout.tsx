@@ -16,10 +16,10 @@ import {
 import { useState, useEffect } from "react";
 import "./globals.css";
 import { useAuthStore } from "@/store/authStore";
-import Header from "@/components/Header";
-import PrivacyPolicyModal from "@/components/PrivacyPolicyModal";
-import TermsOfServiceModal from "@/components/TermsOfServiceModal";
-import SlideMenu from "@/components/SlideMenu";
+import Header from "@/components/layout/Header";
+import PrivacyPolicyModal from "@/components/policy/PrivacyPolicyModal";
+import TermsOfServiceModal from "@/components/policy/TermsOfServiceModal";
+import SlideMenu from "@/components/layout/SlideMenu";
 
 export default function RootLayout({
   children,

@@ -4,8 +4,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { signup, login } from "@/apis/auth";
 import { useAuthStore } from "@/store/authStore";
-import PrivacyPolicyModal from "../PrivacyPolicyModal";
-import TermsOfServiceModal from "../TermsOfServiceModal";
+import PrivacyPolicyModal from "@/components/policy/PrivacyPolicyModal";
+import TermsOfServiceModal from "@/components/policy/TermsOfServiceModal";
 
 interface Message {
   text: string;
