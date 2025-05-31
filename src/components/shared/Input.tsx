@@ -12,6 +12,8 @@ interface InputProps {
   readOnly?: boolean;
   className?: string;
   showArrow?: boolean;
+  error?: string | null;
+  autoFocus?: boolean;
 }
 
 export default function Input({
@@ -24,7 +26,9 @@ export default function Input({
   disabled = false,
   readOnly = false,
   className = "",
-  showArrow = false
+  showArrow = false,
+  error = null,
+  autoFocus = false
 }: InputProps) {
   const isClickable = readOnly && onClick;
 
@@ -35,41 +39,48 @@ export default function Input({
   };
 
   const containerClasses = `
-    relative bg-zinc-800 border border-zinc-700 rounded-lg px-4 pt-3 pb-2 transition-colors
-    ${!readOnly ? 'focus-within:border-red-500' : ''}
+    relative bg-zinc-800 border rounded-lg px-4 pt-3 pb-2 transition-colors
+    ${error ? 'border-red-500' : 'border-zinc-700'}
+    ${!readOnly && !error ? 'focus-within:border-red-500' : ''}
     ${isClickable ? 'cursor-pointer hover:bg-zinc-750 hover:border-zinc-600' : ''}
     ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
     ${className}
   `;
 
   return (
-    <div className={containerClasses} onClick={handleClick}>
-      <label className="block text-xs font-medium text-gray-400 mb-1">
-        {label}
-      </label>
-      <div className="flex items-center justify-between">
-        <input
-          type={type}
-          value={value}
-          onChange={onChange}
-          placeholder={placeholder}
-          disabled={disabled}
-          readOnly={readOnly}
-          tabIndex={readOnly ? -1 : 0}
-          className="flex-1 bg-transparent text-white text-sm focus:outline-none placeholder-gray-500 disabled:cursor-not-allowed"
-          onClick={(e) => {
-            if (isClickable) {
-              e.preventDefault();
-            }
-          }}
-        />
-        {isClickable && showArrow && (
-          <FontAwesomeIcon 
-            icon={faChevronRight} 
-            className="text-gray-400 text-xs ml-2" 
+    <div>
+      <div className={containerClasses} onClick={handleClick}>
+        <label className="block text-xs font-medium text-gray-400 mb-1">
+          {label}
+        </label>
+        <div className="flex items-center justify-between">
+          <input
+            type={type}
+            value={value}
+            onChange={onChange}
+            placeholder={placeholder}
+            disabled={disabled}
+            readOnly={readOnly}
+            autoFocus={autoFocus}
+            tabIndex={readOnly ? -1 : 0}
+            className="flex-1 bg-transparent text-white text-sm focus:outline-none placeholder-gray-500 disabled:cursor-not-allowed"
+            onClick={(e) => {
+              if (isClickable) {
+                e.preventDefault();
+              }
+            }}
           />
-        )}
+          {isClickable && showArrow && (
+            <FontAwesomeIcon 
+              icon={faChevronRight} 
+              className="text-gray-400 text-xs ml-2" 
+            />
+          )}
+        </div>
       </div>
+      {error && (
+        <p className="mt-1 text-sm text-red-500">{error}</p>
+      )}
     </div>
   );
 } 

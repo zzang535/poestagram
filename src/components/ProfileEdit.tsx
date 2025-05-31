@@ -8,6 +8,7 @@ import { UserProfile } from "@/types/users";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import ImageCropModal from "./ImageCropModal";
+import UsernameEditModal from "./UsernameEditModal";
 import TextButton from "@/components/shared/TextButton";
 import Input from "@/components/shared/Input";
 import TextArea from "@/components/shared/TextArea";
@@ -30,6 +31,9 @@ export default function ProfileEdit() {
   // 뷰 상태 관리
   const [currentView, setCurrentView] = useState<ViewState>("profile");
   const [selectedImageFile, setSelectedImageFile] = useState<File | null>(null);
+  
+  // 사용자명 변경 모달 상태
+  const [isUsernameModalOpen, setIsUsernameModalOpen] = useState(false);
 
   useEffect(() => {
     if (!authUser) {
@@ -113,6 +117,24 @@ export default function ProfileEdit() {
     }
   };
 
+  const handleUsernameUpdate = (newUsername: string) => {
+    // 프로필 정보 업데이트
+    if (userProfile) {
+      setUserProfile({
+        ...userProfile,
+        username: newUsername
+      });
+    }
+    
+    // 폼 데이터 업데이트
+    setFormData(prev => ({
+      ...prev,
+      username: newUsername
+    }));
+    
+    alert('사용자명이 성공적으로 변경되었습니다.');
+  };
+
   const handleSave = async () => {
     // TODO: 프로필 업데이트 API 호출 (username, bio)
     alert("프로필 저장 기능은 추후 구현됩니다.");
@@ -169,7 +191,7 @@ export default function ProfileEdit() {
             value={formData.username}
             readOnly={true}
             placeholder="사용자명을 입력하세요"
-            onClick={() => router.push('/profile/edit/username')}
+            onClick={() => setIsUsernameModalOpen(true)}
             showArrow={true}
           />
 
@@ -204,6 +226,14 @@ export default function ProfileEdit() {
         }}
         imageFile={selectedImageFile}
         onCropComplete={handleCropComplete}
+      />
+
+      {/* 사용자명 변경 모달 */}
+      <UsernameEditModal
+        isOpen={isUsernameModalOpen}
+        onClose={() => setIsUsernameModalOpen(false)}
+        currentUsername={userProfile.username}
+        onUpdateSuccess={handleUsernameUpdate}
       />
     </>
   );
