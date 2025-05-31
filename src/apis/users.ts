@@ -1,4 +1,4 @@
-import { UserProfile } from "@/types/users";
+import { UserProfile, UsernameUpdateRequest, UsernameUpdateResponse } from "@/types/users";
 import { handleResponse } from "./handleResponse";
 import { useAuthStore } from "@/store/authStore";
 
@@ -46,6 +46,32 @@ export async function updateProfileImage(imageBlob: Blob): Promise<{ profile_ima
     return handleResponse(response, "프로필 이미지 업로드에 실패했습니다.");
   } catch (error) {
     console.error("프로필 이미지 업로드 API 호출 오류:", error);
+    throw error;
+  }
+}
+
+export async function updateUsername(username: string): Promise<UsernameUpdateResponse> {
+  const accessToken = useAuthStore.getState().accessToken;
+  
+  if (!accessToken) {
+    throw new Error("로그인이 필요합니다.");
+  }
+
+  const requestBody: UsernameUpdateRequest = { username };
+
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/username`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify(requestBody),
+    });
+    
+    return handleResponse(response, "사용자명 변경에 실패했습니다.");
+  } catch (error) {
+    console.error("사용자명 변경 API 호출 오류:", error);
     throw error;
   }
 }
