@@ -9,6 +9,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import ImageCropView from "./ImageCropView";
 import TextButton from "@/components/shared/TextButton";
+import Input from "@/components/shared/Input";
+import TextArea from "@/components/shared/TextArea";
 
 type ViewState = "profile" | "imageCrop";
 
@@ -145,64 +147,53 @@ export default function ProfileEdit() {
 
   // 기본 프로필 편집 뷰
   return (
-    <div className="min-h-screen bg-black text-white">
-
-      {/* 프로필 편집 내용 */}
-      <div className="pt-[60px] pb-8 px-4 max-w-4xl mx-auto">
-        <div className="space-y-6">
-          {/* 프로필 사진 섹션 */}
-          <div className="flex flex-col items-center space-y-4 py-6">
-            <div className="relative">
-              <img
-                src={userProfile.profile_image_url || "/default-profile.svg"}
-                alt="프로필 이미지"
-                className="w-24 h-24 rounded-full object-cover bg-gray-700"
-              />
-              {uploading && (
-                <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-full">
-                  <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+    <div className="min-h-screen bg-black text-white pt-[64px] px-[24px]">
+            {/* 프로필 사진 섹션 */}
+            <div className="flex flex-col items-center space-y-2 py-[24px]">
+                <div className="relative">
+                <img
+                    src={userProfile.profile_image_url || "/default-profile.svg"}
+                    alt="프로필 이미지"
+                    className="w-24 h-24 rounded-full object-cover bg-gray-700"
+                />
+                {uploading && (
+                    <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-full">
+                    <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    </div>
+                )}
                 </div>
-              )}
+                <TextButton
+                    onClick={handleImageChange}
+                    disabled={uploading}
+                    variant="primary"
+                    size="md"
+                >
+                {uploading ? "업로드 중..." : "프로필 사진 변경"}
+                </TextButton>
             </div>
-            <TextButton
-              onClick={handleImageChange}
-              disabled={uploading}
-              variant="primary"
-              size="md"
-            >
-              {uploading ? "업로드 중..." : "프로필 사진 변경"}
-            </TextButton>
-          </div>
 
-          {/* 사용자명 필드 */}
-          <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-300">
-              사용자명
-            </label>
-            <input
-              type="text"
-              value={formData.username}
-              onChange={(e) => setFormData({ ...formData, username: e.target.value })}
-              className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white focus:border-red-500 focus:outline-none"
-              placeholder="사용자명을 입력하세요"
-            />
-          </div>
+            <div className="space-y-4">
+                {/* 사용자명 필드 */}
+                <Input
+                    label="사용자명"
+                    value={formData.username}
+                    readOnly={true}
+                    placeholder="사용자명을 입력하세요"
+                    onClick={() => router.push('/profile/edit/username')}
+                    showArrow={true}
+                />
 
-          {/* 소개 필드 */}
-          <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-300">
-              소개
-            </label>
-            <textarea
-              value={formData.bio}
-              onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
-              rows={4}
-              className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white focus:border-red-500 focus:outline-none resize-none"
-              placeholder="자신을 소개해주세요"
-            />
+                {/* 소개 필드 */}
+                <TextArea
+                    label="소개"
+                    value={formData.bio}
+                    readOnly={true}
+                    placeholder="자신을 소개해주세요"
+                    rows={4}
+                    onClick={() => router.push('/profile/edit/bio')}
+                    showArrow={true}
+                />
           </div>
-        </div>
-      </div>
 
       {/* 숨겨진 파일 input */}
       <input
