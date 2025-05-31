@@ -63,6 +63,8 @@ export default function RootLayout({
       return 'poestagram';
     } else if (pathname?.startsWith('/user/') && pathname?.endsWith('/feed')) {
       return '게시물';
+    } else if (pathname === '/profile/edit') {
+      return '프로필 편집';
     } else if (pathname?.startsWith('/profile/')) {
       return '프로필';
     } else {
