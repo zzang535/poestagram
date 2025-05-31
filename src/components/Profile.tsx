@@ -1,12 +1,14 @@
 "use client";
 
 import { useRouter, useParams } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { getUserFeeds } from "@/apis/feeds";
 import { getUserProfile } from "@/apis/users";
 import { Feed, FeedFile } from "@/types/feeds";
 import { UserProfile } from "@/types/users";
 import { useAuthStore } from "@/store/authStore";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEllipsis } from "@fortawesome/free-solid-svg-icons";
 
 export default function Profile({ userId }: { userId: string }) {
   const router = useRouter();
@@ -16,10 +18,29 @@ export default function Profile({ userId }: { userId: string }) {
   const [feedsLoading, setFeedsLoading] = useState(true);
   const [feeds, setFeeds] = useState<Feed[]>([]);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  const [showMenu, setShowMenu] = useState(false);
   const authUser = useAuthStore((s) => s.user);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   // 현재 프로필이 로그인한 유저의 것인지 확인
   const isOwnProfile = authUser && userProfile && authUser.id === Number(userId);
+
+  // 메뉴 외부 클릭 감지
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setShowMenu(false);
+      }
+    }
+
+    if (showMenu) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showMenu]);
 
   useEffect(() => {
     if (!userId) return;
@@ -89,7 +110,7 @@ export default function Profile({ userId }: { userId: string }) {
   return (
     <div className="bg-gray-950 text-white py-[73px]">
       <section className="px-5 py-6 border-b border-gray-800">
-        <div className="flex items-center space-x-6">
+        <div className="flex items-center space-x-6 relative">
           <div className="relative">
             <img
               src={userProfile.profile_image_url || "/default-profile.svg"}
@@ -104,18 +125,34 @@ export default function Profile({ userId }: { userId: string }) {
               <p className="text-gray-300 mt-2 text-sm">{userProfile.bio}</p>
             )}
           </div>
+          {/* 본인 프로필인 경우 더보기 버튼 표시 */}
+          {isOwnProfile && (
+            <div className="absolute top-0 right-0">
+              <button 
+                className="text-gray-400 hover:text-white p-2"
+                onClick={() => setShowMenu(!showMenu)}
+              >
+                <FontAwesomeIcon icon={faEllipsis} className="text-lg" />
+              </button>
+              {showMenu && (
+                <div 
+                  ref={menuRef}
+                  className="absolute right-0 mt-1 w-32 bg-zinc-800 rounded-md shadow-lg z-10 overflow-hidden"
+                >
+                  <button
+                    onClick={() => {
+                      setShowMenu(false);
+                      router.push('/profile/edit');
+                    }}
+                    className="w-full text-left px-4 py-2 text-sm text-white hover:bg-zinc-700 transition-colors"
+                  >
+                    프로필 편집
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
         </div>
-        {/* 본인 프로필인 경우 프로필 편집 버튼 표시 */}
-        {isOwnProfile && (
-          <div className="mt-4">
-            <button
-              onClick={() => router.push('/profile/edit')}
-              className="w-full px-4 py-2 bg-zinc-700 text-white text-sm rounded-lg hover:bg-zinc-600 transition-colors"
-            >
-              프로필 편집
-            </button>
-          </div>
-        )}
       </section>
 
       {feedsLoading && feeds.length === 0 && (

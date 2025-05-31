@@ -7,6 +7,7 @@ import { useAuthStore } from "@/store/authStore";
 import { login } from "@/apis/auth"; // login API만 사용
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import TextButton from "@/components/shared/TextButton";
 
 export default function LoginForm() {
   const router = useRouter();
@@ -97,10 +98,16 @@ export default function LoginForm() {
               className="block text-center text-black-100 text-sm hover:underline">
               비밀번호를 잊으셨나요?
             </Link>
-            <Link href="/signup" 
-              className="block text-center text-blue-400 text-sm hover:underline">
-              계정이 없으신가요? 가입하기
-            </Link>
+            <div className="text-center">
+              <TextButton
+                href="/signup"
+                variant="link"
+                size="sm"
+                className="block w-full"
+              >
+                계정이 없으신가요? 가입하기
+              </TextButton>
+            </div>
           </div>
         </form>
       </div>

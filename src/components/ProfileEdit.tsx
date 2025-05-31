@@ -8,6 +8,7 @@ import { UserProfile } from "@/types/users";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import ImageCropView from "./ImageCropView";
+import TextButton from "@/components/shared/TextButton";
 
 type ViewState = "profile" | "imageCrop";
 
@@ -163,13 +164,14 @@ export default function ProfileEdit() {
                 </div>
               )}
             </div>
-            <button
+            <TextButton
               onClick={handleImageChange}
               disabled={uploading}
-              className="px-4 py-2 bg-zinc-700 text-white text-sm rounded-lg hover:bg-zinc-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              variant="primary"
+              size="md"
             >
               {uploading ? "업로드 중..." : "프로필 사진 변경"}
-            </button>
+            </TextButton>
           </div>
 
           {/* 사용자명 필드 */}
