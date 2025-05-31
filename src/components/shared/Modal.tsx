@@ -96,7 +96,7 @@ export default function Modal({
 
           {/* 푸터 영역 */}
           {footer && (
-            <div className="flex-shrink-0">
+            <div className="flex-shrink-0 h-[64px]">
               {footer}
             </div>
           )}

@@ -7,7 +7,7 @@ import { getUserProfile, updateProfileImage } from "@/apis/users";
 import { UserProfile } from "@/types/users";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
-import ImageCropView from "./ImageCropView";
+import ImageCropModal from "./ImageCropModal";
 import TextButton from "@/components/shared/TextButton";
 import Input from "@/components/shared/Input";
 import TextArea from "@/components/shared/TextArea";
@@ -134,75 +134,77 @@ export default function ProfileEdit() {
     );
   }
 
-  // 이미지 크롭 뷰
-  if (currentView === "imageCrop" && selectedImageFile) {
-    return (
-      <ImageCropView
-        imageFile={selectedImageFile}
-        onCropComplete={handleCropComplete}
-        onCancel={() => setCurrentView("profile")}
-      />
-    );
-  }
-
   // 기본 프로필 편집 뷰
   return (
-    <div className="min-h-screen bg-black text-white pt-[64px] px-[24px]">
-            {/* 프로필 사진 섹션 */}
-            <div className="flex flex-col items-center space-y-2 py-[24px]">
-                <div className="relative">
-                <img
-                    src={userProfile.profile_image_url || "/default-profile.svg"}
-                    alt="프로필 이미지"
-                    className="w-24 h-24 rounded-full object-cover bg-gray-700"
-                />
-                {uploading && (
-                    <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-full">
-                    <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                    </div>
-                )}
-                </div>
-                <TextButton
-                    onClick={handleImageChange}
-                    disabled={uploading}
-                    variant="primary"
-                    size="md"
-                >
-                {uploading ? "업로드 중..." : "프로필 사진 변경"}
-                </TextButton>
-            </div>
-
-            <div className="space-y-4">
-                {/* 사용자명 필드 */}
-                <Input
-                    label="사용자명"
-                    value={formData.username}
-                    readOnly={true}
-                    placeholder="사용자명을 입력하세요"
-                    onClick={() => router.push('/profile/edit/username')}
-                    showArrow={true}
-                />
-
-                {/* 소개 필드 */}
-                <TextArea
-                    label="소개"
-                    value={formData.bio}
-                    readOnly={true}
-                    placeholder="자신을 소개해주세요"
-                    rows={4}
-                    onClick={() => router.push('/profile/edit/bio')}
-                    showArrow={true}
-                />
+    <>
+      <div className="min-h-screen bg-black text-white pt-[64px] px-[24px]">
+        {/* 프로필 사진 섹션 */}
+        <div className="flex flex-col items-center space-y-2 py-[24px]">
+          <div className="relative">
+            <img
+              src={userProfile.profile_image_url || "/default-profile.svg"}
+              alt="프로필 이미지"
+              className="w-24 h-24 rounded-full object-cover bg-gray-700"
+            />
+            {uploading && (
+              <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-full">
+                <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+              </div>
+            )}
           </div>
+          <TextButton
+            onClick={handleImageChange}
+            disabled={uploading}
+            variant="primary"
+            size="md"
+          >
+            {uploading ? "업로드 중..." : "프로필 사진 변경"}
+          </TextButton>
+        </div>
 
-      {/* 숨겨진 파일 input */}
-      <input
-        ref={fileInputRef}
-        type="file"
-        accept="image/*"
-        onChange={handleFileSelect}
-        className="hidden"
+        <div className="space-y-4">
+          {/* 사용자명 필드 */}
+          <Input
+            label="사용자명"
+            value={formData.username}
+            readOnly={true}
+            placeholder="사용자명을 입력하세요"
+            onClick={() => router.push('/profile/edit/username')}
+            showArrow={true}
+          />
+
+          {/* 소개 필드 */}
+          <TextArea
+            label="소개"
+            value={formData.bio}
+            readOnly={true}
+            placeholder="자신을 소개해주세요"
+            rows={4}
+            onClick={() => router.push('/profile/edit/bio')}
+            showArrow={true}
+          />
+        </div>
+
+        {/* 숨겨진 파일 input */}
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          onChange={handleFileSelect}
+          className="hidden"
+        />
+      </div>
+
+      {/* 이미지 크롭 모달 */}
+      <ImageCropModal
+        isOpen={currentView === "imageCrop"}
+        onClose={() => {
+          setCurrentView("profile");
+          setSelectedImageFile(null);
+        }}
+        imageFile={selectedImageFile}
+        onCropComplete={handleCropComplete}
       />
-    </div>
+    </>
   );
 } 

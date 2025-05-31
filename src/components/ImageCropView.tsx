@@ -1,8 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import { useState, useEffect, useRef, forwardRef, useImperativeHandle } from "react";
 
 interface ImageCropViewProps {
   imageFile: File;
@@ -10,7 +8,12 @@ interface ImageCropViewProps {
   onCancel: () => void;
 }
 
-export default function ImageCropView({ imageFile, onCropComplete, onCancel }: ImageCropViewProps) {
+export interface ImageCropViewRef {
+  handleCrop: () => void;
+}
+
+const ImageCropView = forwardRef<ImageCropViewRef, ImageCropViewProps>(
+  ({ imageFile, onCropComplete, onCancel }, ref) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [imageUrl, setImageUrl] = useState<string>("");
   const [imageElement, setImageElement] = useState<HTMLImageElement | null>(null);
@@ -30,9 +33,9 @@ export default function ImageCropView({ imageFile, onCropComplete, onCancel }: I
     img.onload = () => {
       setImageElement(img);
       
-      // 화면 크기를 고려한 이미지 표시 크기 계산
-      const maxWidth = Math.min(window.innerWidth - 40, 400);
-      const maxHeight = Math.min(window.innerHeight - 200, 600);
+      // 모달 크기를 고려한 이미지 표시 크기 계산
+      const maxWidth = Math.min(350, window.innerWidth - 80);
+      const maxHeight = Math.min(350, window.innerHeight - 300);
       
       const aspectRatio = img.width / img.height;
       let displayWidth, displayHeight;
@@ -202,15 +205,23 @@ export default function ImageCropView({ imageFile, onCropComplete, onCancel }: I
     }, 'image/jpeg', 0.9);
   };
 
+  useImperativeHandle(ref, () => ({
+    handleCrop
+  }));
+
   return (
-    <div className="min-h-screen bg-black text-white">
+    <>
+      {/* 설명 텍스트 */}
+      <div className="px-6 py-4 text-center">
+        <p className="text-gray-300 text-sm">이미지를 드래그하여 크롭 영역을 조정하세요</p>
+      </div>
 
       {/* 이미지 크롭 영역 */}
-      <div className="pt-[120px] flex justify-center px-4 py-4">
+      <div className="flex justify-center px-6 py-4">
         <div className="relative">
           {imageUrl && (
             <div 
-              className="relative select-none"
+              className="relative select-none overflow-hidden"
               style={{ width: imageSize.width, height: imageSize.height }}
             >
               {/* 원본 이미지 */}
@@ -250,36 +261,16 @@ export default function ImageCropView({ imageFile, onCropComplete, onCancel }: I
                 <div
                   className="border-2 border-white rounded-full w-full h-full"
                 ></div>
-                {/* 드래그 핸들 표시 */}
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="w-8 h-8 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
-                    <div className="w-4 h-4 bg-white rounded-sm"></div>
-                  </div>
-                </div>
               </div>
             </div>
           )}
         </div>
       </div>
 
-      {/* 버튼 영역 */}
-      <div className="flex justify-center space-x-4 px-4 pb-8">
-        <button
-          onClick={onCancel}
-          className="px-6 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
-        >
-          취소
-        </button>
-        <button
-          onClick={handleCrop}
-          className="px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
-        >
-          완료
-        </button>
-      </div>
-
       {/* 숨겨진 캔버스 */}
       <canvas ref={canvasRef} className="hidden" />
-    </div>
+    </>
   );
-} 
+});
+
+export default ImageCropView; 
