@@ -21,7 +21,7 @@ export interface Comment {
   user: {
     id: number;
     username: string;
-    profileImage: string;
+    profile_image_url: string;
   };
 }
 

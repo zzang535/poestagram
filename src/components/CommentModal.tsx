@@ -172,7 +172,7 @@ export default function CommentModal({ isOpen, onClose, feedId }: CommentModalPr
         <div className="bg-zinc-900 border-t border-zinc-700 flex items-center gap-[10px] px-4 h-full">
           <div className="flex-shrink-0">
             <img 
-              src="https://i.pravatar.cc/40?img=1" 
+              src={user?.profile_image_url || "/default-profile.svg"} 
               alt="내 프로필"
               className="w-[32px] h-[32px] rounded-full"
             />
@@ -243,7 +243,7 @@ export default function CommentModal({ isOpen, onClose, feedId }: CommentModalPr
             <div className="flex items-start gap-[10px]">
               <div className="flex-shrink-0">
                 <img 
-                  src={comment.user.profileImage || "/default-profile.svg"} 
+                  src={comment.user.profile_image_url || "/default-profile.svg"} 
                   alt={`${comment.user.username}의 프로필`}
                   className="w-[40px] h-[40px] rounded-full"
                 />

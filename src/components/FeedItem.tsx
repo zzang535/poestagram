@@ -99,7 +99,7 @@ export default function FeedItem({
             onClick={() => router.push(`/profile/${user.id}`)}
           >
             <img
-              src={user?.profileImage || "/default-profile.svg"}
+              src={user?.profile_image_url || "/default-profile.svg"}
               alt={`${user?.username} 프로필`}
               className="w-10 h-10 rounded-full"
             />

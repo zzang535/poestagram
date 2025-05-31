@@ -125,6 +125,7 @@ interface LoginResponse {
   token_type: string;
   username: string;
   email: string;
+  profile_image_url?: string;
 }
 
 export async function login(identifier: string, password: string): Promise<LoginResponse> {

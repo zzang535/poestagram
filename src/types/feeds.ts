@@ -58,5 +58,5 @@ export interface FeedListResponse {
 export interface User {
   id: number;
   username: string;
-  profileImage?: string;
+  profile_image_url?: string;
 }

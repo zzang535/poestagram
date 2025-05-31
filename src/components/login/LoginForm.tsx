@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/authStore";
@@ -11,11 +11,20 @@ import TextButton from "@/components/shared/TextButton";
 
 export default function LoginForm() {
   const router = useRouter();
+  const accessToken = useAuthStore((s) => s.accessToken);
+  const hasHydrated = useAuthStore((s) => s.hasHydrated);
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  // 이미 로그인된 사용자 처리
+  useEffect(() => {
+    if (hasHydrated && accessToken) {
+      router.push('/feed');
+    }
+  }, [hasHydrated, accessToken, router]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,7 +43,8 @@ export default function LoginForm() {
         user: {
           id: loginResponse.user_id,
           email: loginResponse.email,
-          username: loginResponse.username, 
+          username: loginResponse.username,
+          profile_image_url: loginResponse.profile_image_url,
         }
       });
       router.push("/feed");
@@ -44,6 +54,20 @@ export default function LoginForm() {
       setIsSubmitting(false);
     }
   };
+
+  // hydration 완료 전까지 로딩 상태
+  if (!hasHydrated) {
+    return (
+      <div className="min-h-screen bg-black flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500"></div>
+      </div>
+    );
+  }
+
+  // 이미 로그인된 경우 아무것도 렌더링하지 않음 (리다이렉트 중)
+  if (accessToken) {
+    return null;
+  }
 
   return (
     <div className="w-full mx-auto min-h-screen flex items-center justify-center px-5">
