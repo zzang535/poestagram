@@ -1,4 +1,4 @@
-import { UserProfile, UsernameUpdateRequest, UsernameUpdateResponse } from "@/types/users";
+import { UserProfile, UsernameUpdateRequest, UsernameUpdateResponse, BioUpdateRequest, BioUpdateResponse } from "@/types/users";
 import { handleResponse } from "./handleResponse";
 import { useAuthStore } from "@/store/authStore";
 
@@ -72,6 +72,32 @@ export async function updateUsername(username: string): Promise<UsernameUpdateRe
     return handleResponse(response, "사용자명 변경에 실패했습니다.");
   } catch (error) {
     console.error("사용자명 변경 API 호출 오류:", error);
+    throw error;
+  }
+}
+
+export async function updateBio(bio: string): Promise<BioUpdateResponse> {
+  const accessToken = useAuthStore.getState().accessToken;
+  
+  if (!accessToken) {
+    throw new Error("로그인이 필요합니다.");
+  }
+
+  const requestBody: BioUpdateRequest = { bio };
+
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/bio`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify(requestBody),
+    });
+    
+    return handleResponse(response, "소개글 변경에 실패했습니다.");
+  } catch (error) {
+    console.error("소개글 변경 API 호출 오류:", error);
     throw error;
   }
 }

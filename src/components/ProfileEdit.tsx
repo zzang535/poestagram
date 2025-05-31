@@ -9,6 +9,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import ImageCropModal from "./ImageCropModal";
 import UsernameEditModal from "./UsernameEditModal";
+import BioEditModal from "./BioEditModal";
 import TextButton from "@/components/shared/TextButton";
 import Input from "@/components/shared/Input";
 import TextArea from "@/components/shared/TextArea";
@@ -32,8 +33,9 @@ export default function ProfileEdit() {
   const [currentView, setCurrentView] = useState<ViewState>("profile");
   const [selectedImageFile, setSelectedImageFile] = useState<File | null>(null);
   
-  // 사용자명 변경 모달 상태
+  // 모달 상태 관리
   const [isUsernameModalOpen, setIsUsernameModalOpen] = useState(false);
+  const [isBioModalOpen, setIsBioModalOpen] = useState(false);
 
   useEffect(() => {
     if (!authUser) {
@@ -135,6 +137,24 @@ export default function ProfileEdit() {
     alert('사용자명이 성공적으로 변경되었습니다.');
   };
 
+  const handleBioUpdate = (newBio: string) => {
+    // 프로필 정보 업데이트
+    if (userProfile) {
+      setUserProfile({
+        ...userProfile,
+        bio: newBio
+      });
+    }
+    
+    // 폼 데이터 업데이트
+    setFormData(prev => ({
+      ...prev,
+      bio: newBio
+    }));
+    
+    alert('소개글이 성공적으로 변경되었습니다.');
+  };
+
   const handleSave = async () => {
     // TODO: 프로필 업데이트 API 호출 (username, bio)
     alert("프로필 저장 기능은 추후 구현됩니다.");
@@ -201,8 +221,8 @@ export default function ProfileEdit() {
             value={formData.bio}
             readOnly={true}
             placeholder="자신을 소개해주세요"
-            rows={4}
-            onClick={() => router.push('/profile/edit/bio')}
+            rows={6}
+            onClick={() => setIsBioModalOpen(true)}
             showArrow={true}
           />
         </div>
@@ -234,6 +254,14 @@ export default function ProfileEdit() {
         onClose={() => setIsUsernameModalOpen(false)}
         currentUsername={userProfile.username}
         onUpdateSuccess={handleUsernameUpdate}
+      />
+
+      {/* 소개 변경 모달 */}
+      <BioEditModal
+        isOpen={isBioModalOpen}
+        onClose={() => setIsBioModalOpen(false)}
+        currentBio={userProfile.bio || ""}
+        onUpdateSuccess={handleBioUpdate}
       />
     </>
   );

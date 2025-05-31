@@ -17,4 +17,13 @@ export interface UsernameUpdateRequest {
 export interface UsernameUpdateResponse {
   message: string;
   username: string;
+}
+
+export interface BioUpdateRequest {
+  bio?: string;
+}
+
+export interface BioUpdateResponse {
+  message: string;
+  bio?: string;
 } 
