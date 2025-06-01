@@ -57,6 +57,9 @@ export default function FeedItem({
     setCurrentImageIndex((prev) => (prev < files.length - 1 ? prev + 1 : prev));
   };
 
+  const handleDotClick = (index: number) => {
+    setCurrentImageIndex(index);
+  };
 
   const onClickLike = () => {
     if(!accessToken) {
@@ -133,75 +136,102 @@ export default function FeedItem({
           )}
         </div>
         <div 
-          className="relative"
+          className="relative overflow-hidden"
           style={{
             aspectRatio: `1/${frame_ratio}`
           }}
         >
           {files.length > 0 && (
             <>
-              {files[currentImageIndex].content_type.startsWith("image") && (
-                <img
-                  src={`${files[currentImageIndex].base_url}/${files[currentImageIndex].s3_key}`}
-                  alt="게임 포스트"
-                  className="absolute top-0 left-0 w-full h-full bg-black"
-                  style={{
-                    objectFit: (() => {
-                      const ratio = frame_ratio;
-                      const imageRatio = files[currentImageIndex].height / files[currentImageIndex].width;
-                      
-                      if(imageRatio > ratio) {
-                        return "cover";
-                      } else {
-                        return "contain";
-                      }
-                    })()
-                  }}
-                />
-              )}
-              {files[currentImageIndex].content_type.startsWith("video") && (
-                <video
-                  src={`${files[currentImageIndex].base_url}/${files[currentImageIndex].s3_key}`}
-                  className="absolute top-0 left-0 w-full h-full bg-black"
-                  controls
-                  autoPlay
-                  loop
-                  muted
-                  style={{
-                    objectFit: (() => {
-                      const ratio = frame_ratio;
-                      const imageRatio = files[currentImageIndex].height / files[currentImageIndex].width;
-                      
-                      if(imageRatio > ratio) {
-                        return "cover";
-                      } else {
-                        return "contain";
-                      }
-                    })()
-                  }}
-                />
-              )}
+              {/* 슬라이드 컨테이너 */}
+              <div 
+                className="flex transition-transform duration-300 ease-in-out h-full"
+                style={{
+                  width: `${files.length * 100}%`,
+                  transform: `translateX(-${currentImageIndex * (100 / files.length)}%)`
+                }}
+              >
+                {files.map((file, index) => (
+                  <div 
+                    key={index}
+                    className="flex-shrink-0"
+                    style={{ width: `${100 / files.length}%` }}
+                  >
+                    {file.content_type.startsWith("image") && (
+                      <img
+                        src={`${file.base_url}/${file.s3_key}`}
+                        alt="게임 포스트"
+                        className="w-full h-full bg-black"
+                        style={{
+                          objectFit: (() => {
+                            const ratio = frame_ratio;
+                            const imageRatio = file.height / file.width;
+                            
+                            if(imageRatio > ratio) {
+                              return "cover";
+                            } else {
+                              return "contain";
+                            }
+                          })()
+                        }}
+                      />
+                    )}
+                    {file.content_type.startsWith("video") && (
+                      <video
+                        src={`${file.base_url}/${file.s3_key}`}
+                        className="w-full h-full bg-black"
+                        controls
+                        autoPlay={index === currentImageIndex}
+                        loop
+                        muted
+                        style={{
+                          objectFit: (() => {
+                            const ratio = frame_ratio;
+                            const imageRatio = file.height / file.width;
+                            
+                            if(imageRatio > ratio) {
+                              return "cover";
+                            } else {
+                              return "contain";
+                            }
+                          })()
+                        }}
+                      />
+                    )}
+                  </div>
+                ))}
+              </div>
+
               {files.length > 1 && (
                 <>
                   <button
                     onClick={handlePrevImage}
-                    className={`
-                        absolute left-2 top-1/2 -translate-y-1/2 bg-black/70 text-white p-2 rounded-full hover:bg-black/90 transition-colors ${currentImageIndex === 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    className={`absolute left-2 top-1/2 -translate-y-1/2 bg-black/70 text-white w-10 h-10 rounded-md hover:bg-black/90 transition-colors z-10 flex items-center justify-center ${currentImageIndex === 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
                     disabled={currentImageIndex === 0}
                   >
-                    <FontAwesomeIcon icon={faChevronLeft} />
+                    <FontAwesomeIcon icon={faChevronLeft} className="text-sm" />
                   </button>
                   <button
                     onClick={handleNextImage}
-                    className={`
-                        absolute right-2 top-1/2 -translate-y-1/2 bg-black/70 text-white p-2 rounded-full hover:bg-black/90 transition-colors ${currentImageIndex === files.length - 1 ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    className={`absolute right-2 top-1/2 -translate-y-1/2 bg-black/70 text-white w-10 h-10 rounded-md hover:bg-black/90 transition-colors z-10 flex items-center justify-center ${currentImageIndex === files.length - 1 ? 'opacity-50 cursor-not-allowed' : ''}`}
                     disabled={currentImageIndex === files.length - 1}
                   >
-                    <FontAwesomeIcon icon={faChevronRight} />
+                    <FontAwesomeIcon icon={faChevronRight} className="text-sm" />
                   </button>
-                  <div className="
-                        absolute bottom-2 left-1/2 -translate-x-1/2 bg-black/70 text-white text-xs px-2 py-1 rounded-full">
-                    {currentImageIndex + 1} / {files.length}
+                  
+                  {/* Dot 페이지네이션 */}
+                  <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2 z-10">
+                    {files.map((_, index) => (
+                      <button
+                        key={index}
+                        onClick={() => handleDotClick(index)}
+                        className={`w-2 h-2 rounded-full transition-all duration-200 ${
+                          index === currentImageIndex 
+                            ? 'bg-white w-6' 
+                            : 'bg-white/50 hover:bg-white/70'
+                        }`}
+                      />
+                    ))}
                   </div>
                 </>
               )}
