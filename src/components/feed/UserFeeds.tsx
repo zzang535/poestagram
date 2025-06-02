@@ -12,7 +12,7 @@ interface UserFeedsProps {
 
 export default function UserFeeds({ userId }: UserFeedsProps) {
   const searchParams = useSearchParams();
-  const limit = 3;
+  const limit = 10;
   
   const [feedData, setFeedData] = useState<FeedItemProps[]>([]);
   const [offset, setOffset] = useState(0);

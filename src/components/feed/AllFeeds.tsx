@@ -6,7 +6,7 @@ import FeedItem from "@/components/feed/FeedItem";
 import { Feed, FeedItemProps } from "@/types/feeds";
 
 export default function AllFeeds() {
-  const limit = 3;
+  const limit = 10;
   
   const [feedData, setFeedData] = useState<FeedItemProps[]>([]);
   const [offset, setOffset] = useState(0);
