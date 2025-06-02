@@ -32,6 +32,23 @@ const MediaUploadBox = forwardRef<HTMLDivElement, MediaUploadBoxProps>(({
   const onFrameSizeChangeRef = useRef(onFrameSizeChange);
   const onFileIdsChangeRef = useRef(onFileIdsChange);
 
+  // 터치 드래그 관련 상태
+  const [touchStart, setTouchStart] = useState<{ x: number; y: number } | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragOffset, setDragOffset] = useState(0);
+  const [touchDirection, setTouchDirection] = useState<'horizontal' | 'vertical' | null>(null);
+
+  // 화면 크기 감지 (768px 이상을 PC로 간주)
+  const [isMobile, setIsMobile] = useState(false);
+
+  // 최소 드래그 거리 (px) - 슬라이드 완료를 위한 threshold
+  const minSwipeDistance = 50;
+  // 컨테이너 너비의 30% 이상 드래그해야 슬라이드
+  const swipeThreshold = 0.3;
+  // 방향 판단을 위한 최소 움직임 거리
+  const directionThreshold = 10;
+
   const MAX_FILE_SIZE_MB = 200;
 
   // 최신 콜백 참조 업데이트
@@ -130,6 +147,20 @@ const MediaUploadBox = forwardRef<HTMLDivElement, MediaUploadBoxProps>(({
     }
   }, [ref]);
 
+  // 화면 크기 감지
+  useEffect(() => {
+    const checkIsMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkIsMobile();
+    window.addEventListener('resize', checkIsMobile);
+    
+    return () => {
+      window.removeEventListener('resize', checkIsMobile);
+    };
+  }, []);
+
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
@@ -199,12 +230,101 @@ const MediaUploadBox = forwardRef<HTMLDivElement, MediaUploadBoxProps>(({
     setCurrentIndex(index);
   };
 
+  // 터치 이벤트 핸들러
+  const onTouchStart = (e: React.TouchEvent) => {
+    setTouchEnd(null);
+    setTouchStart({
+      x: e.targetTouches[0].clientX,
+      y: e.targetTouches[0].clientY
+    });
+    setIsDragging(false);
+    setDragOffset(0);
+    setTouchDirection(null);
+  };
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    if (!touchStart) return;
+    
+    const currentTouch = {
+      x: e.targetTouches[0].clientX,
+      y: e.targetTouches[0].clientY
+    };
+    
+    const deltaX = currentTouch.x - touchStart.x;
+    const deltaY = currentTouch.y - touchStart.y;
+    
+    // 방향이 아직 결정되지 않았고, 충분한 움직임이 있을 때 방향 판단
+    if (!touchDirection && (Math.abs(deltaX) > directionThreshold || Math.abs(deltaY) > directionThreshold)) {
+      if (Math.abs(deltaX) > Math.abs(deltaY)) {
+        // 수평 드래그 의도
+        setTouchDirection('horizontal');
+        setIsDragging(true);
+        e.preventDefault(); // 스크롤 방지
+      } else {
+        // 수직 스크롤 의도
+        setTouchDirection('vertical');
+        return; // 드래그 처리하지 않음
+      }
+    }
+    
+    // 수평 드래그가 확정된 경우에만 드래그 오프셋 계산
+    if (touchDirection === 'horizontal' && isDragging) {
+      // 첫 번째 이미지에서 오른쪽으로 드래그하거나 마지막 이미지에서 왼쪽으로 드래그하는 경우 제한
+      if ((currentIndex === 0 && deltaX > 0) || 
+          (currentIndex === previews.length - 1 && deltaX < 0)) {
+        setDragOffset(deltaX * 0.3); // 저항감 있게 조금만 움직임
+      } else {
+        setDragOffset(deltaX);
+      }
+      
+      setTouchEnd(currentTouch.x);
+      e.preventDefault(); // 스크롤 방지
+    }
+  };
+
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd || !isDragging || touchDirection !== 'horizontal') {
+      // 상태 초기화
+      setIsDragging(false);
+      setDragOffset(0);
+      setTouchDirection(null);
+      setTouchStart(null);
+      setTouchEnd(null);
+      return;
+    }
+    
+    const distance = touchStart.x - touchEnd;
+    const containerWidth = containerRef.current?.clientWidth || window.innerWidth;
+    const threshold = containerWidth * swipeThreshold;
+    
+    const isLeftSwipe = distance > threshold;
+    const isRightSwipe = distance < -threshold;
+
+    if (isLeftSwipe && currentIndex < previews.length - 1) {
+      // 좌측 스와이프 - 다음 이미지
+      handleNextSlide();
+    } else if (isRightSwipe && currentIndex > 0) {
+      // 우측 스와이프 - 이전 이미지
+      handlePrevSlide();
+    }
+    
+    // 드래그 상태 초기화
+    setIsDragging(false);
+    setDragOffset(0);
+    setTouchDirection(null);
+    setTouchStart(null);
+    setTouchEnd(null);
+  };
+
   return (
     <div className="space-y-4">
       {/* 업로드 박스 */}
       <div 
         ref={containerRef}
         className="border-2 border-gray-900 rounded-lg overflow-hidden relative aspect-square bg-black flex items-center justify-center"
+        onTouchStart={onTouchStart}
+        onTouchMove={onTouchMove}
+        onTouchEnd={onTouchEnd}
       >
         {isImageUploading && <ImageUploadLoading />}
         {!isImageUploading && previews.length > 0 && (
@@ -218,10 +338,10 @@ const MediaUploadBox = forwardRef<HTMLDivElement, MediaUploadBoxProps>(({
             >
               {/* 슬라이드 컨테이너 */}
               <div 
-                className="flex transition-transform duration-300 ease-in-out h-full"
+                className={`flex h-full ${!isDragging ? 'transition-transform duration-300 ease-in-out' : ''}`}
                 style={{
                   width: `${previews.length * 100}%`,
-                  transform: `translateX(-${currentIndex * (100 / previews.length)}%)`
+                  transform: `translateX(calc(-${currentIndex * (100 / previews.length)}% + ${dragOffset}px))`
                 }}
               >
                 {previews.map((preview, index) => (
@@ -297,8 +417,8 @@ const MediaUploadBox = forwardRef<HTMLDivElement, MediaUploadBoxProps>(({
               <FontAwesomeIcon icon={faXmark} className="text-sm" />
             </button>
             
-            {/* 좌우 버튼 */}
-            {previews.length > 1 && (
+            {/* 좌우 버튼 - PC에서만 표시 */}
+            {!isMobile && previews.length > 1 && (
               <>
                 <button 
                   onClick={handlePrevSlide}
@@ -315,23 +435,6 @@ const MediaUploadBox = forwardRef<HTMLDivElement, MediaUploadBoxProps>(({
                   <FontAwesomeIcon icon={faChevronRight} className="text-sm" />
                 </button>
               </>
-            )}
-
-            {/* Dot 페이지네이션 */}
-            {previews.length > 1 && (
-              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2 z-10">
-                {previews.map((_, index) => (
-                  <button
-                    key={index}
-                    onClick={() => handleDotClick(index)}
-                    className={`w-2 h-2 rounded-full transition-all duration-200 ${
-                      index === currentIndex 
-                        ? 'bg-white w-6' 
-                        : 'bg-white/50 hover:bg-white/70'
-                    }`}
-                  />
-                ))}
-              </div>
             )}
           </>
         )}
@@ -354,6 +457,25 @@ const MediaUploadBox = forwardRef<HTMLDivElement, MediaUploadBoxProps>(({
         )}
       </div>
 
+       {/* Dot 페이지네이션 - 이미지 아래 별도 영역 */}
+       {previews.length > 1 && (
+        <div className="flex justify-center py-3">
+          <div className="flex space-x-2">
+            {previews.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => handleDotClick(index)}
+                className={`w-2 h-2 rounded-full transition-all duration-200 ${
+                  index === currentIndex 
+                    ? 'bg-white w-6' 
+                    : 'bg-white/50 hover:bg-white/70'
+                }`}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* 이미지 추가 버튼 */}
       {previews.length > 0 && (
         <button
@@ -374,6 +496,8 @@ const MediaUploadBox = forwardRef<HTMLDivElement, MediaUploadBoxProps>(({
         onChange={handleFileChange}
         className="hidden"
       />
+
+     
     </div>
   );
 });
