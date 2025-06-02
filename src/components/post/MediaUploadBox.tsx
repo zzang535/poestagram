@@ -27,6 +27,7 @@ const MediaUploadBox = forwardRef<HTMLDivElement, MediaUploadBoxProps>(({
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isImageUploading, setIsImageUploading] = useState(false);
   const [frameSize, setFrameSize] = useState<{ width: number; height: number } | null>(null);
+  const [isDragOver, setIsDragOver] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const onFrameSizeChangeRef = useRef(onFrameSizeChange);
@@ -165,25 +166,41 @@ const MediaUploadBox = forwardRef<HTMLDivElement, MediaUploadBoxProps>(({
     const files = e.target.files;
     if (!files || files.length === 0) return;
 
+    await processFiles(Array.from(files));
+  };
+
+  const processFiles = async (files: File[]) => {
     // 파일 크기 검사
-    const oversizedFiles = Array.from(files).filter(file => file.size > MAX_FILE_SIZE_MB * 1024 * 1024);
+    const oversizedFiles = files.filter(file => file.size > MAX_FILE_SIZE_MB * 1024 * 1024);
     if (oversizedFiles.length > 0) {
       alert(`파일 크기가 ${MAX_FILE_SIZE_MB}MB를 초과했습니다. 업로드할 수 없습니다.`);
       return;
     }
 
+    // 파일 형식 검사 (이미지 또는 비디오만 허용)
+    const validFiles = files.filter(file => 
+      file.type.startsWith('image/') || file.type.startsWith('video/')
+    );
+
+    if (validFiles.length === 0) {
+      alert('이미지 또는 비디오 파일만 업로드할 수 있습니다.');
+      return;
+    }
+
+    if (validFiles.length !== files.length) {
+      alert('일부 파일이 지원되지 않는 형식이어서 제외되었습니다.');
+    }
+
     try {
       setIsImageUploading(true);
       
-      const fileArray = Array.from(files);
-      
       // API 호출
-      const response: UploadResponse = await uploadFile(fileArray);
+      const response: UploadResponse = await uploadFile(validFiles);
       console.log("업로드 성공:", response);
       
       // 서버에서 반환된 URL과 ID, 이미지 크기 정보를 사용하여 미리보기 생성
       const newPreviews: PreviewImage[] = response.file_urls.map((url: string, index: number) => {
-        const fileType = fileArray[index].type.startsWith('video/') ? 'video' : 'image';
+        const fileType = validFiles[index].type.startsWith('video/') ? 'video' : 'image';
         return { 
           url, 
           type: fileType,
@@ -316,20 +333,67 @@ const MediaUploadBox = forwardRef<HTMLDivElement, MediaUploadBoxProps>(({
     setTouchEnd(null);
   };
 
+  // 드래그 앤 드롭 이벤트 핸들러
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragOver(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    // 실제로 컨테이너를 벗어났는지 확인
+    const rect = containerRef.current?.getBoundingClientRect();
+    if (rect) {
+      const { clientX, clientY } = e;
+      if (
+        clientX < rect.left ||
+        clientX > rect.right ||
+        clientY < rect.top ||
+        clientY > rect.bottom
+      ) {
+        setIsDragOver(false);
+      }
+    }
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragOver(false);
+
+    const files = Array.from(e.dataTransfer.files);
+    if (files.length > 0) {
+      processFiles(files);
+    }
+  };
+
+  const handleDragEnter = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
   return (
     <div className="space-y-4">
       {/* 업로드 박스 */}
       <div 
         ref={containerRef}
-        className="
+        className={`
           border-2 
-          border-zinc-900 
+          ${isDragOver ? 'border-red-500 bg-red-500/10' : 'border-zinc-900'}
           rounded-lg overflow-hidden relative aspect-square 
           bg-zinc-950 
-          flex items-center justify-center"
+          flex items-center justify-center
+          transition-colors duration-200
+        `}
         onTouchStart={onTouchStart}
         onTouchMove={onTouchMove}
         onTouchEnd={onTouchEnd}
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+        onDragEnter={handleDragEnter}
+        onDrop={handleDrop}
       >
         {isImageUploading && <ImageUploadLoading />}
         {!isImageUploading && previews.length > 0 && (
@@ -459,11 +523,22 @@ const MediaUploadBox = forwardRef<HTMLDivElement, MediaUploadBoxProps>(({
               className="cursor-pointer absolute inset-0 w-full h-full flex items-center justify-center"
             >
               <div className="text-center">
-                <div className="mx-auto w-16 h-16 bg-opacity-10 rounded-full flex items-center justify-center mb-4">
+                <div className="mx-auto w-16 h-16 bg-opacity-10 rounded-full flex items-center justify-center">
                   <FontAwesomeIcon icon={faCamera} className="text-2xl" />
                 </div>
-                <p className="text-gray-300 mb-2 text-sm">이미지 또는 동영상을 업로드하세요</p>
-                <p className="text-xs text-gray-400">지원 형식: JPG, PNG, MP4 (최대 200MB)</p>
+                <p className="text-gray-300 text-sm">
+                  {isDragOver 
+                    ? "파일을 여기에 놓으세요" 
+                    : "이미지 또는 동영상을 업로드하세요"
+                  }
+                </p>
+                <p className="text-xs text-gray-400 mt-4">
+                  {isDragOver 
+                    ? "드롭하여 업로드" 
+                    : "클릭하거나 드래그해서 업로드"
+                  }
+                </p>
+                <p className="text-xs text-gray-400 mt-1">지원 형식: JPG, PNG, MP4 (최대 200MB)</p>
               </div>
             </label>
           </>
