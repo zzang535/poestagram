@@ -5,9 +5,9 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/authStore";
 import { login } from "@/apis/auth"; // login API만 사용
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import TextButton from "@/components/ui/TextButton";
+import Button from "@/components/ui/Button";
+import Input from "@/components/ui/Input";
 
 export default function LoginForm() {
   const router = useRouter();
@@ -15,9 +15,8 @@ export default function LoginForm() {
   const hasHydrated = useAuthStore((s) => s.hasHydrated);
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   // 이미 로그인된 사용자 처리
   useEffect(() => {
@@ -34,7 +33,7 @@ export default function LoginForm() {
     }
 
     setIsSubmitting(true);
-    setErrorMessage(null);
+    setErrorMessage("");
 
     try {
       const loginResponse = await login(identifier, password);
@@ -49,7 +48,7 @@ export default function LoginForm() {
       });
       router.push("/feed");
     } catch (error) {
-      setErrorMessage(error instanceof Error ? error.message : "로그인에 실패했습니다. 사용자명 또는 비밀번호를 확인해주세요.");
+      setErrorMessage(error instanceof Error ? error.message : "로그인에 실패했습니다.");
     } finally {
       setIsSubmitting(false);
     }
@@ -72,34 +71,24 @@ export default function LoginForm() {
   return (
     <div className="w-full mx-auto min-h-screen flex items-center justify-center px-5">
       <div className="w-full max-w-[400px] space-y-6">
-        <p className="text-2xl font-bold text-white text-center">로그인</p>
         <form className="space-y-4" onSubmit={handleLogin}>
           <div className="space-y-4">
-            <div>
-              <input
-                type="text"
-                className="w-full px-4 py-3 border border-gray-700 rounded-lg text-sm focus:border-white focus:ring-white bg-gray-900 text-white"
-                placeholder="아이디 (이메일 또는 사용자명)"
-                value={identifier}
-                onChange={(e) => setIdentifier(e.target.value)}
-              />
-            </div>
-            <div className="relative">
-              <input
-                type={showPassword ? "text" : "password"}
-                className="w-full px-4 py-3 pr-12 border border-gray-700 rounded-lg text-sm focus:border-white focus:ring-white bg-gray-900 text-white"
-                placeholder="비밀번호"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-              <button
-                type="button"
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white"
-                onClick={() => setShowPassword(!showPassword)}
-              >
-                <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
-              </button>
-            </div>
+            <Input
+              label="아이디"
+              type="text"
+              placeholder="이메일 또는 사용자명"
+              value={identifier}
+              onChange={(e) => setIdentifier(e.target.value)}
+            />
+            
+            <Input
+              label="비밀번호"
+              type="password"
+              placeholder="비밀번호"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              showPasswordToggle={true}
+            />
 
             {errorMessage && (
               <p className="text-sm text-red-500">
@@ -107,14 +96,13 @@ export default function LoginForm() {
               </p>
             )}
 
-            <button 
+            <Button
               type="submit"
-              className="
-                w-full bg-red-800 text-white py-3 rounded-lg font-medium hover:bg-red-900 transition-colors disabled:bg-gray-700 disabled:cursor-not-allowed"
-              disabled={isSubmitting}
+              loading={isSubmitting}
+              loadingText="로그인 중..."
             >
-              {isSubmitting ? "로그인 중..." : "로그인"}
-            </button>
+              로그인
+            </Button>
           </div>
 
           <div className="space-y-2 mt-6">

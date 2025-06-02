@@ -2,6 +2,9 @@
 
 import { useState, useEffect } from "react";
 import { verifyCode, sendVerificationEmail } from "@/apis/auth";
+import Button from "@/components/ui/Button";
+import TextButton from "@/components/ui/TextButton";
+import Input from "@/components/ui/Input";
 
 interface Message {
   text: string;
@@ -15,7 +18,7 @@ interface SharedVerificationCodeStepProps {
 }
 
 export default function SharedVerificationCodeStep({ email, onNext, onBack }: SharedVerificationCodeStepProps) {
-  const [verificationCode, setVerificationCode] = useState(["", "", "", "", "", ""]);
+  const [verificationCode, setVerificationCode] = useState("");
   const [timeLeft, setTimeLeft] = useState(180);
   const [isVerifying, setIsVerifying] = useState(false);
   const [isResending, setIsResending] = useState(false);
@@ -43,36 +46,24 @@ export default function SharedVerificationCodeStep({ email, onNext, onBack }: Sh
     return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
   };
 
-  const handleVerificationInput = (index: number, value: string) => {
-    if (value.length === 1 && index < 5) {
-      const nextInput = document.querySelector(`input[name="verification-${index + 1}"]`) as HTMLInputElement;
-      nextInput?.focus();
-    }
-    const newCode = [...verificationCode];
-    newCode[index] = value;
-    setVerificationCode(newCode);
-  };
-
-  const handleVerificationKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Backspace" && !verificationCode[index] && index > 0) {
-      const prevInput = document.querySelector(`input[name="verification-${index - 1}"]`) as HTMLInputElement;
-      prevInput?.focus();
-    }
+  const handleVerificationInput = (value: string) => {
+    // 숫자만 입력되도록 필터링하고 최대 6자리까지만 허용
+    const numericValue = value.replace(/\D/g, '').slice(0, 6);
+    setVerificationCode(numericValue);
   };
 
   const handleVerifyCode = async () => {
-    const code = verificationCode.join('');
-    if (code.length !== 6) {
+    if (verificationCode.length !== 6) {
       setVerificationMessage({ text: "6자리 인증번호를 모두 입력해주세요.", type: "error" });
       return;
     }
     setIsVerifying(true);
     setVerificationMessage(null);
     try {
-      const response = await verifyCode(email, code);
+      const response = await verifyCode(email, verificationCode);
       if (response.is_verified) {
         setVerificationMessage({ text: "인증이 완료되었습니다.", type: "success" });
-        onNext(code); // ResetPasswordForm에서는 code를 사용, SignUpForm에서는 사용 안 함
+        onNext(verificationCode); // ResetPasswordForm에서는 code를 사용, SignUpForm에서는 사용 안 함
       } else {
         setVerificationMessage({ text: response.message || "인증번호가 일치하지 않습니다.", type: "error" });
       }
@@ -102,52 +93,51 @@ export default function SharedVerificationCodeStep({ email, onNext, onBack }: Sh
 
   return (
     <>
-      <p className="text-gray-400 text-center">이메일로 전송된 6자리 인증코드를 입력해 주세요</p>
+      <p className="text-gray-400 text-center">이메일로 전송된 인증코드를 입력해 주세요</p>
       <div className="space-y-4">
-        <div className="flex gap-2 justify-center mb-4">
-          {verificationCode.map((digit, index) => (
-            <input
-              key={index}
-              type="text"
-              maxLength={1}
-              name={`verification-${index}`}
-              className="w-12 h-12 text-center border border-gray-700 rounded-lg focus:border-white focus:ring-white bg-gray-900 text-white text-xl"
-              value={digit}
-              onChange={(e) => handleVerificationInput(index, e.target.value)}
-              onKeyDown={(e) => handleVerificationKeyDown(index, e)}
-            />
-          ))}
+        <div className="mb-4">
+          <Input
+            label="인증코드"
+            type="text"
+            placeholder="6자리 숫자 입력"
+            value={verificationCode}
+            onChange={(e) => handleVerificationInput(e.target.value)}
+            className="text-lg tracking-widest"
+          />
         </div>
         <div className="flex justify-between items-center mb-6">
           <span className={`text-sm ${timeLeft === 0 ? 'text-red-500' : 'text-gray-400'}`}>
             남은 시간: <span className={timeLeft === 0 ? '' : 'text-red-800'}>{formatTime(timeLeft)}</span>
           </span>
-          <button 
-            className="text-sm text-blue-400 hover:underline disabled:text-gray-500 disabled:no-underline"
+          <TextButton
             onClick={handleResendCode}
-            disabled={isResending || timeLeft > 0}
+            disabled={isResending}
+            variant="link"
+            size="sm"
           >
             {isResending ? "재전송 중..." : "인증코드 재전송"}
-          </button>
+          </TextButton>
         </div>
         {verificationMessage && (
           <p className={`text-sm ${getMessageColor(verificationMessage.type)}`}>
             {verificationMessage.text}
           </p>
         )}
-        <button 
-          className="w-full bg-red-800 text-white py-3 rounded-lg font-medium hover:bg-red-900 transition-colors disabled:bg-gray-700 disabled:cursor-not-allowed"
+        <Button
           onClick={handleVerifyCode}
-          disabled={isVerifying || verificationCode.join('').length !== 6}
+          disabled={verificationCode.length !== 6}
+          loading={isVerifying}
+          loadingText="확인 중..."
         >
-          {isVerifying ? "확인 중..." : "인증하기"}
-        </button>
-        <button 
-          className="w-full text-gray-400 py-2 hover:text-white transition-colors"
+          인증하기
+        </Button>
+        <TextButton
           onClick={onBack}
+          variant="default"
+          className="w-full py-2"
         >
           이메일 다시 입력하기
-        </button>
+        </TextButton>
       </div>
     </>
   );

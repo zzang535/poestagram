@@ -67,6 +67,8 @@ export default function RootLayout({
       return '프로필 편집';
     } else if (pathname?.startsWith('/profile/')) {
       return '프로필';
+    } else if (pathname === '/reset-password') {
+      return '비밀번호 재설정';
     } else {
       return 'poestagram';
     }

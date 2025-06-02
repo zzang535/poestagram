@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { checkUsername } from "@/apis/auth";
+import Button from "@/components/ui/Button";
+import Input from "@/components/ui/Input";
 
 interface Message {
   text: string;
@@ -48,13 +50,13 @@ export default function UsernameStep({ onNext }: UsernameStepProps) {
     }
 
     if (value.length < 4) {
-      setUsernameMessage({ text: "사용자명은 4글자 이상이어야 합니다.", type: "error" });
+      setUsernameMessage({ text: "조금 더 길게 작성해 주세요. 4글자 이상이면 좋겠어요.", type: "error" });
     } else if (value.length > 20) {
-      setUsernameMessage({ text: "사용자명은 20글자 이하여야 합니다.", type: "error" });
+      setUsernameMessage({ text: "조금 더 짧게 작성해 주세요. 20글자 이하면 좋겠어요.", type: "error" });
     } else if (!/^[a-z0-9]*$/.test(value)) {
-      setUsernameMessage({ text: "영문 소문자와 숫자만 사용할 수 있습니다.", type: "error" });
+      setUsernameMessage({ text: "영문 소문자와 숫자만 사용해 주세요.", type: "error" });
     } else if (validateUsername(value)) {
-      setUsernameMessage({ text: "형식이 올바릅니다.", type: "info" });
+      setUsernameMessage({ text: "좋은 사용자 이름이네요!", type: "info" });
     } else {
       // validateUsername(value)가 false인 경우는 정규식은 통과했으나 길이가 맞지 않는 경우인데,
       // 위에서 길이 체크를 이미 했으므로 이 경우는 발생하지 않아야 함.
@@ -65,12 +67,12 @@ export default function UsernameStep({ onNext }: UsernameStepProps) {
 
   const handleNext = async () => {
     if (!username) {
-      setUsernameMessage({ text: "사용자명을 입력해주세요.", type: "error" });
+      setUsernameMessage({ text: "사용자 이름을 입력해 주세요.", type: "error" });
       return;
     }
 
     if (!validateUsername(username)) {
-      setUsernameMessage({ text: "올바른 사용자명을 입력해주세요.", type: "error" });
+      setUsernameMessage({ text: "사용자 이름을 다시 확인해 주세요.", type: "error" });
       return;
     }
 
@@ -87,17 +89,17 @@ export default function UsernameStep({ onNext }: UsernameStepProps) {
     try {
       const checkResult = await checkUsername(username);
       if (checkResult.exists) {
-        setUsernameMessage({ text: "이미 사용 중인 사용자명입니다.", type: "error" });
+        setUsernameMessage({ text: "이미 사용 중인 사용자 이름이에요. 다른 이름은 어떠세요?", type: "error" });
         setIsValidated(false);
       } else {
-        setUsernameMessage({ text: "사용 가능한 사용자명입니다.", type: "success" });
+        setUsernameMessage({ text: "사용하실 수 있는 멋진 사용자 이름이에요!", type: "success" });
         setIsValidated(true);
         // 중복 확인 성공 시 바로 다음 단계로
         onNext(username);
       }
     } catch (error) {
       setUsernameMessage({ 
-        text: error instanceof Error ? error.message : "사용자명 중복 확인에 실패했습니다.", 
+        text: error instanceof Error ? error.message : "잠시 확인이 어려워요. 다시 시도해 주세요.", 
         type: "error" 
       });
       setIsValidated(false);
@@ -108,22 +110,15 @@ export default function UsernameStep({ onNext }: UsernameStepProps) {
 
   return (
     <>
-      <p className="text-gray-400 text-center">사용자명을 입력해 주세요</p>
+      <p className="text-gray-400 text-center">원하시는 사용자 이름을 만들어 보세요</p>
       <div className="space-y-4">
-        <div className="relative">
-          <input
-            type="text"
-            className="w-full px-4 py-3 border border-gray-700 rounded-lg text-sm focus:border-white focus:ring-white bg-gray-900 text-white"
-            placeholder="사용자명 (영문소문자, 숫자 허용, 4-20글자)"
-            value={username}
-            onChange={handleUsernameChange}
-          />
-        </div>
-        
-        <div className="text-xs text-gray-500 space-y-1">
-          <p>• 영문 소문자와 숫자만 사용 가능</p>
-          <p>• 4글자 이상 20글자 이하</p>
-        </div>
+        <Input
+          label="사용자 이름"
+          type="text"
+          placeholder="영문소문자+숫자, 4-20자 (예: user123)"
+          value={username}
+          onChange={handleUsernameChange}
+        />
 
         {usernameMessage && (
           <p className={`text-sm ${getMessageColor(usernameMessage.type)}`}>
@@ -131,13 +126,14 @@ export default function UsernameStep({ onNext }: UsernameStepProps) {
           </p>
         )}
         
-        <button 
-          className="w-full bg-red-800 text-white py-3 rounded-lg font-medium hover:bg-red-900 transition-colors disabled:bg-gray-700 disabled:cursor-not-allowed"
+        <Button
           onClick={handleNext}
-          disabled={!username || !validateUsername(username) || isChecking}
+          disabled={!username || !validateUsername(username)}
+          loading={isChecking}
+          loadingText="확인 중..."
         >
-          {isChecking ? "확인 중..." : isValidated ? "다음" : "중복 확인 후 다음"}
-        </button>
+          {isValidated ? "다음" : "다음"}
+        </Button>
       </div>
     </>
   );

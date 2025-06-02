@@ -3,6 +3,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import { sendVerificationEmail, checkEmail } from "@/apis/auth";
+import Button from "@/components/ui/Button";
+import Input from "@/components/ui/Input";
 
 interface Message {
   text: string;
@@ -62,27 +64,28 @@ export default function ResetPasswordEmailStep({ onNext }: ResetPasswordEmailSte
     <>
       <p className="text-gray-400 text-center">가입하신 이메일 주소를 입력해 주세요</p>
       <div className="space-y-4">
-        <div className="relative">
-          <input
-            type="email"
-            className="w-full px-4 py-3 border border-gray-700 rounded-lg text-sm focus:border-white focus:ring-white bg-gray-900 text-white"
-            placeholder="이메일 주소"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </div>
+        <Input
+          label="이메일 주소"
+          type="email"
+          placeholder="이메일 주소"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        
         {emailMessage && (
           <p className={`text-sm ${getMessageColor(emailMessage.type)}`}>
             {emailMessage.text}
           </p>
         )}
-        <button 
-          className="w-full bg-red-800 text-white py-3 rounded-lg font-medium hover:bg-red-900 transition-colors disabled:bg-gray-700 disabled:cursor-not-allowed"
+        
+        <Button
           onClick={handleSendVerification}
-          disabled={isSending}
+          loading={isSending}
+          loadingText="전송 중..."
         >
-          {isSending ? "전송 중..." : "인증번호 받기"}
-        </button>
+          인증번호 받기
+        </Button>
+
         <Link href="/login" className="block text-center text-blue-400 text-sm hover:underline">
           로그인으로 돌아가기
         </Link>
