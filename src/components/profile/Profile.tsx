@@ -108,7 +108,7 @@ export default function Profile({ userId }: { userId: string }) {
   }
 
   return (
-    <div className="bg-gray-950 text-white py-[73px]">
+    <div className="min-h-screen bg-black text-white py-[73px]">
       <section className="px-5 py-6 border-b border-gray-800">
         <div className="flex items-center space-x-6 relative">
           <div className="relative">

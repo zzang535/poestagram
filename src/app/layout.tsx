@@ -118,15 +118,15 @@ export default function RootLayout({
 
   return (
     <html lang="ko">
-      <body>
-        <div className="min-h-screen bg-black flex flex-col">
+      <body className="min-h-[100svh] flex flex-col bg-black">
+        <div className="flex flex-col flex-grow">
           <Header 
             onMenuOpen={toggleMenu}
             title={getPageTitle()}
             showBackButton={shouldShowBackButton()}
           />
 
-          <main className="h-[100dvh] overflow-y-auto">
+          <main className="flex-grow overflow-y-auto">
             <div className="max-w-7xl mx-auto">
               {children}
             </div>
