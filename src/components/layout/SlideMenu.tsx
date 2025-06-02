@@ -59,13 +59,12 @@ export default function SlideMenu({
         onClick={onClose} 
       />
       <div 
-        className="border-l border-zinc-950"
+        className="border-l border-zinc-950 w-[300px]"
         style={{
           position: 'fixed',
           top: 0,
           bottom: 0,
           right: 0,
-          width: '16rem',
           backgroundColor: 'black',
           transform: isVisible ? 'translateX(0)' : 'translateX(100%)',
           opacity: isVisible ? 1 : 0,
@@ -73,8 +72,8 @@ export default function SlideMenu({
         }}
       >
         <div className="p-4 flex flex-col h-full">
-          <div className="flex justify-between items-center mb-8">
-            <h2 className="text-xl font-bold text-white">메뉴</h2>
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-xl font-bold text-white">poestagram</h2>
             <button 
               className="text-gray-400 hover:text-white transition-colors"
               onClick={onClose}
@@ -82,7 +81,7 @@ export default function SlideMenu({
               <FontAwesomeIcon icon={faXmark} className="text-xl" />
             </button>
           </div>
-          <div className="space-y-4 flex-1">
+          <div className="flex-1">
             {accessToken ? (
               // 로그인 상태일 때 보여줄 메뉴
               <>
