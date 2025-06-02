@@ -85,7 +85,7 @@ export default function RootLayout({
   const handleLogout = () => {
     logout();
     setIsMenuOpen(false);
-    router.push("/feed");
+    router.push("/login");
   };
 
   const handleDeleteAccount = () => {

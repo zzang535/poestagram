@@ -5,6 +5,12 @@ export async function handleResponse<T>(response: Response, defaultErrorMessage 
   if (response.status === 401) {
     console.warn("401 발생 - 로그아웃 처리 및 리디렉션");
     useAuthStore.getState().logout?.();
+
+    // 브라우저 환경에서만 리다이렉션 실행
+    if (typeof window !== 'undefined') {
+      window.location.href = '/login';
+    }
+
     throw new Error("인증이 만료되었습니다. 다시 로그인해주세요.");
   }
 

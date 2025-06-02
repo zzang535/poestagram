@@ -19,24 +19,11 @@ export default function AllFeeds() {
   const hasMoreRef = useRef(true);
   const didInitRef = useRef(false);
 
-  const accessToken = useAuthStore((s) => s.accessToken);
-
   // 피드 아이템 삭제 핸들러
   const handleDeleteFeedItem = (feedIdToDelete: number) => {
     setFeedData(prevFeedData => prevFeedData.filter(feed => feed.id !== feedIdToDelete));
     setOffset(prevOffset => Math.max(0, prevOffset - 1));
   };
-
-  // 로그아웃 시 상태 초기화
-  useEffect(() => {
-    setOffset(0);
-    setFeedData([]);
-    setInitDone(false);
-    setLoading(false);
-    setHasMore(true);
-    setError(null);
-    didInitRef.current = false;
-  }, [accessToken]); 
 
   // 첫 로딩
   useEffect(() => {
@@ -48,7 +35,7 @@ export default function AllFeeds() {
       setInitDone(true);
     };
     init();
-  }, [accessToken]);
+  }, []);
 
   const fetchFeeds = async (offsetVal: number, limitVal: number) => {
     setLoading(true);
@@ -58,7 +45,7 @@ export default function AllFeeds() {
     await new Promise(resolve => setTimeout(resolve, 1000));
 
     try {
-      // 자동 재시도 제거 - 일반 fetch만 사용
+      console.log("fetchFeeds", offsetVal, limitVal);
       const res = await getAllFeeds(offsetVal, limitVal);
 
       const transformed = res.feeds.map((feed: Feed): FeedItemProps => ({
