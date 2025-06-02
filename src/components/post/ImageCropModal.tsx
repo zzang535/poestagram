@@ -24,26 +24,14 @@ export default function ImageCropModal({
       isOpen={isOpen} 
       onClose={onClose} 
       title="프로필 사진 편집"
-      footer={
-        <div className="bg-zinc-900 border-t border-zinc-700 flex justify-center items-center h-full">
-          <div className="flex items-center gap-4 px-4 w-full max-w-[768px]">
-            <button
-              onClick={onClose}
-              className="flex-1 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
-            >
-              취소
-            </button>
-            <button
-              onClick={() => {
-                imageCropRef.current?.handleCrop();
-              }}
-              className="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
-            >
-              완료
-            </button>
-          </div>
-        </div>
-      }
+      standardFooter={{
+        onCancel: onClose,
+        onConfirm: () => {
+          imageCropRef.current?.handleCrop();
+        },
+        cancelText: "취소",
+        confirmText: "완료"
+      }}
     >
       {imageFile ? (
         <ImageCropView

@@ -214,7 +214,7 @@ export default function FeedItem({
   return (
     <>
       <article className="bg-black rounded-lg mb-4 overflow-hidden">
-        <div className="flex items-center justify-between p-4 border-b border-gray-800">
+        <div className="flex items-center justify-between p-4 border-b border-zinc-900">
           <div className="flex items-center"
             onClick={() => router.push(`/profile/${user.id}`)}
           >
@@ -347,7 +347,7 @@ export default function FeedItem({
 
         {/* Dot 페이지네이션 - 이미지 아래 별도 영역 */}
         {files.length > 1 && (
-          <div className="flex justify-center py-3">
+          <div className="flex justify-center py-2">
             <div className="flex space-x-2">
               {files.map((_, index) => (
                 <button
@@ -364,7 +364,11 @@ export default function FeedItem({
           </div>
         )}
 
-        <div className="px-4 pt-4 pb-3 border-t border-gray-800">
+        <div className={
+          `p-4
+          ${files.length > 1 ? 'pt-0' : ''}
+          `
+        }>
           <div className="flex items-center justify-between mb-2">
             <div className="flex gap-3">
               <button

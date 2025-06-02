@@ -71,6 +71,7 @@ const ImageCropView = forwardRef<ImageCropViewRef, ImageCropViewProps>(
     setIsDragging(true);
     setDragStart({ x: e.clientX, y: e.clientY });
     e.preventDefault();
+    e.stopPropagation();
   };
 
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -78,6 +79,7 @@ const ImageCropView = forwardRef<ImageCropViewRef, ImageCropViewProps>(
     const touch = e.touches[0];
     setDragStart({ x: touch.clientX, y: touch.clientY });
     e.preventDefault();
+    e.stopPropagation();
   };
 
   const handleMouseMove = (e: React.MouseEvent) => {
@@ -88,6 +90,8 @@ const ImageCropView = forwardRef<ImageCropViewRef, ImageCropViewProps>(
     
     updateCropPosition(deltaX, deltaY);
     setDragStart({ x: e.clientX, y: e.clientY });
+    e.preventDefault();
+    e.stopPropagation();
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
@@ -100,6 +104,7 @@ const ImageCropView = forwardRef<ImageCropViewRef, ImageCropViewProps>(
     updateCropPosition(deltaX, deltaY);
     setDragStart({ x: touch.clientX, y: touch.clientY });
     e.preventDefault();
+    e.stopPropagation();
   };
 
   const updateCropPosition = (deltaX: number, deltaY: number) => {
@@ -132,33 +137,41 @@ const ImageCropView = forwardRef<ImageCropViewRef, ImageCropViewProps>(
   useEffect(() => {
     const handleGlobalMouseMove = (e: MouseEvent) => {
       if (isDragging) {
+        e.preventDefault();
+        e.stopPropagation();
         handleMouseMove(e as any);
       }
     };
 
-    const handleGlobalMouseUp = () => {
+    const handleGlobalMouseUp = (e: MouseEvent) => {
       if (isDragging) {
+        e.preventDefault();
+        e.stopPropagation();
         handleMouseUp();
       }
     };
 
     const handleGlobalTouchMove = (e: TouchEvent) => {
       if (isDragging) {
+        e.preventDefault();
+        e.stopPropagation();
         handleTouchMove(e as any);
       }
     };
 
-    const handleGlobalTouchEnd = () => {
+    const handleGlobalTouchEnd = (e: TouchEvent) => {
       if (isDragging) {
+        e.preventDefault();
+        e.stopPropagation();
         handleTouchEnd();
       }
     };
 
     if (isDragging) {
-      document.addEventListener('mousemove', handleGlobalMouseMove);
-      document.addEventListener('mouseup', handleGlobalMouseUp);
+      document.addEventListener('mousemove', handleGlobalMouseMove, { passive: false });
+      document.addEventListener('mouseup', handleGlobalMouseUp, { passive: false });
       document.addEventListener('touchmove', handleGlobalTouchMove, { passive: false });
-      document.addEventListener('touchend', handleGlobalTouchEnd);
+      document.addEventListener('touchend', handleGlobalTouchEnd, { passive: false });
     }
 
     return () => {
@@ -228,38 +241,57 @@ const ImageCropView = forwardRef<ImageCropViewRef, ImageCropViewProps>(
               <img
                 src={imageUrl}
                 alt="크롭할 이미지"
-                className="w-full h-full object-cover pointer-events-none"
-                style={{ width: imageSize.width, height: imageSize.height }}
+                className="w-full h-full object-cover pointer-events-none select-none"
+                style={{ 
+                  width: imageSize.width, 
+                  height: imageSize.height,
+                  touchAction: 'none',
+                  userSelect: 'none',
+                  WebkitUserSelect: 'none',
+                  MozUserSelect: 'none',
+                  msUserSelect: 'none'
+                }}
                 draggable={false}
               />
               
               {/* 어두운 오버레이 (원 바깥 영역) */}
               <div 
-                className="absolute pointer-events-none"
+                className="absolute pointer-events-none select-none"
                 style={{
                   left: cropPosition.x - cropRadius,
                   top: cropPosition.y - cropRadius,
                   width: cropRadius * 2,
                   height: cropRadius * 2,
                   borderRadius: '50%',
-                  boxShadow: `0 0 0 ${Math.max(imageSize.width, imageSize.height)}px rgba(0, 0, 0, 0.5)`
+                  boxShadow: `0 0 0 ${Math.max(imageSize.width, imageSize.height)}px rgba(0, 0, 0, 0.5)`,
+                  touchAction: 'none',
+                  userSelect: 'none'
                 }}
               ></div>
               
               {/* 원형 크롭 가이드 */}
               <div 
-                className="absolute pointer-events-auto cursor-move"
+                className="absolute pointer-events-auto cursor-move select-none"
                 style={{
                   left: cropPosition.x - cropRadius,
                   top: cropPosition.y - cropRadius,
                   width: cropRadius * 2,
-                  height: cropRadius * 2
+                  height: cropRadius * 2,
+                  touchAction: 'none',
+                  userSelect: 'none',
+                  WebkitUserSelect: 'none',
+                  MozUserSelect: 'none',
+                  msUserSelect: 'none'
                 }}
                 onMouseDown={handleMouseDown}
                 onTouchStart={handleTouchStart}
               >
                 <div
-                  className="border-2 border-white rounded-full w-full h-full"
+                  className="border-2 border-white rounded-full w-full h-full pointer-events-none select-none"
+                  style={{
+                    touchAction: 'none',
+                    userSelect: 'none'
+                  }}
                 ></div>
               </div>
             </div>

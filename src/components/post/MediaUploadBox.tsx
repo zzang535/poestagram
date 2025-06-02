@@ -1,7 +1,7 @@
 "use client";
 import { forwardRef, useState, useEffect, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCamera, faChevronLeft, faChevronRight, faXmark } from "@fortawesome/free-solid-svg-icons";
+import { faCamera, faChevronLeft, faChevronRight, faXmark, faPlus } from "@fortawesome/free-solid-svg-icons";
 import ImageUploadLoading from "@/components/ui/ImageUploadLoading";
 import { uploadFile } from "@/apis/files";
 import { UploadResponse } from "@/apis/files";
@@ -321,7 +321,12 @@ const MediaUploadBox = forwardRef<HTMLDivElement, MediaUploadBoxProps>(({
       {/* 업로드 박스 */}
       <div 
         ref={containerRef}
-        className="border-2 border-gray-900 rounded-lg overflow-hidden relative aspect-square bg-black flex items-center justify-center"
+        className="
+          border-2 
+          border-zinc-900 
+          rounded-lg overflow-hidden relative aspect-square 
+          bg-zinc-950 
+          flex items-center justify-center"
         onTouchStart={onTouchStart}
         onTouchMove={onTouchMove}
         onTouchEnd={onTouchEnd}
@@ -416,6 +421,14 @@ const MediaUploadBox = forwardRef<HTMLDivElement, MediaUploadBoxProps>(({
             >
               <FontAwesomeIcon icon={faXmark} className="text-sm" />
             </button>
+
+            {/* 이미지 추가 버튼 */}
+            <button 
+              onClick={handleAddMoreImages}
+              className="absolute bottom-2 right-2 bg-black/70 text-white w-10 h-10 rounded-md hover:bg-black/90 transition-colors z-10 flex items-center justify-center"
+            >
+              <FontAwesomeIcon icon={faPlus} className="text-sm" />
+            </button>
             
             {/* 좌우 버튼 - PC에서만 표시 */}
             {!isMobile && previews.length > 1 && (
@@ -474,16 +487,6 @@ const MediaUploadBox = forwardRef<HTMLDivElement, MediaUploadBoxProps>(({
             ))}
           </div>
         </div>
-      )}
-
-      {/* 이미지 추가 버튼 */}
-      {previews.length > 0 && (
-        <button
-          onClick={handleAddMoreImages}
-          className="w-full bg-gray-800 text-white py-2 rounded-lg font-medium hover:bg-gray-700 transition-colors"
-        >
-          이미지 추가하기
-        </button>
       )}
 
       {/* 숨겨진 파일 input */}

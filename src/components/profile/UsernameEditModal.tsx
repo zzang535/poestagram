@@ -66,26 +66,15 @@ export default function UsernameEditModal({
       isOpen={isOpen} 
       onClose={handleClose} 
       title="사용자명 변경"
-      footer={
-        <div className="bg-zinc-900 border-t border-zinc-700 flex justify-center items-center h-full">
-          <div className="flex items-center gap-4 px-4 w-full max-w-[768px]">
-            <button
-              onClick={handleClose}
-              disabled={isSubmitting}
-              className="flex-1 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors disabled:opacity-50"
-            >
-              취소
-            </button>
-            <button
-              onClick={handleSubmit}
-              disabled={isSubmitting || !username.trim() || username.trim() === currentUsername}
-              className="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50"
-            >
-              {isSubmitting ? "변경 중..." : "변경"}
-            </button>
-          </div>
-        </div>
-      }
+      standardFooter={{
+        onCancel: handleClose,
+        onConfirm: handleSubmit,
+        cancelText: "취소",
+        confirmText: "변경",
+        confirmDisabled: !username.trim() || username.trim() === currentUsername,
+        confirmLoading: isSubmitting,
+        confirmLoadingText: "변경 중..."
+      }}
     >
       <div className="p-4">
         <Input

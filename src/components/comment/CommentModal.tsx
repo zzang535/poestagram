@@ -232,7 +232,7 @@ export default function CommentModal({ isOpen, onClose, feedId }: CommentModalPr
       title="댓글"
       enableKeyboardAdjustment={true}
       footer={accessToken ? (
-        <div className="bg-zinc-900 border-t border-zinc-700 flex items-center gap-[10px] px-4 h-full">
+        <div className="bg-zinc-950 border-t border-zinc-900 flex items-center gap-[10px] px-4 h-full">
           <div className="flex-shrink-0">
             <img 
               src={user?.profile_image_url || "/default-profile.svg"} 
@@ -247,12 +247,12 @@ export default function CommentModal({ isOpen, onClose, feedId }: CommentModalPr
               placeholder="댓글을 입력하세요..."
               value={commentInput}
               onChange={(e) => setCommentInput(e.target.value)}
-              onKeyPress={handleKeyPress}
               onFocus={handleInputFocus}
               className="
                 w-full
                 px-3 py-2 
-                bg-zinc-900 text-white rounded-full 
+                bg-zinc-950 
+                text-white rounded-lg 
                 focus:outline-none focus:ring-1 focus:ring-red-500"
             />
           </div>

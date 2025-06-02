@@ -59,6 +59,7 @@ export default function SlideMenu({
         onClick={onClose} 
       />
       <div 
+        className="border-l border-zinc-950"
         style={{
           position: 'fixed',
           top: 0,
@@ -66,7 +67,6 @@ export default function SlideMenu({
           right: 0,
           width: '16rem',
           backgroundColor: 'black',
-          borderLeft: '1px solid #1f2937',
           transform: isVisible ? 'translateX(0)' : 'translateX(100%)',
           opacity: isVisible ? 1 : 0,
           transition: 'transform 0.3s ease, opacity 0.3s ease'
@@ -88,9 +88,8 @@ export default function SlideMenu({
               <>
                 <button
                   onClick={onLogout}
-                  className="w-full flex items-center space-x-3 text-white p-3 hover:bg-gray-800 rounded-lg transition-colors"
+                  className="w-full flex items-center space-x-3 text-white p-3 hover:bg-zinc-900 rounded-lg transition-colors"
                 >
-                  <FontAwesomeIcon icon={faSignOutAlt} className="text-xl" />
                   <span>로그아웃</span>
                 </button>
               </>
@@ -99,24 +98,22 @@ export default function SlideMenu({
               <>
                 <Link
                   href="/login"
-                  className="w-full flex items-center space-x-3 text-white p-3 hover:bg-gray-800 rounded-lg transition-colors"
+                  className="w-full flex items-center space-x-3 text-white p-3 hover:bg-zinc-900 rounded-lg transition-colors"
                   onClick={onClose}
                 >
-                  <FontAwesomeIcon icon={faSignInAlt} className="text-xl" />
                   <span>로그인</span>
                 </Link>
                 <Link
                   href="/signup"
-                  className="w-full flex items-center space-x-3 text-white p-3 hover:bg-gray-800 rounded-lg transition-colors"
+                  className="w-full flex items-center space-x-3 text-white p-3 hover:bg-zinc-900 rounded-lg transition-colors"
                   onClick={onClose}
                 >
-                  <FontAwesomeIcon icon={faUserPlus} className="text-xl" />
                   <span>회원가입</span>
                 </Link>
               </>
             )}
           </div>
-          <div className="pt-4 border-t border-gray-800">
+          <div className="pt-4 border-t border-zinc-950">
             <div className="flex justify-center space-x-4 text-xs text-gray-400">
               <button 
                 onClick={onOpenPrivacyModal} 

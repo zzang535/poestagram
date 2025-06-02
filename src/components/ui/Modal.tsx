@@ -1,6 +1,17 @@
 import { useEffect, useState, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
+import Button from "./Button";
+
+interface StandardFooterProps {
+  onCancel: () => void;
+  onConfirm: () => void;
+  cancelText?: string;
+  confirmText?: string;
+  confirmDisabled?: boolean;
+  confirmLoading?: boolean;
+  confirmLoadingText?: string;
+}
 
 interface ModalProps {
   isOpen: boolean;
@@ -8,6 +19,7 @@ interface ModalProps {
   title: string;
   children: React.ReactNode;
   footer?: React.ReactNode;
+  standardFooter?: StandardFooterProps;
   topBarHeight?: number;
   enableKeyboardAdjustment?: boolean;
 }
@@ -18,6 +30,7 @@ export default function Modal({
   title, 
   children,
   footer,
+  standardFooter,
   topBarHeight = 60,
   enableKeyboardAdjustment = false
 }: ModalProps) {
@@ -172,7 +185,7 @@ export default function Modal({
         ref={modalRef}
         className="
           absolute left-0 right-0 bottom-0
-          bg-zinc-900 
+          bg-zinc-950
           rounded-t-[20px] mx-auto max-w-[1280px] 
         "
         style={{
@@ -206,9 +219,31 @@ export default function Modal({
           </div>
 
           {/* 푸터 영역 */}
-          {footer && (
-            <div className="flex-shrink-0 h-[64px]">
-              {footer}
+          {(footer || standardFooter) && (
+            <div className="flex-shrink-0 h-[74px]">
+              {footer || (standardFooter && (
+                <div className="bg-zinc-950 border-t border-zinc-900 flex justify-center items-center h-full">
+                  <div className="flex items-center gap-4 px-4 w-full max-w-[768px]">
+                    <Button
+                      onClick={standardFooter.onCancel}
+                      variant="secondary"
+                      className="flex-1"
+                    >
+                      {standardFooter.cancelText || "취소"}
+                    </Button>
+                    <Button
+                      onClick={standardFooter.onConfirm}
+                      disabled={standardFooter.confirmDisabled}
+                      loading={standardFooter.confirmLoading}
+                      loadingText={standardFooter.confirmLoadingText}
+                      variant="primary"
+                      className="flex-1"
+                    >
+                      {standardFooter.confirmText || "확인"}
+                    </Button>
+                  </div>
+                </div>
+              ))}
             </div>
           )}
         </div>

@@ -107,8 +107,6 @@ export default function ProfileEdit() {
           profile_image_url: response.profile_image_url
         });
       }
-      
-      alert('프로필 사진이 성공적으로 변경되었습니다.');
       setCurrentView("profile");
     } catch (error) {
       console.error('프로필 이미지 업로드 실패:', error);
@@ -133,8 +131,6 @@ export default function ProfileEdit() {
       ...prev,
       username: newUsername
     }));
-    
-    alert('사용자명이 성공적으로 변경되었습니다.');
   };
 
   const handleBioUpdate = (newBio: string) => {
@@ -152,7 +148,6 @@ export default function ProfileEdit() {
       bio: newBio
     }));
     
-    alert('소개글이 성공적으로 변경되었습니다.');
   };
 
   const handleSave = async () => {

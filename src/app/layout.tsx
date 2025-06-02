@@ -77,7 +77,7 @@ export default function RootLayout({
   };
 
   const shouldShowGnb = () => {
-    return pathname !== '/login' && pathname !== '/signup';
+    return pathname !== '/login' && pathname !== '/signup' && pathname !== '/create';
   };
 
   const handleLogout = () => {
@@ -119,14 +119,14 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body className="min-h-[100svh] flex flex-col bg-black">
-        <div className="flex flex-col flex-grow">
+        <div className="flex flex-col h-[100svh]">
           <Header 
             onMenuOpen={toggleMenu}
             title={getPageTitle()}
             showBackButton={shouldShowBackButton()}
           />
 
-          <main className="flex-grow overflow-y-auto">
+          <main className="flex-grow overflow-y-auto min-h-0">
             <div className="max-w-7xl mx-auto">
               {children}
             </div>
@@ -141,7 +141,7 @@ export default function RootLayout({
                   bg-black/73
                   backdrop-blur-sm 
                   border-t 
-                  border-gray-800 
+                  border-zinc-900
                   z-20
                 ">
               <div className="max-w-7xl mx-auto">

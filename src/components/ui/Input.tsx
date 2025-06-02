@@ -39,8 +39,8 @@ export default function Input({
   };
 
   const containerClasses = `
-    relative bg-zinc-800 border rounded-lg px-4 pt-3 pb-2 transition-colors
-    ${error ? 'border-red-500' : 'border-zinc-700'}
+    relative bg-zinc-950 border rounded-lg px-4 pt-3 pb-2 transition-colors
+    ${error ? 'border-red-500' : 'border-zinc-900'}
     ${!readOnly && !error ? 'focus-within:border-red-500' : ''}
     ${isClickable ? 'cursor-pointer hover:bg-zinc-750 hover:border-zinc-600' : ''}
     ${disabled ? 'opacity-50 cursor-not-allowed' : ''}

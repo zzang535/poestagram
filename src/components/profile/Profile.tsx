@@ -12,7 +12,6 @@ import { faEllipsis } from "@fortawesome/free-solid-svg-icons";
 
 export default function Profile({ userId }: { userId: string }) {
   const router = useRouter();
-  const params = useParams();
 
   const [profileLoading, setProfileLoading] = useState(true);
   const [feedsLoading, setFeedsLoading] = useState(true);
@@ -93,15 +92,15 @@ export default function Profile({ userId }: { userId: string }) {
 
   if (isLoading) {
     return (
-      <div className="bg-gray-950 text-white py-[73px] min-h-screen flex justify-center items-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500"></div>
+      <div className="bg-black text-white py-[73px] min-h-screen flex justify-center items-center">
+        <div className="w-8 h-8 border-4 border-gray-300 border-t-white rounded-full animate-spin"></div>
       </div>
     );
   }
 
   if (!userProfile) {
     return (
-      <div className="bg-gray-950 text-white py-[73px] min-h-screen flex justify-center items-center">
+      <div className="bg-black text-white py-[73px] min-h-screen flex justify-center items-center">
         <p className="text-gray-400">사용자 정보를 찾을 수 없습니다.</p>
       </div>
     );
@@ -109,7 +108,7 @@ export default function Profile({ userId }: { userId: string }) {
 
   return (
     <div className="min-h-screen bg-black text-white py-[73px]">
-      <section className="px-5 py-6 border-b border-gray-800">
+      <section className="px-5 py-6 border-b border-zinc-900">
         <div className="flex items-center space-x-6 relative">
           <div className="relative">
             <img
