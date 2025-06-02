@@ -78,8 +78,8 @@ export default function RootLayout({
     return pathname === '/feed' ? false : true;
   };
 
-  const shouldShowGnb = () => {
-    return pathname !== '/login' && pathname !== '/signup' && pathname !== '/create';
+  const noShowGnb = () => {
+    return pathname === '/login' || pathname === '/signup' || pathname === '/reset-password' || pathname === '/create';
   };
 
   const handleLogout = () => {
@@ -134,7 +134,7 @@ export default function RootLayout({
             </div>
           </main>
 
-          {shouldShowGnb() && (
+          {!noShowGnb() && (
             <nav className="
                   fixed 
                   bottom-0 
