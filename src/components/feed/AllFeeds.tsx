@@ -155,24 +155,39 @@ export default function AllFeeds() {
   return (
     <div className="min-h-screen bg-black text-white pt-[64px] pb-[78px]">
       <div className="max-w-4xl mx-auto">
-        <div className="space-y-4">
-          {feedData.map((feed, index) => (
-            <div key={index}>
-              <FeedItem
-                id={feed.id}
-                files={feed.files}
-                description={feed.description}
-                frame_ratio={feed.frame_ratio}
-                created_at={feed.created_at}
-                updated_at={feed.updated_at}
-                is_liked={feed.is_liked}
-                user={feed.user}
-                likes_count={feed.likes_count}
-                onDeleteSuccess={handleDeleteFeedItem}
-              />
+        {/* 게시물이 없는 경우 */}
+        {feedData.length === 0 && !loading && !error && (
+          <div className="flex flex-col items-center justify-center min-h-[calc(100vh-142px)] px-4">
+            <div className="text-center space-y-6">
+              {/* 메시지 */}
+              <div className="space-y-2">
+                <h3 className="text-xl font-semibold text-white">게시물이 없습니다</h3>
+              </div>
             </div>
-          ))}
-        </div>
+          </div>
+        )}
+
+        {/* 게시물 목록 */}
+        {feedData.length > 0 && (
+          <div className="space-y-4">
+            {feedData.map((feed, index) => (
+              <div key={index}>
+                <FeedItem
+                  id={feed.id}
+                  files={feed.files}
+                  description={feed.description}
+                  frame_ratio={feed.frame_ratio}
+                  created_at={feed.created_at}
+                  updated_at={feed.updated_at}
+                  is_liked={feed.is_liked}
+                  user={feed.user}
+                  likes_count={feed.likes_count}
+                  onDeleteSuccess={handleDeleteFeedItem}
+                />
+              </div>
+            ))}
+          </div>
+        )}
         
         {/* 로딩 상태 */}
         {loading && feedData.length > 0 && (
