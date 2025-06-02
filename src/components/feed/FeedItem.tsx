@@ -215,7 +215,8 @@ export default function FeedItem({
     <>
       <article className="bg-black rounded-lg mb-4 overflow-hidden">
         <div className="flex items-center justify-between p-4 border-b border-zinc-900">
-          <div className="flex items-center"
+          <button 
+            className="flex items-center text-left hover:opacity-80 transition-opacity"
             onClick={() => router.push(`/profile/${user.id}`)}
           >
             <img
@@ -225,9 +226,8 @@ export default function FeedItem({
             />
             <div className="ml-3">
               <p className="text-sm font-semibold text-white">{user?.username}</p>
-              <p className="text-xs text-gray-400">{user?.username}</p>
             </div>
-          </div>
+          </button>
           {currentUser && currentUser.id === user.id && (
             <div className="relative">
               <button 
@@ -390,7 +390,12 @@ export default function FeedItem({
             </div>
           </div>
           <p className="text-sm text-white mt-2">
-            <span className="font-semibold mr-1">{user.username}</span>
+            <button 
+              onClick={() => router.push(`/profile/${user.id}`)}
+              className="font-semibold mr-1 hover:text-gray-300 transition-colors cursor-pointer"
+            >
+              {user.username}
+            </button>
             {description}
           </p>
         </div>

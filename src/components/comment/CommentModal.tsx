@@ -315,7 +315,12 @@ export default function CommentModal({ isOpen, onClose, feedId }: CommentModalPr
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex justify-between items-center mb-[2px]">
-                  <span className="text-sm font-semibold text-white">{comment.user.username}</span>
+                  <button 
+                    onClick={() => router.push(`/profile/${comment.user.id}`)}
+                    className="text-sm font-semibold text-white hover:text-gray-300 transition-colors cursor-pointer"
+                  >
+                    {comment.user.username}
+                  </button>
                   {accessToken && user && user.id === comment.user.id && (
                     <div className="relative">
                       <button 
