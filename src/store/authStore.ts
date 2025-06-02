@@ -5,6 +5,7 @@ export interface User {
   id: number;
   email: string;
   username: string;
+  bio?: string;
   profile_image_url?: string;
 }
 
@@ -14,6 +15,7 @@ interface AuthState {
   hasHydrated: boolean;
   login: (response: { access_token: string; user: User }) => void;
   logout: () => void;
+  updateUser: (userUpdate: Partial<User>) => void;
   setHasHydrated: (hasHydrated: boolean) => void;
 }
 
@@ -28,6 +30,12 @@ export const useAuthStore = create<AuthState>()(
       },
       logout: () => {
         set({ user: null, accessToken: null });
+      },
+      updateUser: (userUpdate) => {
+        const currentUser = get().user;
+        if (currentUser) {
+          set({ user: { ...currentUser, ...userUpdate } });
+        }
       },
       setHasHydrated: (hasHydrated) => {
         set({ hasHydrated });

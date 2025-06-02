@@ -19,6 +19,7 @@ type ViewState = "profile" | "imageCrop";
 export default function ProfileEdit() {
   const router = useRouter();
   const authUser = useAuthStore((s) => s.user);
+  const updateUser = useAuthStore((s) => s.updateUser);
   const fileInputRef = useRef<HTMLInputElement>(null);
   
   const [loading, setLoading] = useState(true);
@@ -62,17 +63,6 @@ export default function ProfileEdit() {
     fetchProfile();
   }, [authUser, router]);
 
-  const handleGoBack = () => {
-    if (currentView === "imageCrop") {
-      setCurrentView("profile");
-      setSelectedImageFile(null);
-    } else if (authUser) {
-      router.push(`/user/${authUser.id}`);
-    } else {
-      router.back();
-    }
-  };
-
   const handleImageChange = () => {
     fileInputRef.current?.click();
   };
@@ -107,6 +97,10 @@ export default function ProfileEdit() {
           profile_image_url: response.profile_image_url
         });
       }
+
+      // authStore의 사용자 정보도 업데이트
+      updateUser({ profile_image_url: response.profile_image_url });
+
       setCurrentView("profile");
     } catch (error) {
       console.error('프로필 이미지 업로드 실패:', error);
@@ -131,6 +125,9 @@ export default function ProfileEdit() {
       ...prev,
       username: newUsername
     }));
+
+    // authStore의 사용자 정보도 업데이트
+    updateUser({ username: newUsername });
   };
 
   const handleBioUpdate = (newBio: string) => {
@@ -147,7 +144,9 @@ export default function ProfileEdit() {
       ...prev,
       bio: newBio
     }));
-    
+
+    // authStore의 사용자 정보도 업데이트
+    updateUser({ bio: newBio });
   };
 
   const handleSave = async () => {
