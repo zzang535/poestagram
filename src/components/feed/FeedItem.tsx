@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect, useCallback } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronLeft, faChevronRight, faHeart as faSolidHeart, faEllipsis, faPlay, faPause } from "@fortawesome/free-solid-svg-icons";
+import { faChevronLeft, faChevronRight, faHeart as faSolidHeart, faEllipsis, faPlay, faPause, faExpand } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as faRegularHeart, faComment, faBookmark } from "@fortawesome/free-regular-svg-icons";
 import CommentModal from "@/components/comment/CommentModal";
 import ConfirmModal from "@/components/ui/ConfirmModal";
@@ -472,6 +472,22 @@ export default function FeedItem({
     }
   };
 
+  // 전체화면 토글
+  const handleFullscreen = useCallback(() => {
+    const currentVideo = videoRefs.current[currentImageIndex];
+    if (!currentVideo) return;
+
+    if (currentVideo.requestFullscreen) {
+      currentVideo.requestFullscreen();
+    } else if ((currentVideo as any).webkitRequestFullscreen) {
+      // Safari 지원
+      (currentVideo as any).webkitRequestFullscreen();
+    } else if ((currentVideo as any).msRequestFullscreen) {
+      // IE/Edge 지원
+      (currentVideo as any).msRequestFullscreen();
+    }
+  }, [currentImageIndex]);
+
   return (
     <>
       <article ref={containerRef} className="bg-black rounded-lg mb-4 overflow-hidden">
@@ -596,13 +612,13 @@ export default function FeedItem({
                             {/* 모바일에서는 터치로 컨트롤 표시 */}
                             <div 
                               className={`absolute inset-0 transition-opacity duration-300 ${
-                                showControls || isMobile ? 'opacity-100' : 'opacity-0'
+                                showControls || isMobile ? 'opacity-100' : 'opacity-100'
                               }`}
                               onTouchStart={() => setShowControls(true)}
                               onTouchEnd={() => setTimeout(() => setShowControls(false), 3000)}
                             >
                               {/* 재생바와 작은 재생 버튼 */}
-                              <div className="absolute bottom-4 left-4 right-4">
+                              <div className="absolute bottom-1 left-2 right-2">
                                 <div className="flex items-center gap-3 text-white text-sm">
                                   {/* 작은 재생/일시정지 버튼 */}
                                   <button
@@ -615,7 +631,7 @@ export default function FeedItem({
                                     />
                                   </button>
                                   
-                                  <span className="min-w-[40px] text-xs">
+                                  <span className="min-w-[40px] text-xs text-right">
                                     {formatTime(currentTime)}
                                   </span>
                                   <div 
@@ -633,16 +649,27 @@ export default function FeedItem({
                                     />
                                     {/* 드래그 핸들 */}
                                     <div 
-                                      className="absolute top-1/2 -translate-y-1/2 w-3 h-3 bg-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-150"
+                                      className="absolute top-0 bottom-0 w-3 h-3 bg-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-150 my-auto"
                                       style={{ 
                                         left: `${duration ? (currentTime / duration) * 100 : 0}%`,
-                                        transform: 'translateX(-50%) translateY(-50%)'
+                                        transform: 'translateX(-50%)'
                                       }}
                                     />
                                   </div>
-                                  <span className="min-w-[40px] text-xs">
+                                  <span className="min-w-[40px] text-xs text-left">
                                     {formatTime(duration)}
                                   </span>
+                                  
+                                  {/* 전체화면 버튼 */}
+                                  <button
+                                    onClick={handleFullscreen}
+                                    className="w-8 h-8 bg-black/50 rounded-full flex items-center justify-center hover:bg-black/70 transition-colors flex-shrink-0"
+                                  >
+                                    <FontAwesomeIcon 
+                                      icon={faExpand} 
+                                      className="text-xs"
+                                    />
+                                  </button>
                                 </div>
                               </div>
                             </div>
