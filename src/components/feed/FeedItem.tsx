@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect, useCallback } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronLeft, faChevronRight, faHeart as faSolidHeart, faEllipsis } from "@fortawesome/free-solid-svg-icons";
+import { faChevronLeft, faChevronRight, faHeart as faSolidHeart, faEllipsis, faPlay, faPause } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as faRegularHeart, faComment, faBookmark } from "@fortawesome/free-regular-svg-icons";
 import CommentModal from "@/components/comment/CommentModal";
 import ConfirmModal from "@/components/ui/ConfirmModal";
@@ -195,6 +195,18 @@ export default function FeedItem({
     };
   }, [isDraggingProgress, handleProgressBarInteraction]);
 
+  // 재생/일시정지 토글
+  const handlePlayPause = useCallback(() => {
+    const currentVideo = videoRefs.current[currentImageIndex];
+    if (!currentVideo) return;
+
+    if (isPlaying) {
+      currentVideo.pause();
+    } else {
+      currentVideo.play();
+    }
+  }, [currentImageIndex, isPlaying]);
+
   // 비디오 재생 함수
   const playVideo = useCallback((videoElement: HTMLVideoElement, videoId: string) => {
     if (currentPlayingVideo !== videoId) {
@@ -214,6 +226,24 @@ export default function FeedItem({
   const stopCurrentVideo = useCallback(() => {
     setCurrentPlayingVideo(null);
   }, [setCurrentPlayingVideo]);
+
+  // 초기 로드 시 자동재생 처리
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      const currentVideoId = `${id}-${currentImageIndex}`;
+      const currentFile = files[currentImageIndex];
+      const currentVideoElement = videoRefs.current[currentImageIndex];
+
+      if (currentFile?.content_type.startsWith("video") && currentVideoElement && isIntersectingRef.current) {
+        playVideo(currentVideoElement, currentVideoId);
+        if (currentVideoElement.duration) {
+          setDuration(currentVideoElement.duration);
+        }
+      }
+    }, 100); // 100ms 지연 후 체크
+
+    return () => clearTimeout(timer);
+  }, [id, currentImageIndex, files]);
 
   // Intersection 변경에 따른 비디오 제어
   useEffect(() => {
@@ -571,9 +601,20 @@ export default function FeedItem({
                               onTouchStart={() => setShowControls(true)}
                               onTouchEnd={() => setTimeout(() => setShowControls(false), 3000)}
                             >
-                              {/* 재생바만 표시 (재생/일시정지 버튼 제거) */}
+                              {/* 재생바와 작은 재생 버튼 */}
                               <div className="absolute bottom-4 left-4 right-4">
-                                <div className="flex items-center gap-2 text-white text-sm">
+                                <div className="flex items-center gap-3 text-white text-sm">
+                                  {/* 작은 재생/일시정지 버튼 */}
+                                  <button
+                                    onClick={handlePlayPause}
+                                    className="w-8 h-8 bg-black/50 rounded-full flex items-center justify-center hover:bg-black/70 transition-colors flex-shrink-0"
+                                  >
+                                    <FontAwesomeIcon 
+                                      icon={isPlaying ? faPause : faPlay} 
+                                      className="text-xs"
+                                    />
+                                  </button>
+                                  
                                   <span className="min-w-[40px] text-xs">
                                     {formatTime(currentTime)}
                                   </span>

@@ -195,6 +195,15 @@ export default function AllFeeds() {
             <div className="w-8 h-8 border-4 border-gray-300 border-t-white rounded-full animate-spin"></div>
           </div>
         )}
+
+        {/* 더 이상 게시물이 없는 경우 */}
+        {!loading && !hasMore && feedData.length > 0 && !error && (
+          <div className="flex flex-col items-center justify-center space-y-4 mt-4 p-4">
+            <div className="text-center text-gray-400">
+              <p className="text-sm">더 이상 게시물이 없습니다</p>
+            </div>
+          </div>
+        )}
         
         {/* 에러 상태 */}
         {error && feedData.length > 0 && (
