@@ -86,7 +86,7 @@ export default function Input({
           {showPasswordToggle && isPasswordType && (
             <button
               type="button"
-              className="text-gray-400 hover:text-white ml-2"
+              className="text-gray-400 hover:text-white"
               onClick={(e) => {
                 e.stopPropagation();
                 setShowPassword(!showPassword);
