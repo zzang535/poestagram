@@ -10,16 +10,15 @@ interface AuthRouteProps {
 
 export default function AuthRoute({ children }: AuthRouteProps) {
   const router = useRouter();
-  const accessToken = useAuthStore((s) => s.accessToken);
-
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated());
 
   useEffect(() => {
-    if (accessToken) {
+    if (isAuthenticated) {
       router.push('/feed');
     }
-  }, [accessToken, router]);
+  }, [isAuthenticated, router]);
 
-  if (accessToken) {
+  if (isAuthenticated) {
     return null;
   }
 

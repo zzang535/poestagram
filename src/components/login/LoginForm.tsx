@@ -11,7 +11,7 @@ import Input from "@/components/ui/Input";
 
 export default function LoginForm() {
   const router = useRouter();
-  const accessToken = useAuthStore((s) => s.accessToken);
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated());
   const hasHydrated = useAuthStore((s) => s.hasHydrated);
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
@@ -20,10 +20,10 @@ export default function LoginForm() {
 
   // 이미 로그인된 사용자 처리
   useEffect(() => {
-    if (hasHydrated && accessToken) {
+    if (hasHydrated && isAuthenticated) {
       router.push('/feed');
     }
-  }, [hasHydrated, accessToken, router]);
+  }, [hasHydrated, isAuthenticated, router]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -64,7 +64,7 @@ export default function LoginForm() {
   }
 
   // 이미 로그인된 경우 아무것도 렌더링하지 않음 (리다이렉트 중)
-  if (accessToken) {
+  if (isAuthenticated) {
     return null;
   }
 
@@ -75,18 +75,18 @@ export default function LoginForm() {
           <div className="space-y-4">
             <Input
               label="아이디"
-              type="text"
+                type="text"
               placeholder="이메일 또는 사용자명"
-              value={identifier}
-              onChange={(e) => setIdentifier(e.target.value)}
-            />
+                value={identifier}
+                onChange={(e) => setIdentifier(e.target.value)}
+              />
             
             <Input
               label="비밀번호"
               type="password"
-              placeholder="비밀번호"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+                placeholder="비밀번호"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
               showPasswordToggle={true}
             />
 

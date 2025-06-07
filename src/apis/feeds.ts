@@ -25,7 +25,7 @@ export const createFeed = async (feedData: FeedCreate): Promise<FeedResponse> =>
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${useAuthStore.getState().accessToken}`
+        "Authorization": `Bearer ${useAuthStore.getState().getAccessToken()}`
       },
       body: JSON.stringify(feedData),
     });
@@ -45,7 +45,7 @@ export const getUserFeeds = async (userId: number, skip: number = 0, limit: numb
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${useAuthStore.getState().accessToken}`
+          "Authorization": `Bearer ${useAuthStore.getState().getAccessToken()}`
         },
       }
     );
@@ -53,7 +53,7 @@ export const getUserFeeds = async (userId: number, skip: number = 0, limit: numb
 };
 
 export const getAllFeeds = async (offset: number = 0, limit: number = 20): Promise<FeedListResponse> => {
-  const token = useAuthStore.getState().accessToken;
+  const token = useAuthStore.getState().getAccessToken();
   const headers: HeadersInit = {
     "Content-Type": "application/json",
   };
@@ -83,7 +83,7 @@ export async function toggleLikeFeedApi(feedId: number, currentIsLiked: boolean)
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/feeds/${feedId}/like`, {
       method: method,
       headers: {
-        "Authorization": `Bearer ${useAuthStore.getState().accessToken}`,
+        "Authorization": `Bearer ${useAuthStore.getState().getAccessToken()}`,
       },
     });
 
@@ -100,7 +100,7 @@ export async function deleteFeed(feedId: number): Promise<{ message: string }> {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${useAuthStore.getState().accessToken}`,
+        "Authorization": `Bearer ${useAuthStore.getState().getAccessToken()}`,
       },
     });
     return handleResponse(response, "피드 삭제 중 오류가 발생했습니다.");

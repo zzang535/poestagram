@@ -27,7 +27,7 @@ export default function UserFeeds({ userId }: UserFeedsProps) {
 
   // 유저 피드 플로우에 필요한 데이터
   const feedId = searchParams.get('feed_id');
-  const accessToken = useAuthStore((s) => s.accessToken);
+  const getAccessToken = useAuthStore((s) => s.getAccessToken);
   const targetFeedRef = useRef<HTMLDivElement | null>(null);
   const [targetFeedIndex, setTargetFeedIndex] = useState(0);
 
@@ -46,7 +46,7 @@ export default function UserFeeds({ userId }: UserFeedsProps) {
     setHasMore(true);
     setError(null);
     didInitRef.current = false;
-  }, [accessToken]); 
+  }, [getAccessToken]); 
 
   // 첫 로딩
   useEffect(() => {
@@ -71,7 +71,7 @@ export default function UserFeeds({ userId }: UserFeedsProps) {
       }
     };
     init();
-  }, [accessToken, userId, feedId]);
+  }, [getAccessToken, userId, feedId]);
 
   const fetchFeeds = async (offsetVal: number, limitVal: number) => {
     setLoading(true);

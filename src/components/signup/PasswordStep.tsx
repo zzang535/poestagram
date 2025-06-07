@@ -82,8 +82,8 @@ export default function PasswordStep({ onNext }: PasswordStepProps) {
           label="비밀번호"
           type="password"
           placeholder="8자리 이상, 영문+숫자+특수문자"
-          value={password}
-          onChange={handlePasswordChange}
+            value={password}
+            onChange={handlePasswordChange}
           showPasswordToggle={true}
           isValid={passwordMessage?.type === "success"}
         />
@@ -93,7 +93,7 @@ export default function PasswordStep({ onNext }: PasswordStepProps) {
             {passwordMessage.text}
           </p>
         )}
-        
+
         <Button
           onClick={handleNext}
           disabled={!password || !validatePassword(password)}

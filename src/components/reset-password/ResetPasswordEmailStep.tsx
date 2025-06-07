@@ -66,11 +66,11 @@ export default function ResetPasswordEmailStep({ onNext }: ResetPasswordEmailSte
       <div className="space-y-4">
         <Input
           label="이메일 주소"
-          type="email"
-          placeholder="이메일 주소"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
+            type="email"
+            placeholder="이메일 주소"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
         
         {emailMessage && (
           <p className={`text-sm ${getMessageColor(emailMessage.type)}`}>

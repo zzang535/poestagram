@@ -28,7 +28,7 @@ export default function FeedItem({
 }: FeedItemProps & { onDeleteSuccess?: (feedId: number) => void }) {
 
   const router = useRouter();
-  const accessToken = useAuthStore((s) => s.accessToken);
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated());
   const currentUser = useAuthStore((s) => s.user);
   const { currentPlayingVideo, setCurrentPlayingVideo } = useVideoStore();
 
@@ -440,7 +440,7 @@ export default function FeedItem({
   };
 
   const onClickLike = () => {
-    if(!accessToken) {
+    if(!isAuthenticated) {
       router.push("/login");
       return;
     }
@@ -575,7 +575,7 @@ export default function FeedItem({
                     )}
                     {file.content_type.startsWith("video") && (
                       <div className="relative w-full h-full">
-                        <video
+                      <video
                           ref={(el) => {
                             if (el) {
                               videoRefs.current[index] = el;
@@ -584,27 +584,27 @@ export default function FeedItem({
                               // cleanup 함수는 컴포넌트 언마운트시 자동으로 호출됨
                             }
                           }}
-                          src={`${file.base_url}/${file.s3_key}`}
-                          className="w-full h-full bg-black"
-                          loop
+                        src={`${file.base_url}/${file.s3_key}`}
+                        className="w-full h-full bg-black"
+                        loop
                           muted
                           playsInline
                           preload="metadata"
                           onMouseEnter={() => setShowControls(true)}
                           onMouseLeave={() => setShowControls(false)}
-                          style={{
-                            objectFit: (() => {
-                              const ratio = frame_ratio;
-                              const imageRatio = file.height / file.width;
-                              
-                              if(imageRatio > ratio) {
-                                return "cover";
-                              } else {
-                                return "contain";
-                              }
-                            })()
-                          }}
-                        />
+                        style={{
+                          objectFit: (() => {
+                            const ratio = frame_ratio;
+                            const imageRatio = file.height / file.width;
+                            
+                            if(imageRatio > ratio) {
+                              return "cover";
+                            } else {
+                              return "contain";
+                            }
+                          })()
+                        }}
+                      />
 
                         {/* 비디오 컨트롤 오버레이 - 현재 슬라이드인 경우만 표시 */}
                         {index === currentImageIndex && file.content_type.startsWith("video") && (

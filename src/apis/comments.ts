@@ -14,7 +14,7 @@ export async function getComments(feedId: number, skip: number = 0, limit: numbe
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/feeds/${feedId}/comments?skip=${skip}&limit=${limit}`, {
       method: 'GET',
       headers: {
-        "Authorization": `Bearer ${useAuthStore.getState().accessToken}`,
+        "Authorization": `Bearer ${useAuthStore.getState().getAccessToken()}`,
         'Content-Type': 'application/json',
       },
     });
@@ -36,7 +36,7 @@ export async function createComment(feedId: number, content: string): Promise<Co
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/feeds/${feedId}/comments`, {
     method: 'POST',
     headers: {
-      "Authorization": `Bearer ${useAuthStore.getState().accessToken}`,
+      "Authorization": `Bearer ${useAuthStore.getState().getAccessToken()}`,
       "Content-Type": "application/json",
     },
     body: JSON.stringify({ content }),
@@ -54,7 +54,7 @@ export async function deleteComment(commentId: number) {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/comments/${commentId}`, {
       method: 'DELETE',
       headers: {
-        'Authorization': `Bearer ${useAuthStore.getState().accessToken}`,
+        'Authorization': `Bearer ${useAuthStore.getState().getAccessToken()}`,
       },
     });
 
@@ -79,7 +79,7 @@ export async function toggleCommentLikeApi(commentId: number, currentIsLiked: bo
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/comments/${commentId}/like`, {
       method: method,
       headers: {
-        "Authorization": `Bearer ${useAuthStore.getState().accessToken}`,
+        "Authorization": `Bearer ${useAuthStore.getState().getAccessToken()}`,
       },
     });
 

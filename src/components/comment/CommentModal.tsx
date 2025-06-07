@@ -19,7 +19,7 @@ interface CommentModalProps {
 }
 
 export default function CommentModal({ isOpen, onClose, feedId }: CommentModalProps) {
-  const accessToken = useAuthStore((s) => s.accessToken);
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated());
   const user = useAuthStore((s) => s.user);
   const router = useRouter();
   const [comments, setComments] = useState<Comment[]>([]);
@@ -115,7 +115,7 @@ export default function CommentModal({ isOpen, onClose, feedId }: CommentModalPr
 
   // 낙관적 업데이트를 적용한 좋아요 토글 함수
   const toggleLike = (commentId: number) => {
-    if(!accessToken) {
+    if(!isAuthenticated) {
       router.push("/login");
       return;
     }
@@ -162,7 +162,7 @@ export default function CommentModal({ isOpen, onClose, feedId }: CommentModalPr
   const handleSubmitComment = async () => {
     if (!commentInput.trim() || isSubmitting) return;
 
-    if (!accessToken) {
+    if (!isAuthenticated) {
       router.push("/login");
       return;
     }
@@ -231,7 +231,7 @@ export default function CommentModal({ isOpen, onClose, feedId }: CommentModalPr
       onClose={onClose} 
       title="댓글"
       enableKeyboardAdjustment={true}
-      footer={accessToken ? (
+      footer={isAuthenticated ? (
         <div className="bg-zinc-950 border-t border-zinc-900 flex items-center gap-[10px] px-4 h-full">
           <div className="flex-shrink-0">
             <img 
@@ -321,7 +321,7 @@ export default function CommentModal({ isOpen, onClose, feedId }: CommentModalPr
                   >
                     {comment.user.username}
                   </button>
-                  {accessToken && user && user.id === comment.user.id && (
+                  {isAuthenticated && user && user.id === comment.user.id && (
                     <div className="relative">
                       <button 
                         className="text-gray-400 hover:text-white"

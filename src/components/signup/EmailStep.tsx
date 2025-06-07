@@ -111,11 +111,11 @@ export default function EmailStep({ onNext }: EmailStepProps) {
       <div className="space-y-4">
         <Input
           label="이메일 주소"
-          type="email"
+            type="email"
           placeholder="example@email.com"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
         {emailMessage && (
           <p className={`text-sm ${getMessageColor(emailMessage.type)}`}>
             {emailMessage.text}

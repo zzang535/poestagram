@@ -10,17 +10,17 @@ interface ProtectedRouteProps {
 
 export default function ProtectedRoute({ children }: ProtectedRouteProps) {
   const router = useRouter();
-  const accessToken = useAuthStore((s) => s.accessToken);
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated());
   const hasHydrated = useAuthStore((s) => s.hasHydrated);
 
   useEffect(() => {
     // hydration이 완료된 후에만 인증 체크
-    if (hasHydrated && !accessToken) {
+    if (hasHydrated && !isAuthenticated) {
       router.push('/login');
     }
-  }, [accessToken, hasHydrated, router]);
+  }, [isAuthenticated, hasHydrated, router]);
 
-  // hydration이 완료되지 않았거나 토큰이 없으면 로딩 상태
+  // hydration이 완료되지 않았으면 로딩 상태
   if (!hasHydrated) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
@@ -29,7 +29,7 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
     );
   }
 
-  if (!accessToken) {
+  if (!isAuthenticated) {
     return null; // 리다이렉트 중이므로 아무것도 렌더링하지 않음
   }
 

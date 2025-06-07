@@ -109,7 +109,7 @@ export default function ResetPasswordNewPasswordStep({ email, code }: ResetPassw
           label="새 비밀번호"
           type="password"
           placeholder="8자리 이상, 영문+숫자+특수문자"
-          value={newPassword}
+            value={newPassword}
           onChange={handlePasswordChange}
           showPasswordToggle={true}
           isValid={passwordMessage?.type === "success"}

@@ -3,7 +3,7 @@ import { handleResponse } from "./handleResponse";
 import { useAuthStore } from "@/store/authStore";
 
 export async function getUserProfile(userId: string | number): Promise<UserProfile> {
-  const accessToken = useAuthStore.getState().accessToken;
+  const accessToken = useAuthStore.getState().getAccessToken();
   const headers: HeadersInit = {
     "Content-Type": "application/json",
   };
@@ -25,7 +25,7 @@ export async function getUserProfile(userId: string | number): Promise<UserProfi
 }
 
 export async function updateProfileImage(imageBlob: Blob): Promise<{ profile_image_url: string }> {
-  const accessToken = useAuthStore.getState().accessToken;
+  const accessToken = useAuthStore.getState().getAccessToken();
   
   if (!accessToken) {
     throw new Error("로그인이 필요합니다.");
@@ -51,7 +51,7 @@ export async function updateProfileImage(imageBlob: Blob): Promise<{ profile_ima
 }
 
 export async function updateUsername(username: string): Promise<UsernameUpdateResponse> {
-  const accessToken = useAuthStore.getState().accessToken;
+  const accessToken = useAuthStore.getState().getAccessToken();
   
   if (!accessToken) {
     throw new Error("로그인이 필요합니다.");
@@ -77,7 +77,7 @@ export async function updateUsername(username: string): Promise<UsernameUpdateRe
 }
 
 export async function updateBio(bio: string): Promise<BioUpdateResponse> {
-  const accessToken = useAuthStore.getState().accessToken;
+  const accessToken = useAuthStore.getState().getAccessToken();
   
   if (!accessToken) {
     throw new Error("로그인이 필요합니다.");
