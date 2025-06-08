@@ -74,12 +74,12 @@ export async function generateMetadata({ params, searchParams }: UserFeedPagePro
     
     // 피드 정보를 가져올 수 없는 경우 기본 메타데이터
     return {
-      title: `POE 게임 콘텐츠 - poestagram`,
-      description: `POE 패스오브 엑자일 게임 플레이 영상과 스크린샷을 확인해보세요.`,
+      title: 'poestagram',
+      description: 'POE 패스오브 엑자일 유저를 위한 커뮤니티입니다. 게임 플레이 영상과 스크린샷을 공유하고 소통해보세요.???',
       keywords: ['패스오브 엑자일', 'POE', 'poe', '게임', '영상', '사진', '소셜', '커뮤니티', 'poestagram', '게이머', '스크린샷', '게임플레이'],
       openGraph: {
-        title: `POE 게임 콘텐츠 - poestagram`,
-        description: `POE 패스오브 엑자일 게임 플레이 영상과 스크린샷을 확인해보세요.`,
+        title: 'poestagram',
+        description: 'POE 패스오브 엑자일 유저를 위한 커뮤니티입니다. 게임 플레이 영상과 스크린샷을 공유하고 소통해보세요.',
         type: 'article',
       },
       robots: {

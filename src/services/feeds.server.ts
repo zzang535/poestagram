@@ -130,18 +130,23 @@ export const getFeedDetailServer = async (feedId: number, accessToken?: string):
     headers["Authorization"] = `Bearer ${accessToken}`;
   }
 
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/feeds/${feedId}`,
-    {
-      method: "GET",
-      headers,
-      cache: 'no-store',
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/feeds/${feedId}`,
+      {
+        method: "GET",
+        headers,
+        cache: 'no-store',
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
-  );
-
-  if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`);
+  
+    return response.json();
+  } catch (error) {
+    console.error('Server feed detail fetch error:', error);
+    throw error;
   }
-
-  return response.json();
 };
