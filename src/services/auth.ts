@@ -3,7 +3,7 @@ interface SendVerificationEmailResponse {
   message: string;
 }
 
-import { handleResponse } from "./handleResponse";
+import { handleResponse } from "../utils/handleResponse";
 
 export const sendVerificationEmail = async (email: string): Promise<SendVerificationEmailResponse> => {
   try {

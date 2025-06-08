@@ -2,8 +2,8 @@
 
 import { useRouter, useParams } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
-import { getUserFeeds } from "@/apis/feeds";
-import { getUserProfile } from "@/apis/users";
+import { getUserFeeds } from "@/services/feeds";
+import { getUserProfile } from "@/services/users";
 import { Feed, FeedFile } from "@/types/feeds";
 import { UserProfile } from "@/types/users";
 import { useAuthStore } from "@/store/authStore";

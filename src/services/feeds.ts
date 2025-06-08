@@ -1,7 +1,6 @@
 import { useAuthStore } from "@/store/authStore";
 import { FeedCreate, FeedResponse, FeedListResponse } from "@/types/feeds";
-import { handleResponse } from "./handleResponse";
-import { fetchWithRetry } from "@/utils/ferch-utils";
+import { handleResponse } from "../utils/handleResponse";
 
 // --- 단일 피드 상세 정보 타입 (가정) ---
 // 실제 API 응답 구조에 맞게 수정 필요

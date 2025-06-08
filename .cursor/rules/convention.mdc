@@ -1,0 +1,72 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+당신은 TypeScript, Node.js, Next.js App Router, React, Tailwind 전문가입니다.
+
+## 커밋 규칙
+- 커밋을 요청하기 전까지는 커밋을 하지 않습니다.
+- 커밋 메세지에 여러가지 작업 항목이 있는 경우 / 로 구분하여 작성합니다.
+
+## 코드 스타일 및 구조
+- 들여쓰기는 2칸으로 합니다.
+- 정확한 예시를 포함한 간결하고 기술적인 TypeScript 코드를 작성하십시오.
+- 함수형 및 선언형 프로그래밍 패턴 사용; 클래스를 피하십시오.
+- 코드 중복을 피하고 반복 및 모듈화를 선호합니다.
+- 보조 동사를 포함한 설명적인 변수 이름 사용(예: isLoading, hasError).
+- 파일 구조: 내보낸 컴포넌트, 하위 컴포넌트, 헬퍼, 정적 콘텐츠, 타입.
+
+## TypeScript 사용
+- 모든 코드에 TypeScript를 사용하고, 인터페이스를 타입보다 선호합니다.
+- 열거형을 피하고 대신 맵을 사용합니다.
+- TypeScript 인터페이스를 사용하는 함수형 컴포넌트 사용.
+
+## 구문 및 서식
+- 순수 함수에 "function" 키워드 사용.
+- 조건문에서 불필요한 중괄호 피하기; 간단한 문에는 간결한 구문 사용.
+- 선언형 JSX 사용.
+
+## UI 및 스타일링
+- 컴포넌트 및 스타일링에 Tailwind 사용.
+- Tailwind CSS로 반응형 디자인 구현; 모바일 우선 접근법 사용.
+
+## 프로젝트 구조
+```
+src/
+├── app/
+│   ├── (public)/          # 공개 페이지 (로그인, 회원가입)
+│   ├── (authenticated)/   # 인증 필요 페이지 (프로필, 설정)
+│   ├── feed/             # 피드 페이지
+│   ├── user/[id]/        # 동적 사용자 페이지
+│   └── api/              # API 라우트
+├── components/
+│   ├── ui/               # 재사용 UI 컴포넌트
+│   ├── layout/           # 레이아웃 컴포넌트
+│   └── [feature]/        # 기능별 컴포넌트 (feed/, auth/)
+├── data/                 # 데이터
+├── hooks/                # 훅
+├── services/
+│   ├── *.server.ts       # 서버용 API 함수
+│   └── *.ts              # 공용 API 타입/상수
+├── store/                # Zustand 스토어 (클라이언트 전용)
+├── types/                # 타입 정의
+├── utils/
+│   ├── *.server.ts       # 서버 전용 유틸 (server-auth.ts)
+│   └── *.ts              # 공용 유틸 (validation.ts)
+
+## 네이밍 컨벤션
+
+### 폴더명
+- Next.js App Router: kebab-case 사용 (reset-password, user-profile)
+- 컴포넌트 폴더: kebab-case 사용 (auth-wizard, feed-item)
+- Route Groups: (authenticated), (public) 등 괄호 사용
+
+### 파일명
+- 서버 전용: 파일명.server.ts (auth.server.ts, handleResponse.server.ts)
+- 공용 로직: 파일명.ts (접미사 없음)
+- 더미 데이터: 파일명.mock.ts (comments.mock.ts, users.mock.ts)
+
+### 변수명
+- 더미/모킹 데이터: mockComments, dummyUsers, sampleFeeds
+- 정적/상수 데이터: GAME_CATEGORIES, DEFAULT_SETTINGS, API_ENDPOINTS

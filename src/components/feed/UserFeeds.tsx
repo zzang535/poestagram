@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import { useSearchParams } from "next/navigation";
-import { getUserFeeds, getFeedIndex } from "@/apis/feeds";
+import { getUserFeeds, getFeedIndex } from "@/services/feeds";
 import { useAuthStore } from "@/store/authStore";
 import FeedItem from "@/components/feed/FeedItem";
 import { Feed, FeedItemProps } from "@/types/feeds";

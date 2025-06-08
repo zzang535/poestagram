@@ -1,5 +1,5 @@
 import { UserProfile, UsernameUpdateRequest, UsernameUpdateResponse, BioUpdateRequest, BioUpdateResponse } from "@/types/users";
-import { handleResponse } from "./handleResponse";
+import { handleResponse } from "../utils/handleResponse";
 import { useAuthStore } from "@/store/authStore";
 
 export async function getUserProfile(userId: string | number): Promise<UserProfile> {

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Modal from "@/components/ui/Modal";
 import Input from "@/components/ui/Input";
-import { updateUsername } from "@/apis/users";
+import { updateUsername } from "@/services/users";
 
 interface UsernameEditModalProps {
   isOpen: boolean;

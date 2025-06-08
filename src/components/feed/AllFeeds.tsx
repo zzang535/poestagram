@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
-import { getAllFeeds } from "@/apis/feeds";
+import { getAllFeeds } from "@/services/feeds";
 import FeedItem from "@/components/feed/FeedItem";
 import { Feed, FeedItemProps } from "@/types/feeds";
 

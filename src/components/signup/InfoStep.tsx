@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { signup, login } from "@/apis/auth";
+import { signup, login } from "@/services/auth";
 import { useAuthStore } from "@/store/authStore";
 import PrivacyPolicyModal from "@/components/policy/PrivacyPolicyModal";
 import TermsOfServiceModal from "@/components/policy/TermsOfServiceModal";

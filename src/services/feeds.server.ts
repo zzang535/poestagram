@@ -1,5 +1,5 @@
 import { FeedListResponse } from "@/types/feeds";
-import { handleResponse } from "./handleResponse";
+import { handleResponse } from "../utils/handleResponse";
 
 /**
  * 서버에서 모든 피드를 가져오는 API를 호출합니다.

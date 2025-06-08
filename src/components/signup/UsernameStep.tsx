@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { checkUsername } from "@/apis/auth";
+import { checkUsername } from "@/services/auth";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 

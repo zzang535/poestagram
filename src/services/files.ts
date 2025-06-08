@@ -1,4 +1,4 @@
-import { handleResponse } from "./handleResponse";
+import { handleResponse } from "../utils/handleResponse";
 
 export interface UploadedFile {
   file_name: string;

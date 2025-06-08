@@ -1,6 +1,6 @@
 import { useAuthStore } from "@/store/authStore";
 import { CommentCreate, CommentResponse, CommentListResponse } from "@/types/comments";
-import { handleResponse } from "./handleResponse";
+import { handleResponse } from "../utils/handleResponse";
 
 /**
  * 피드의 댓글 목록을 가져오는 API를 호출합니다.

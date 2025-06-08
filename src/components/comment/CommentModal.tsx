@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 
-import { createComment, getComments, deleteComment, toggleCommentLikeApi } from "@/apis/comments";
+import { createComment, getComments, deleteComment, toggleCommentLikeApi } from "@/services/comments";
 import { useAuthStore } from "@/store/authStore";
 import { Comment } from "@/types/comments";
 

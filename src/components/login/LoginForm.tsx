@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/authStore";
-import { login } from "@/apis/auth"; // login API만 사용
+import { login } from "@/services/auth"; // login API만 사용
 import TextButton from "@/components/ui/TextButton";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";

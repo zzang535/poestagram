@@ -7,7 +7,7 @@ import { faHeart as faRegularHeart, faComment, faBookmark } from "@fortawesome/f
 import CommentModal from "@/components/comment/CommentModal";
 import ConfirmModal from "@/components/ui/ConfirmModal";
 import { FeedItemProps } from "@/types/feeds";
-import { toggleLikeFeedApi, deleteFeed } from "@/apis/feeds";
+import { toggleLikeFeedApi, deleteFeed } from "@/services/feeds";
 import { useAuthStore } from "@/store/authStore";
 import { useVideoStore } from "@/store/videoStore";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
