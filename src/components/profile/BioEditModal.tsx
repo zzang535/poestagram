@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Modal from "@/components/ui/Modal";
 import TextArea from "@/components/ui/TextArea";
-import { updateBio } from "@/services/users";
+import { updateBio } from "@/services/users";
 
 interface BioEditModalProps {
   isOpen: boolean;

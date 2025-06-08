@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
-import { checkEmail, sendVerificationEmail } from "@/services/auth";
+import { checkEmail, sendVerificationEmail } from "@/services/auth";
 
 interface Message {
   text: string;

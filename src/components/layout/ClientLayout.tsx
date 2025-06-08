@@ -33,14 +33,14 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
 
   // 현재 경로에 따른 네비게이션 활성화 상태
   const isFeedActive = pathname === "/feed";
-  const isCreateActive = pathname === "/create";
-  const isProfileActive = pathname.startsWith("/profile");
+  const isCreateActive = pathname === "/create-post";
+  const isProfileActive = pathname.includes("/profile");
 
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated());
   const { logout, user } = useAuthStore();
 
   const getPageTitle = () => {
-    if (pathname === '/create') {
+    if (pathname === '/create-post') {
       return '새 게시물';
     } else if (pathname === '/login') {
       return '로그인';
@@ -50,9 +50,9 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
       return 'poestagram';
     } else if (pathname?.startsWith('/user/') && pathname?.endsWith('/feed')) {
       return '게시물';
-    } else if (pathname === '/profile/edit') {
+    } else if (pathname === '/edit-profile') {
       return '프로필 편집';
-    } else if (pathname?.startsWith('/profile/')) {
+    } else if (pathname?.includes('/profile')) {
       return '프로필';
     } else if (pathname === '/reset-password') {
       return '비밀번호 재설정';
@@ -66,7 +66,7 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
   };
 
   const noShowGnb = () => {
-    return pathname === '/login' || pathname === '/signup' || pathname === '/reset-password' || pathname === '/create';
+    return pathname === '/login' || pathname === '/signup' || pathname === '/reset-password' || pathname === '/create-post';
   };
 
   const handleLogout = () => {
@@ -76,7 +76,7 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
   };
 
   const handleNavigation = (path: string) => {
-    if (path === "/create" ) {
+    if (path === "/create-post" ) {
       if (isAuthenticated) {
         router.push(path);
       } else {
@@ -84,7 +84,7 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
       }
     } else if (path === "/profile") {
       if (isAuthenticated) {
-        router.push(`/profile/${user?.id}`);
+        router.push(`/user/${user?.id}/profile`);
       } else {
         router.push("/login");
       }
@@ -137,7 +137,7 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
               </button>
 
               <button 
-                onClick={() => handleNavigation("/create")}
+                onClick={() => handleNavigation("/create-post")}
                 className={`flex flex-col items-center justify-center ${
                   isCreateActive ? "text-red-800" : "text-white"
                 }`}

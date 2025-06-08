@@ -12,8 +12,8 @@ export default function robots(): MetadataRoute.Robots {
           '/api/',
           '/_next/',
           '/admin/',
-          '/create/',
-          '/profile/edit/',
+          '/create-post/',
+          '/edit-profile/',
           '/reset-password/',
           '/login/',
           '/signup/'
@@ -26,8 +26,8 @@ export default function robots(): MetadataRoute.Robots {
           '/api/',
           '/_next/',
           '/admin/',
-          '/create/',
-          '/profile/edit/',
+          '/create-post/',
+          '/edit-profile/',
           '/reset-password/'
         ],
       },

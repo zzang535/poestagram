@@ -7,7 +7,7 @@ import { faHeart as faRegularHeart, faComment, faBookmark } from "@fortawesome/f
 import CommentModal from "@/components/comment/CommentModal";
 import ConfirmModal from "@/components/ui/ConfirmModal";
 import { FeedItemProps } from "@/types/feeds";
-import { toggleLikeFeedApi, deleteFeed } from "@/services/feeds";
+import { toggleLikeFeedApi, deleteFeed } from "@/services/feeds";
 import { useAuthStore } from "@/store/authStore";
 import { useVideoStore } from "@/store/videoStore";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
@@ -494,7 +494,7 @@ export default function FeedItem({
         <div className="flex items-center justify-between p-4 border-b border-zinc-900">
           <button 
             className="flex items-center text-left hover:opacity-80 transition-opacity"
-            onClick={() => router.push(`/profile/${user.id}`)}
+            onClick={() => router.push(`/user/${user.id}/profile`)}
           >
             <img
               src={user?.profile_image_url || "/default-profile.svg"}
@@ -750,7 +750,7 @@ export default function FeedItem({
           </div>
           <p className="text-sm text-white mt-2">
             <button 
-              onClick={() => router.push(`/profile/${user.id}`)}
+              onClick={() => router.push(`/user/${user.id}/profile`)}
               className="font-semibold mr-1 hover:text-gray-300 transition-colors cursor-pointer"
             >
               {user.username}

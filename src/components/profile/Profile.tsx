@@ -2,8 +2,8 @@
 
 import { useRouter, useParams } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
-import { getUserFeeds } from "@/services/feeds";
-import { getUserProfile } from "@/services/users";
+import { getUserFeeds } from "@/services/feeds";
+import { getUserProfile } from "@/services/users";
 import { Feed, FeedFile } from "@/types/feeds";
 import { UserProfile } from "@/types/users";
 import { useAuthStore } from "@/store/authStore";
@@ -141,7 +141,7 @@ export default function Profile({ userId }: { userId: string }) {
                   <button
                     onClick={() => {
                       setShowMenu(false);
-                      router.push('/profile/edit');
+                      router.push('/edit-profile');
                     }}
                     className="w-full text-left px-4 py-2 text-sm text-white hover:bg-zinc-700 transition-colors"
                   >

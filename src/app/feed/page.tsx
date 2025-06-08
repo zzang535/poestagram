@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
 import { Metadata } from 'next';
 import AllFeeds from "@/components/feed/AllFeeds";
-import { getAllFeedsServer } from "@/services/feeds.server";
+import { getAllFeedsServer } from "@/services/feeds.server";
 import { getServerAuthToken } from "@/utils/auth.server";
 import type { Feed, FeedItemProps } from "@/types/feeds";
 

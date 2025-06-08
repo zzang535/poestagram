@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 
-import { createComment, getComments, deleteComment, toggleCommentLikeApi } from "@/services/comments";
+import { createComment, getComments, deleteComment, toggleCommentLikeApi } from "@/services/comments";
 import { useAuthStore } from "@/store/authStore";
 import { Comment } from "@/types/comments";
 
@@ -316,7 +316,7 @@ export default function CommentModal({ isOpen, onClose, feedId }: CommentModalPr
               <div className="flex-1 min-w-0">
                 <div className="flex justify-between items-center mb-[2px]">
                   <button 
-                    onClick={() => router.push(`/profile/${comment.user.id}`)}
+                    onClick={() => router.push(`/user/${comment.user.id}/profile`)}
                     className="text-sm font-semibold text-white hover:text-gray-300 transition-colors cursor-pointer"
                   >
                     {comment.user.username}

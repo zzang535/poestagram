@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { sendVerificationEmail, checkEmail } from "@/services/auth";
+import { sendVerificationEmail, checkEmail } from "@/services/auth";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 

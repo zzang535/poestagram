@@ -3,8 +3,8 @@ import { forwardRef, useState, useEffect, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCamera, faChevronLeft, faChevronRight, faXmark, faPlus } from "@fortawesome/free-solid-svg-icons";
 import ImageUploadLoading from "@/components/ui/ImageUploadLoading";
-import { uploadFile } from "@/services/files";
-import { UploadResponse } from "@/services/files";
+import { uploadFile } from "@/services/files";
+import { UploadResponse } from "@/services/files";
 
 interface PreviewImage {
   url: string;

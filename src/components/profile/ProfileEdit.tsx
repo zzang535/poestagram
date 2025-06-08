@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/authStore";
-import { getUserProfile, updateProfileImage } from "@/services/users";
+import { getUserProfile, updateProfileImage } from "@/services/users";
 import { UserProfile } from "@/types/users";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";

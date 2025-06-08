@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { verifyCode, sendVerificationEmail } from "@/services/auth";
+import { verifyCode, sendVerificationEmail } from "@/services/auth";
 import Button from "@/components/ui/Button";
 import TextButton from "@/components/ui/TextButton";
 import Input from "@/components/ui/Input";

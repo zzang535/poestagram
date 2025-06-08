@@ -1,7 +1,7 @@
 "use client";
 import { useState, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { createFeed } from "@/services/feeds";
+import { createFeed } from "@/services/feeds";
 import MediaUploadBox from "./MediaUploadBox";
 import TextArea from "@/components/ui/TextArea";
 import Button from "@/components/ui/Button";
