@@ -29,9 +29,20 @@ export default function ResetPasswordEmailStep({ onNext }: ResetPasswordEmailSte
     }
   };
 
+  const validateEmail = (value: string): boolean => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(value);
+  };
+
   const handleSendVerification = async () => {
     if (!email) {
       setEmailMessage({ text: "이메일을 입력해주세요.", type: "error" });
+      return;
+    }
+
+
+    if (!validateEmail(email)) {
+      setEmailMessage({ text: "올바른 이메일 형식으로 입력해 주세요.", type: "error" });
       return;
     }
 
@@ -50,9 +61,10 @@ export default function ResetPasswordEmailStep({ onNext }: ResetPasswordEmailSte
       await sendVerificationEmail(email);
       setEmailMessage({ text: "인증번호가 이메일로 전송되었습니다.", type: "success" });
       onNext(email);
-    } catch (error) {
-      setEmailMessage({ 
-        text: error instanceof Error ? error.message : "인증번호 전송에 실패했습니다.", 
+    } catch (error: any) {
+       // 서버에서 오는 에러 처리
+       setEmailMessage({ 
+        text: error.message, 
         type: "error" 
       });
     } finally {

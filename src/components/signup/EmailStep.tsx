@@ -65,39 +65,9 @@ export default function EmailStep({ onNext }: EmailStepProps) {
       setEmailMessage({ text: "인증번호를 이메일로 보내드렸어요!", type: "success" });
       onNext(email);
     } catch (error: any) {
-      // 서버에서 오는 validation 에러 처리
-      if (error?.response?.data?.detail && Array.isArray(error.response.data.detail)) {
-        const detail = error.response.data.detail;
-        
-        // 이메일 형식 에러 확인
-        const emailError = detail.find((d: any) => d.loc?.includes("email"));
-        if (emailError) {
-          setEmailMessage({ text: "올바른 이메일 형식으로 입력해 주세요.", type: "error" });
-          return;
-        }
-        
-        // 다른 validation 에러가 있는 경우
-        if (detail.length > 0) {
-          setEmailMessage({ text: detail[0].msg || "입력 정보를 확인해 주세요.", type: "error" });
-          return;
-        }
-      }
-      
-      // 서버에서 오는 단일 에러 메시지 처리
-      if (error?.response?.data?.message) {
-        setEmailMessage({ text: error.response.data.message, type: "error" });
-        return;
-      }
-      
-      // 네트워크 에러나 기타 에러 처리
-      if (error?.message) {
-        setEmailMessage({ text: error.message, type: "error" });
-        return;
-      }
-      
-      // 알 수 없는 에러
+      // 서버에서 오는 에러 처리
       setEmailMessage({ 
-        text: "잠시 전송이 어려워요. 다시 시도해 주세요.", 
+        text: error.message, 
         type: "error" 
       });
     } finally {
@@ -123,7 +93,7 @@ export default function EmailStep({ onNext }: EmailStepProps) {
         )}
         <Button
           onClick={handleSendVerification}
-          disabled={!email || !validateEmail(email)}
+          disabled={!email}
           loading={isSending}
           loadingText="전송 중..."
         >
