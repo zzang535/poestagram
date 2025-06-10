@@ -26,7 +26,11 @@ const setCookie = (name: string, value: string, days: number = 7) => {
   
   const expires = new Date();
   expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
-  document.cookie = `${name}=${value}; expires=${expires.toUTCString()}; path=/; SameSite=Lax; Secure`;
+
+  // 로컬 테스트 환경에서는 Secure 속성 제거
+  // mobile 에서 192.168.x.x 로 접속하면 쿠키가 저장되지 않음
+  const isLocal = typeof window !== 'undefined' && window.location.hostname.startsWith('192.168.');
+  document.cookie = `${name}=${value}; expires=${expires.toUTCString()}; path=/; SameSite=Lax${isLocal ? '' : '; Secure'}`;
 };
 
 const getCookie = (name: string): string | null => {
