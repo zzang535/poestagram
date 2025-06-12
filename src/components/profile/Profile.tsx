@@ -10,13 +10,19 @@ import { useAuthStore } from "@/store/authStore";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEllipsis } from "@fortawesome/free-solid-svg-icons";
 
-export default function Profile({ userId }: { userId: string }) {
+interface ProfileProps {
+  userId: string;
+  initialProfile?: UserProfile;
+  initialFeeds?: Feed[];
+}
+
+export default function Profile({ userId, initialProfile, initialFeeds }: ProfileProps) {
   const router = useRouter();
 
-  const [profileLoading, setProfileLoading] = useState(true);
-  const [feedsLoading, setFeedsLoading] = useState(true);
-  const [feeds, setFeeds] = useState<Feed[]>([]);
-  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  const [profileLoading, setProfileLoading] = useState(!initialProfile);
+  const [feedsLoading, setFeedsLoading] = useState(!initialFeeds);
+  const [feeds, setFeeds] = useState<Feed[]>(initialFeeds || []);
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(initialProfile || null);
   const [showMenu, setShowMenu] = useState(false);
   const authUser = useAuthStore((s) => s.user);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -42,7 +48,8 @@ export default function Profile({ userId }: { userId: string }) {
   }, [showMenu]);
 
   useEffect(() => {
-    if (!userId) return;
+    // 초기 프로필 데이터가 없는 경우에만 fetch
+    if (!userId || initialProfile) return;
     const fetchUserProfile = async () => {
       try {
         setProfileLoading(true);
@@ -56,10 +63,11 @@ export default function Profile({ userId }: { userId: string }) {
       }
     };
     fetchUserProfile();
-  }, [userId, router]);
+  }, [userId, router, initialProfile]);
 
   useEffect(() => {
-    if (!userId) return;
+    // 초기 피드 데이터가 없는 경우에만 fetch
+    if (!userId || initialFeeds) return;
     const fetchUserFeeds = async () => {
       try {
         setFeedsLoading(true);
@@ -72,7 +80,7 @@ export default function Profile({ userId }: { userId: string }) {
       }
     };
     fetchUserFeeds();
-  }, [userId]);
+  }, [userId, initialFeeds]);
 
   const handlePostClick = (feedId: number) => {
     if (userId) {
