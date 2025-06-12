@@ -50,7 +50,7 @@ export async function generateMetadata({ params, searchParams }: UserFeedPagePro
     return {
       title: `${feedTitle} - poestagram`,
       description: `${username}의 POE 패스오브 엑자일 게임 콘텐츠: ${description || '게임 플레이 영상과 스크린샷을 확인해보세요.'}`,
-      keywords: ['패스오브 엑자일', 'POE', 'poe', '게임', '영상', '사진', '소셜', '커뮤니티', 'poestagram', '게이머', '스크린샷', '게임플레이', username],
+      keywords: ['피오이스타그램', 'poestagram', 'POE', '패스오브 엑자일', '게임커뮤니티', username],
       openGraph: {
         title: feedTitle,
         description: `${username}의 POE 게임 콘텐츠: ${description || '게임 플레이 영상과 스크린샷을 확인해보세요.'}`,
@@ -76,7 +76,7 @@ export async function generateMetadata({ params, searchParams }: UserFeedPagePro
     return {
       title: 'poestagram',
       description: 'POE 패스오브 엑자일 유저를 위한 커뮤니티입니다. 게임 플레이 영상과 스크린샷을 공유하고 소통해보세요.???',
-      keywords: ['패스오브 엑자일', 'POE', 'poe', '게임', '영상', '사진', '소셜', '커뮤니티', 'poestagram', '게이머', '스크린샷', '게임플레이'],
+      keywords: ['피오이스타그램', 'poestagram', 'POE', '패스오브 엑자일', '게임커뮤니티'],
       openGraph: {
         title: 'poestagram',
         description: 'POE 패스오브 엑자일 유저를 위한 커뮤니티입니다. 게임 플레이 영상과 스크린샷을 공유하고 소통해보세요.',
