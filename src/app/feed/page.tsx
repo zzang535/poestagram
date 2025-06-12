@@ -5,15 +5,78 @@ import { getAllFeedsServer } from "@/services/feeds.server";
 import { getServerAuthToken } from "@/utils/auth.server";
 import type { Feed, FeedItemProps } from "@/types/feeds";
 
-export const metadata: Metadata = {
-  title: 'poestagram',
-  description: 'POE 패스오브 엑자일 유저를 위한 커뮤니티입니다. 게임 플레이 영상과 스크린샷을 공유하고 소통해보세요.',
-  keywords: ['피오이스타그램', 'poestagram', 'POE', '패스오브 엑자일', '게임커뮤니티'],
-  openGraph: {
-    title: 'poestagram',
-    description: 'POE 패스오브 엑자일 유저를 위한 커뮤니티입니다. 게임 플레이 영상과 스크린샷을 공유하고 소통해보세요.',
-    type: 'website',
-  },
+export async function generateMetadata(): Promise<Metadata> {
+  try {
+    const accessToken = await getServerAuthToken();
+    const { feeds } = await getAllFeedsServer(0, 1, accessToken || undefined);
+
+    if (feeds.length === 0) {
+      throw new Error('No feeds found');
+    }
+
+    const firstFeed = feeds[0];
+    const username = firstFeed.user?.username || '유저';
+    
+    const firstFile = firstFeed.files?.[0];
+    let imageUrl;
+    if (firstFile) {
+      const isVideo = firstFile.content_type?.startsWith('video/');
+      imageUrl = isVideo && firstFile.s3_key_thumbnail
+        ? `${firstFile.base_url}/${firstFile.s3_key_thumbnail}`
+        : `${firstFile.base_url}/${firstFile.s3_key}`;
+    }
+    
+    const description = firstFeed.description || '';
+    const shortDescription = description.length > 100 
+      ? description.substring(0, 100) + '...' 
+      : description;
+    
+    const feedTitle = shortDescription 
+      ? `${username}: ${shortDescription}`
+      : `${username}의 POE 게임 콘텐츠`;
+
+    const fullDescription = `${username}의 POE 패스오브 엑자일 게임 콘텐츠: ${description || '게임 플레이 영상과 스크린샷을 확인해보세요.'}`;
+
+    return {
+      title: 'poestagram - 피드',
+      description: 'POE 패스오브 엑자일 유저들의 피드를 확인하고 소통해보세요.',
+      keywords: ['피오이스타그램', 'poestagram', 'POE', '패스오브 엑자일', '게임커뮤니티', '피드'],
+      openGraph: {
+        title: feedTitle,
+        description: fullDescription,
+        type: 'website',
+        images: imageUrl ? [
+          {
+            url: imageUrl,
+            width: 800,
+            height: 600,
+            alt: `${username}의 게임 콘텐츠`,
+          }
+        ] : undefined,
+      },
+      robots: {
+        index: true,
+        follow: true,
+      },
+    };
+  } catch (error) {
+    console.error('Failed to fetch first feed for metadata:', error);
+    
+    return {
+      title: 'poestagram',
+      description: 'POE 패스오브 엑자일 유저를 위한 커뮤니티입니다. 게임 플레이 영상과 스크린샷을 공유하고 소통해보세요.',
+      keywords: ['피오이스타그램', 'poestagram', 'POE', '패스오브 엑자일', '게임커뮤니티'],
+      openGraph: {
+        title: 'poestagram',
+        description: 'POE 패스오브 엑자일 유저를 위한 커뮤니티입니다. 게임 플레이 영상과 스크린샷을 공유하고 소통해보세요.',
+        type: 'website',
+      },
+      robots: {
+        index: true,
+        follow: true,
+      },
+    };
+  }
 }
 
 // 서버에서 초기 피드 데이터 가져오기
