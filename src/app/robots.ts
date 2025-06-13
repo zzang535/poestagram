@@ -28,7 +28,9 @@ export default function robots(): MetadataRoute.Robots {
           '/admin/',
           '/create-post/',
           '/edit-profile/',
-          '/reset-password/'
+          '/reset-password/',
+          '/login/',
+          '/signup/'
         ],
       },
     ],
