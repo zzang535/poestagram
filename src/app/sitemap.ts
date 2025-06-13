@@ -12,7 +12,6 @@ interface FeedForSitemap {
   user_id: number;
   updated_at: string;
 }
-
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://poestagram.com'
   
@@ -31,6 +30,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ];
 
+  // 동적 사이트맵
   // 사용자 URL 가져오기
   let userUrls: MetadataRoute.Sitemap = [];
   try {
