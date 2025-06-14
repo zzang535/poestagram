@@ -92,7 +92,7 @@ export const getUserProfileServer = async (userId: number): Promise<any> => {
 
   return response.json();
 };
-
+//
 /**
  * 서버 사이드에서 특정 피드의 인덱스를 가져오는 API를 호출합니다.
  */
