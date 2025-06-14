@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import "./globals.css";
 import ClientLayout from "@/components/layout/ClientLayout";
+import { MaintenanceContent } from "@/app/maintenance/page";
 
 export const metadata: Metadata = {
   title: {
@@ -52,6 +53,17 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  // 메인터넌스 모드 체크
+  const isMaintenanceMode = process.env.MAINTENANCE_MODE === 'true';
+
+  // 개발 환경에서 디버깅
+  if (process.env.NODE_ENV === 'development') {
+    console.log('🔧 Layout Debug:', {
+      MAINTENANCE_MODE: process.env.MAINTENANCE_MODE,
+      isMaintenanceMode,
+    });
+  }
+
   return (
     <html lang="ko">
       <head>
@@ -60,9 +72,13 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.ico" />
       </head>
       <body className="min-h-[100svh] flex flex-col bg-black">
-        <ClientLayout>
-          {children}
-        </ClientLayout>
+        {isMaintenanceMode ? (
+          <MaintenanceContent />
+        ) : (
+          <ClientLayout>
+            {children}
+          </ClientLayout>
+        )}
       </body>
     </html>
   );
