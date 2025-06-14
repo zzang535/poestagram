@@ -20,10 +20,7 @@ export async function generateMetadata(): Promise<Metadata> {
     const firstFile = firstFeed.files?.[0];
     let imageUrl;
     if (firstFile) {
-      const isVideo = firstFile.content_type?.startsWith('video/');
-      imageUrl = isVideo && firstFile.s3_key_thumbnail
-        ? `${firstFile.base_url}/${firstFile.s3_key_thumbnail}`
-        : `${firstFile.base_url}/${firstFile.s3_key}`;
+      imageUrl = firstFile.url_thumbnail || firstFile.url;
     }
     
     const description = firstFeed.description || '';

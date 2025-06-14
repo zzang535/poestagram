@@ -2,8 +2,9 @@ import { handleResponse } from "../utils/handleResponse";
 
 export interface UploadedFile {
   file_name: string;
-  base_url: string;
   s3_key: string;
+  url: string;
+  url_thumbnail?: string;
   file_type: string;
   file_size: number;
   id: number;

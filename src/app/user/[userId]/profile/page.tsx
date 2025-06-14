@@ -18,6 +18,7 @@ export async function generateMetadata({ params }: UserProfilePageProps): Promis
 
   try {
     const userProfile = await getUserProfileServer(userId);
+    console.log(userProfile);
     
     // 프로필 이미지 URL
     const imageUrl = userProfile.profile_image_url;

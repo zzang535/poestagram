@@ -14,14 +14,13 @@ export interface Feed {
 export interface FeedFile {
   id: number;
   file_name: string;
-  base_url: string;
   s3_key: string;
-  s3_key_thumbnail?: string;
-  file_type: string;
+  url: string;
+  url_thumbnail?: string;
   content_type: string;
-  file_size: number;
   width: number;
   height: number;
+  file_size: number;
   created_at: string;
   updated_at: string | null;
 }

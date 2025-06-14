@@ -89,11 +89,11 @@ export default function Profile({ userId, initialProfile, initialFeeds }: Profil
   };
 
   const getFileUrl = (file: FeedFile) => {
-    return `${file.base_url}/${file.s3_key}`;
+    return file.url;
   };
 
   const getThumbnailUrl = (file: FeedFile) => {
-    return file.s3_key_thumbnail ? `${file.base_url}/${file.s3_key_thumbnail}` : getFileUrl(file);
+    return file.url_thumbnail || file.url;
   };
 
   const isLoading = profileLoading || feedsLoading;

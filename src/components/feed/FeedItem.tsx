@@ -556,7 +556,7 @@ export default function FeedItem({
                   >
                     {file.content_type.startsWith("image") && (
                       <img
-                        src={`${file.base_url}/${file.s3_key}`}
+                        src={file.url}
                         alt="게임 포스트"
                         className="w-full h-full bg-black"
                         style={{
@@ -584,7 +584,7 @@ export default function FeedItem({
                               // cleanup 함수는 컴포넌트 언마운트시 자동으로 호출됨
                             }
                           }}
-                        src={`${file.base_url}/${file.s3_key}`}
+                        src={file.url}
                         className="w-full h-full bg-black"
                         loop
                           muted
