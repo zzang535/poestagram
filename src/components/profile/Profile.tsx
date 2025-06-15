@@ -2,6 +2,7 @@
 
 import { useRouter, useParams } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
+import Image from "next/image";
 import { getUserFeeds } from "@/services/feeds";
 import { getUserProfile } from "@/services/users";
 import { Feed, FeedFile } from "@/types/feeds";
@@ -96,6 +97,8 @@ export default function Profile({ userId, initialProfile, initialFeeds }: Profil
     return file.url_thumbnail || file.url;
   };
 
+
+
   const isLoading = profileLoading || feedsLoading;
 
   if (isLoading) {
@@ -183,12 +186,16 @@ export default function Profile({ userId, initialProfile, initialFeeds }: Profil
               onClick={() => handlePostClick(feed.id)}
             >
               {feed.files.length > 0 && (
-                <img
+                <Image
                   src={feed.files[0].content_type.startsWith('video') 
                     ? getThumbnailUrl(feed.files[0])
                     : getFileUrl(feed.files[0])}
                   alt={`게시물 ${feed.id}`}
+                  width={300}
+                  height={300}
                   className="w-full h-full object-cover"
+                  placeholder="blur"
+                  blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABmX/9k="
                 />
               )}
               
