@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useAuthStore } from "@/store/authStore";
 import { login } from "@/services/auth"; // login API만 사용
 import TextButton from "@/components/ui/TextButton";
@@ -11,6 +12,7 @@ import Input from "@/components/ui/Input";
 
 export default function LoginForm() {
   const router = useRouter();
+  const t = useTranslations('login');
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated());
   const hasHydrated = useAuthStore((s) => s.hasHydrated);
   const [identifier, setIdentifier] = useState("");
@@ -28,7 +30,7 @@ export default function LoginForm() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!identifier || !password) {
-      setErrorMessage("아이디와 비밀번호를 모두 입력해주세요.");
+      setErrorMessage(t('errors.required'));
       return;
     }
 
@@ -48,7 +50,7 @@ export default function LoginForm() {
       });
       router.push("/feed");
     } catch (error) {
-      setErrorMessage(error instanceof Error ? error.message : "로그인에 실패했습니다.");
+      setErrorMessage(error instanceof Error ? error.message : t('errors.loginFailed'));
     } finally {
       setIsSubmitting(false);
     }
@@ -74,19 +76,19 @@ export default function LoginForm() {
         <form className="space-y-4" onSubmit={handleLogin}>
           <div className="space-y-4">
             <Input
-              label="아이디"
-                type="text"
-              placeholder="이메일 또는 사용자명"
-                value={identifier}
-                onChange={(e) => setIdentifier(e.target.value)}
-              />
+              label={t('identifier')}
+              type="text"
+              placeholder={t('identifierPlaceholder')}
+              value={identifier}
+              onChange={(e) => setIdentifier(e.target.value)}
+            />
             
             <Input
-              label="비밀번호"
+              label={t('password')}
               type="password"
-                placeholder="비밀번호"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+              placeholder={t('passwordPlaceholder')}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               showPasswordToggle={true}
             />
 
@@ -99,16 +101,16 @@ export default function LoginForm() {
             <Button
               type="submit"
               loading={isSubmitting}
-              loadingText="로그인 중..."
+              loadingText={t('loggingIn')}
             >
-              로그인
+              {t('loginButton')}
             </Button>
           </div>
 
           <div className="space-y-2 mt-6">
             <Link href="/reset-password" 
               className="block text-center text-black-100 text-sm hover:underline">
-              비밀번호를 잊으셨나요?
+              {t('forgotPassword')}
             </Link>
             <div className="text-center">
               <TextButton
@@ -117,7 +119,7 @@ export default function LoginForm() {
                 size="sm"
                 className="block w-full"
               >
-                계정이 없으신가요? 가입하기
+                {t('noAccount')}
               </TextButton>
             </div>
           </div>

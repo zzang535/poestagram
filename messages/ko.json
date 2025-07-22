@@ -3,11 +3,11 @@
     "newPost": "새 게시물",
     "login": "로그인",
     "signup": "회원가입",
-    "feed": "피오이스타그램",
     "posts": "게시물",
     "editProfile": "프로필 편집",
     "profile": "프로필",
-    "resetPassword": "비밀번호 재설정"
+    "resetPassword": "비밀번호 재설정",
+    "poestagram": "피오이스타그램"
   },
   "menu": {
     "logout": "로그아웃",
@@ -17,5 +17,19 @@
     "termsOfService": "이용약관",
     "language": "언어",
     "poestagram": "피오이스타그램"
+  },
+  "login": {
+    "identifier": "아이디",
+    "password": "비밀번호",
+    "identifierPlaceholder": "이메일 또는 사용자명",
+    "passwordPlaceholder": "비밀번호",
+    "loginButton": "로그인",
+    "loggingIn": "로그인 중...",
+    "forgotPassword": "비밀번호를 잊으셨나요?",
+    "noAccount": "계정이 없으신가요? 가입하기",
+    "errors": {
+      "required": "아이디와 비밀번호를 모두 입력해주세요.",
+      "loginFailed": "로그인에 실패했습니다."
+    }
   }
 } 

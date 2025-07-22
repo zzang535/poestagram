@@ -49,7 +49,7 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
     } else if (pathname === '/signup') {
       return t('signup');
     } else if (pathname === '/feed') {
-      return t('feed');
+      return t('poestagram');
     } else if (pathname?.startsWith('/user/') && pathname?.endsWith('/feed')) {
       return t('posts');
     } else if (pathname === '/edit-profile') {

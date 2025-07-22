@@ -3,11 +3,11 @@
     "newPost": "New Post",
     "login": "Login", 
     "signup": "Sign Up",
-    "feed": "poestagram",
     "posts": "Posts",
     "editProfile": "Edit Profile",
     "profile": "Profile",
-    "resetPassword": "Reset Password"
+    "resetPassword": "Reset Password",
+    "poestagram": "poestagram"
   },
   "menu": {
     "logout": "Logout",
@@ -17,5 +17,19 @@
     "termsOfService": "Terms of Service",
     "language": "Language",
     "poestagram": "poestagram"
+  },
+  "login": {
+    "identifier": "Username",
+    "password": "Password",
+    "identifierPlaceholder": "Email or username",
+    "passwordPlaceholder": "Password",
+    "loginButton": "Login",
+    "loggingIn": "Logging in...",
+    "forgotPassword": "Forgot your password?",
+    "noAccount": "Don't have an account? Sign up",
+    "errors": {
+      "required": "Please enter both username and password.",
+      "loginFailed": "Login failed."
+    }
   }
 } 
