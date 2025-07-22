@@ -76,7 +76,7 @@ export default function SlideMenu({
       >
         <div className="p-4 flex flex-col h-full">
           <div className="flex justify-between items-center mb-6">
-            <h2 className="text-xl font-bold text-white">poestagram</h2>
+            <h2 className="text-xl font-bold text-white">{t('poestagram')}</h2>
             <button 
               className="text-gray-400 hover:text-white transition-colors"
               onClick={onClose}
@@ -116,7 +116,7 @@ export default function SlideMenu({
             )}
             
             {/* 언어 선택 드롭다운 - 회원가입 바로 아래 */}
-            <div className="mt-2">
+            <div>
               <LanguageSelector />
             </div>
           </div>
