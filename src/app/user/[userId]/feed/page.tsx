@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
+import { getTranslations } from 'next-intl/server';
 import UserFeeds from "@/components/feed/UserFeeds";
 import { getUserFeedsServer, getFeedIndexServer, getFeedDetailServer } from "@/services/feeds.server";
 import { getServerAuthToken } from "@/utils/auth.server";
@@ -25,7 +26,7 @@ export async function generateMetadata({ params, searchParams }: UserFeedPagePro
     const feedDetail = await getFeedDetailServer(feedId, accessToken || undefined);
     
     // 피드 작성자 정보
-    const username = feedDetail.user?.username || `유저 ${userId}`;
+    const username = feedDetail.user?.username || `User ${userId}`;
     
     // 피드의 첫 번째 파일에서 이미지 URL 가져오기 (비디오인 경우 썸네일 사용)
     const firstFile = feedDetail.files?.[0];
@@ -94,6 +95,7 @@ export default async function UserFeed({ params, searchParams }: UserFeedPagePro
   const userId = Number(resolvedParams.userId);
   const feedId = Number(resolvedSearchParams.feed_id!); // feedId는 무조건 존재
   const limit = 3;
+  const t = await getTranslations('common');
 
   if (isNaN(userId) || isNaN(feedId)) {
     notFound();
@@ -125,8 +127,8 @@ export default async function UserFeed({ params, searchParams }: UserFeedPagePro
       <div className="min-h-screen bg-black text-white p-4 py-20">
         <div className="max-w-4xl mx-auto">
           <div className="flex flex-col items-center justify-center space-y-4">
-            <p className="text-center text-red-500">피드를 불러오는 중 오류가 발생했습니다.</p>
-            <p className="text-center text-gray-400">페이지를 새로고침해 주세요.</p>
+            <p className="text-center text-red-500">{t('loadError')}</p>
+            <p className="text-center text-gray-400">{t('refreshPage')}</p>
           </div>
         </div>
       </div>

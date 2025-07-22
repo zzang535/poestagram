@@ -1,5 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
+import { useTranslations } from "next-intl";
 
 interface TextAreaProps {
   label: string;
@@ -34,6 +35,7 @@ export default function TextArea({
   showCharCount = false,
   autoFocus = false
 }: TextAreaProps) {
+  const t = useTranslations('common');
   const isClickable = readOnly && onClick;
   const currentLength = value.length;
   const isOverLimit = maxLength ? currentLength > maxLength : false;
@@ -106,7 +108,7 @@ export default function TextArea({
       </div>
       {(error || isOverLimit) && (
         <p className="mt-1 text-sm text-red-500">
-          {error || (isOverLimit && `글자 수 제한을 초과했습니다. (${maxLength}자 이하)`)}
+          {error || (isOverLimit && t('characterLimitExceeded', { maxLength: maxLength || 0 }))}
         </p>
       )}
     </div>

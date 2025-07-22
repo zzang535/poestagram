@@ -1,5 +1,6 @@
 import { Suspense } from 'react';
 import { Metadata } from 'next';
+import { getTranslations } from 'next-intl/server';
 import AllFeeds from "@/components/feed/AllFeeds";
 import { getAllFeedsServer } from "@/services/feeds.server";
 import { getServerAuthToken } from "@/utils/auth.server";
@@ -105,6 +106,7 @@ async function getInitialFeedData(accessToken?: string): Promise<FeedItemProps[]
 export default async function Feed() {
   // 서버에서 인증 토큰 가져오기
   const accessToken = await getServerAuthToken();
+  const t = await getTranslations('common');
   
   const initialFeedData = await getInitialFeedData(accessToken || undefined);
   
@@ -113,7 +115,7 @@ export default async function Feed() {
       <div className="max-w-4xl mx-auto">
         <div className="flex flex-col items-center justify-center space-y-4">
           <div className="w-8 h-8 border-4 border-gray-300 border-t-white rounded-full animate-spin"></div>
-          <p className="text-center text-gray-400">로딩 중...</p>
+          <p className="text-center text-gray-400">{t('loading')}</p>
         </div>
       </div>
     </div>}>

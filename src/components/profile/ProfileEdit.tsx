@@ -181,7 +181,7 @@ export default function ProfileEdit() {
           <div className="relative">
             <img
               src={userProfile.profile_image_url || "/default-profile.svg"}
-              alt="프로필 이미지"
+              alt={t('profileImage')}
               className="w-24 h-24 rounded-full object-cover bg-gray-700"
             />
             {uploading && (

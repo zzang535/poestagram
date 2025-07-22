@@ -24,6 +24,7 @@ export default function CommentModal({ isOpen, onClose, feedId }: CommentModalPr
   const user = useAuthStore((s) => s.user);
   const router = useRouter();
   const t = useTranslations('comment');
+  const tCommon = useTranslations('common');
   const [comments, setComments] = useState<Comment[]>([]);
   const [commentInput, setCommentInput] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -238,7 +239,7 @@ export default function CommentModal({ isOpen, onClose, feedId }: CommentModalPr
           <div className="flex-shrink-0">
             <img 
               src={user?.profile_image_url || "/default-profile.svg"} 
-              alt="내 프로필"
+              alt={tCommon('myProfile')}
               className="w-[32px] h-[32px] rounded-full"
             />
           </div>
