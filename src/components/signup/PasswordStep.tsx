@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 
@@ -14,6 +15,7 @@ interface PasswordStepProps {
 }
 
 export default function PasswordStep({ onNext }: PasswordStepProps) {
+  const t = useTranslations('signup.password');
   const [password, setPassword] = useState("");
   const [passwordMessage, setPasswordMessage] = useState<Message | null>(null);
 
@@ -48,26 +50,26 @@ export default function PasswordStep({ onNext }: PasswordStepProps) {
     }
 
     if (value.length < 8) {
-      setPasswordMessage({ text: "8자리 이상 입력해 주세요.", type: "error" });
+      setPasswordMessage({ text: t('errors.tooShort'), type: "error" });
     } else if (!/[a-zA-Z]/.test(value)) {
-      setPasswordMessage({ text: "영문을 포함해 주세요.", type: "error" });
+      setPasswordMessage({ text: t('errors.noLetter'), type: "error" });
     } else if (!/\d/.test(value)) {
-      setPasswordMessage({ text: "숫자를 포함해 주세요.", type: "error" });
+      setPasswordMessage({ text: t('errors.noNumber'), type: "error" });
     } else if (!/[!@#$%^&*(),.?":{}|<>]/.test(value)) {
-      setPasswordMessage({ text: "특수문자를 포함해 주세요.", type: "error" });
+      setPasswordMessage({ text: t('errors.noSpecial'), type: "error" });
     } else {
-      setPasswordMessage({ text: "안전한 비밀번호예요!", type: "success" });
+      setPasswordMessage({ text: t('success'), type: "success" });
     }
   };
 
   const handleNext = () => {
     if (!password) {
-      setPasswordMessage({ text: "비밀번호를 입력해 주세요.", type: "error" });
+      setPasswordMessage({ text: t('errors.required'), type: "error" });
       return;
     }
 
     if (!validatePassword(password)) {
-      setPasswordMessage({ text: "비밀번호 조건을 확인해 주세요.", type: "error" });
+      setPasswordMessage({ text: t('errors.invalid'), type: "error" });
       return;
     }
 
@@ -76,14 +78,14 @@ export default function PasswordStep({ onNext }: PasswordStepProps) {
 
   return (
     <>
-      <p className="text-gray-400 text-center">안전한 비밀번호를 만들어 주세요</p>
+      <p className="text-gray-400 text-center">{t('title')}</p>
       <div className="space-y-4">
         <Input
-          label="비밀번호"
+          label={t('label')}
           type="password"
-          placeholder="8자리 이상, 영문+숫자+특수문자"
-            value={password}
-            onChange={handlePasswordChange}
+          placeholder={t('placeholder')}
+          value={password}
+          onChange={handlePasswordChange}
           showPasswordToggle={true}
           isValid={passwordMessage?.type === "success"}
         />
@@ -98,7 +100,7 @@ export default function PasswordStep({ onNext }: PasswordStepProps) {
           onClick={handleNext}
           disabled={!password || !validatePassword(password)}
         >
-          다음
+          {t('nextButton')}
         </Button>
       </div>
     </>

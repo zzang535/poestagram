@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { checkUsername } from "@/services/auth";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
@@ -15,6 +16,7 @@ interface UsernameStepProps {
 }
 
 export default function UsernameStep({ onNext }: UsernameStepProps) {
+  const t = useTranslations('signup.username');
   const [username, setUsername] = useState("");
   const [usernameMessage, setUsernameMessage] = useState<Message | null>(null);
   const [isChecking, setIsChecking] = useState(false);
@@ -50,13 +52,13 @@ export default function UsernameStep({ onNext }: UsernameStepProps) {
     }
 
     if (value.length < 4) {
-      setUsernameMessage({ text: "조금 더 길게 작성해 주세요. 4글자 이상이면 좋겠어요.", type: "error" });
+      setUsernameMessage({ text: t('errors.tooShort'), type: "error" });
     } else if (value.length > 20) {
-      setUsernameMessage({ text: "조금 더 짧게 작성해 주세요. 20글자 이하면 좋겠어요.", type: "error" });
+      setUsernameMessage({ text: t('errors.tooLong'), type: "error" });
     } else if (!/^[a-z0-9]*$/.test(value)) {
-      setUsernameMessage({ text: "영문 소문자와 숫자만 사용해 주세요.", type: "error" });
+      setUsernameMessage({ text: t('errors.invalidChars'), type: "error" });
     } else if (validateUsername(value)) {
-      setUsernameMessage({ text: "좋은 사용자 이름이네요!", type: "info" });
+      setUsernameMessage({ text: t('info'), type: "info" });
     } else {
       // validateUsername(value)가 false인 경우는 정규식은 통과했으나 길이가 맞지 않는 경우인데,
       // 위에서 길이 체크를 이미 했으므로 이 경우는 발생하지 않아야 함.
@@ -67,12 +69,12 @@ export default function UsernameStep({ onNext }: UsernameStepProps) {
 
   const handleNext = async () => {
     if (!username) {
-      setUsernameMessage({ text: "사용자 이름을 입력해 주세요.", type: "error" });
+      setUsernameMessage({ text: t('errors.required'), type: "error" });
       return;
     }
 
     if (!validateUsername(username)) {
-      setUsernameMessage({ text: "사용자 이름을 다시 확인해 주세요.", type: "error" });
+      setUsernameMessage({ text: t('errors.invalid'), type: "error" });
       return;
     }
 
@@ -89,17 +91,17 @@ export default function UsernameStep({ onNext }: UsernameStepProps) {
     try {
       const checkResult = await checkUsername(username);
       if (checkResult.exists) {
-        setUsernameMessage({ text: "이미 사용 중인 사용자 이름이에요. 다른 이름은 어떠세요?", type: "error" });
+        setUsernameMessage({ text: t('errors.exists'), type: "error" });
         setIsValidated(false);
       } else {
-        setUsernameMessage({ text: "사용하실 수 있는 멋진 사용자 이름이에요!", type: "success" });
+        setUsernameMessage({ text: t('success'), type: "success" });
         setIsValidated(true);
         // 중복 확인 성공 시 바로 다음 단계로
         onNext(username);
       }
     } catch (error) {
       setUsernameMessage({ 
-        text: error instanceof Error ? error.message : "잠시 확인이 어려워요. 다시 시도해 주세요.", 
+        text: error instanceof Error ? error.message : t('errors.checkFailed'), 
         type: "error" 
       });
       setIsValidated(false);
@@ -110,12 +112,12 @@ export default function UsernameStep({ onNext }: UsernameStepProps) {
 
   return (
     <>
-      <p className="text-gray-400 text-center">원하시는 사용자 이름을 만들어 보세요</p>
+      <p className="text-gray-400 text-center">{t('title')}</p>
       <div className="space-y-4">
         <Input
-          label="사용자 이름"
+          label={t('label')}
           type="text"
-          placeholder="영문소문자+숫자, 4-20자 (예: user123)"
+          placeholder={t('placeholder')}
           value={username}
           onChange={handleUsernameChange}
         />
@@ -130,9 +132,9 @@ export default function UsernameStep({ onNext }: UsernameStepProps) {
           onClick={handleNext}
           disabled={!username || !validateUsername(username)}
           loading={isChecking}
-          loadingText="확인 중..."
+          loadingText={t('checking')}
         >
-          {isValidated ? "다음" : "다음"}
+          {t('nextButton')}
         </Button>
       </div>
     </>

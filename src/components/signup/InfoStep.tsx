@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { signup, login } from "@/services/auth";
 import { useAuthStore } from "@/store/authStore";
 import PrivacyPolicyModal from "@/components/policy/PrivacyPolicyModal";
@@ -20,6 +21,7 @@ interface InfoStepProps {
 
 export default function InfoStep({ email, username, password }: InfoStepProps) {
   const router = useRouter();
+  const t = useTranslations('signup.info');
   const [termsOfService, setTermsOfService] = useState(false);
   const [privacyPolicy, setPrivacyPolicy] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -44,7 +46,7 @@ export default function InfoStep({ email, username, password }: InfoStepProps) {
     e.preventDefault();
     
     if (!termsOfService || !privacyPolicy) {
-      setSubmitMessage({ text: "이용약관과 개인정보 처리방침에 동의해주세요.", type: "error" });
+      setSubmitMessage({ text: t('errors.agreementRequired'), type: "error" });
       return;
     }
 
@@ -79,7 +81,7 @@ export default function InfoStep({ email, username, password }: InfoStepProps) {
       
     } catch (error) {
       setSubmitMessage({ 
-        text: error instanceof Error ? error.message : "회원가입에 실패했습니다. 다시 시도해주세요.", 
+        text: error instanceof Error ? error.message : t('errors.signupFailed'), 
         type: "error" 
       });
     } finally {
@@ -89,7 +91,7 @@ export default function InfoStep({ email, username, password }: InfoStepProps) {
 
   return (
     <>
-      <p className="text-gray-400 text-center">마지막 단계입니다. 약관에 동의해주세요.</p>
+      <p className="text-gray-400 text-center">{t('title')}</p>
       <form className="space-y-4" onSubmit={handleSubmit}>
         <div className="space-y-3 pt-4">
           <div className="flex items-center justify-between">
@@ -104,14 +106,14 @@ export default function InfoStep({ email, username, password }: InfoStepProps) {
                 required
                 readOnly
               />
-              <span className="text-sm text-gray-300">서비스 이용약관 동의</span>
+              <span className="text-sm text-gray-300">{t('termsOfService')}</span>
             </label>
             <button 
               type="button" 
               className="text-gray-400 hover:text-white transition-colors"
               onClick={() => setIsTermsModalOpen(true)}
             >
-              확인하기
+              {t('check')}
             </button>
           </div>
 
@@ -127,14 +129,14 @@ export default function InfoStep({ email, username, password }: InfoStepProps) {
                 required
                 readOnly
               />
-              <span className="text-sm text-gray-300">개인정보 처리방침 동의</span>
+              <span className="text-sm text-gray-300">{t('privacyPolicy')}</span>
             </label>
             <button 
               type="button" 
               className="text-gray-400 hover:text-white transition-colors"
               onClick={() => setIsPrivacyModalOpen(true)}
             >
-              확인하기
+              {t('check')}
             </button>
           </div>
         </div>
@@ -150,7 +152,7 @@ export default function InfoStep({ email, username, password }: InfoStepProps) {
           disabled={isSubmitting}
           className="w-full bg-red-800 text-white py-3 rounded-lg font-medium hover:bg-red-900 transition-colors disabled:bg-gray-700 disabled:cursor-not-allowed"
         >
-          {isSubmitting ? "가입 중..." : "가입하고 시작하기"}
+          {isSubmitting ? t('submitting') : t('submitButton')}
         </button>
       </form>
 

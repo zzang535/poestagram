@@ -31,5 +31,362 @@
       "required": "Please enter both username and password.",
       "loginFailed": "Login failed."
     }
+  },
+  "signup": {
+    "email": {
+      "title": "Please enter your email address",
+      "label": "Email Address",
+      "placeholder": "example@email.com",
+      "sendButton": "Get Verification Code",
+      "sending": "Sending...",
+      "hasAccount": "Already have an account? Sign in",
+      "errors": {
+        "required": "Please enter your email address.",
+        "invalid": "Please enter a valid email format.",
+        "exists": "This email is already registered. Please try logging in!"
+      },
+      "success": "Verification code has been sent to your email!"
+    },
+    "username": {
+      "title": "Create your desired username",
+      "label": "Username",
+      "placeholder": "Lowercase letters + numbers, 4-20 chars (e.g., user123)",
+      "nextButton": "Next",
+      "checking": "Checking...",
+      "errors": {
+        "required": "Please enter a username.",
+        "tooShort": "Please make it a bit longer. At least 4 characters.",
+        "tooLong": "Please make it a bit shorter. 20 characters or less.",
+        "invalidChars": "Please use only lowercase letters and numbers.",
+        "invalid": "Please check your username again.",
+        "exists": "This username is already taken. How about a different one?",
+        "checkFailed": "Unable to check at the moment. Please try again."
+      },
+      "info": "That's a great username!",
+      "success": "This is an available and awesome username!"
+    },
+    "password": {
+      "title": "Create a secure password",
+      "label": "Password",
+      "placeholder": "8+ chars, letters + numbers + special chars",
+      "nextButton": "Next",
+      "errors": {
+        "required": "Please enter a password.",
+        "tooShort": "Please enter at least 8 characters.",
+        "noLetter": "Please include letters.",
+        "noNumber": "Please include numbers.",
+        "noSpecial": "Please include special characters.",
+        "invalid": "Please check the password requirements."
+      },
+      "success": "That's a secure password!"
+    },
+    "info": {
+      "title": "Final step. Please agree to the terms.",
+      "termsOfService": "Agree to Terms of Service",
+      "privacyPolicy": "Agree to Privacy Policy",
+      "check": "View",
+      "submitButton": "Sign Up and Get Started",
+      "submitting": "Signing up...",
+      "errors": {
+        "agreementRequired": "Please agree to the Terms of Service and Privacy Policy.",
+        "signupFailed": "Sign up failed. Please try again."
+      }
+    }
+  },
+  "resetPassword": {
+    "email": {
+      "title": "Please enter your registered email address",
+      "label": "Email Address",
+      "placeholder": "Email address",
+      "sendButton": "Get Verification Code",
+      "sending": "Sending...",
+      "backToLogin": "Back to Login",
+      "errors": {
+        "required": "Please enter your email.",
+        "invalid": "Please enter a valid email format.",
+        "notFound": "This email is not registered."
+      },
+      "success": "Verification code has been sent to your email."
+    },
+    "newPassword": {
+      "title": "Create a new password",
+      "label": "New Password",
+      "placeholder": "8+ chars, letters + numbers + special chars",
+      "completeButton": "Complete",
+      "changing": "Changing...",
+      "errors": {
+        "required": "Please enter a new password.",
+        "tooShort": "Please enter at least 8 characters.",
+        "noLetter": "Please include letters.",
+        "noNumber": "Please include numbers.",
+        "noSpecial": "Please include special characters.",
+        "invalid": "Please check the password requirements.",
+        "changeFailed": "Password change failed."
+      },
+      "success": "That's a secure password!"
+    }
+  },
+  "verification": {
+    "title": "Enter the verification code sent to your email",
+    "label": "Verification Code",
+    "placeholder": "Enter 6-digit number",
+    "timeLeft": "Time remaining:",
+    "resendButton": "Resend Verification Code",
+    "resending": "Resending...",
+    "verifyButton": "Verify",
+    "verifying": "Verifying...",
+    "backButton": "Re-enter email",
+    "errors": {
+      "incomplete": "Please enter all 6 digits of the verification code.",
+      "invalid": "Verification code does not match.",
+      "verifyFailed": "Verification code validation failed.",
+      "resendFailed": "Failed to resend verification code."
+    },
+    "success": "Verification completed.",
+    "resendSuccess": "Verification code has been resent."
+  },
+  "policy": {
+    "privacyPolicy": {
+      "title": "Privacy Policy",
+      "close": "Close",
+      "agree": "Agree",
+      "section1": {
+        "title": "1. Purpose of Personal Information Processing",
+        "content": "SingingBird (hereinafter \"Company\") processes personal information for the following purposes. The personal information being processed will not be used for any other purposes, and if the purpose of use changes, necessary measures such as obtaining separate consent will be implemented in accordance with Article 18 of the Personal Information Protection Act.",
+        "items": [
+          "Member registration and management",
+          "Providing content upload and sharing services for game videos, photos, etc.",
+          "Providing social networking features (follow, like, comment)",
+          "Providing personalized content recommendations and customized services",
+          "Community management and prevention of fraudulent use",
+          "Customer support and service improvement",
+          "Response to violations of laws and terms of service"
+        ]
+      },
+      "section2": {
+        "title": "2. Personal Information Items Collected",
+        "content": "The Company collects the following personal information:",
+        "required": {
+          "title": "▶ Required Collection Items",
+          "items": ["Email address, password, username"]
+        },
+        "optional": {
+          "title": "▶ Optional Collection Items",
+          "items": ["Profile picture, self-introduction"]
+        },
+        "generated": {
+          "title": "▶ Information Generated During Service Use",
+          "items": [
+            "Uploaded game videos, photos and related metadata",
+            "Activity records such as comments, likes, follows",
+            "Service usage records, access logs, cookies, access IP information"
+          ]
+        }
+      },
+      "section3": {
+        "title": "3. Personal Information Collection Methods",
+        "content": "The Company collects personal information through the following methods:",
+        "items": [
+          "Information directly provided by users during registration and service use",
+          "Information received from relevant platforms when using social login services",
+          "Information automatically generated and collected during service use",
+          "Information collected during consultation through customer service"
+        ]
+      },
+      "section4": {
+        "title": "4. Personal Information Processing and Retention Period",
+        "content": "The Company processes and retains personal information within the retention and use period of personal information according to laws or the retention and use period of personal information agreed upon when collecting personal information from data subjects.",
+        "items": [
+          "Member information: Until membership withdrawal (except for legal retention obligations)",
+          "Posts and comments: Until deleted by user or membership withdrawal",
+          "Service usage records: 3 months",
+          "Records related to fraudulent use and disputes: 1 year",
+          "When preservation is required by relevant laws: Period specified by the relevant laws"
+        ]
+      },
+      "section5": {
+        "title": "5. Provision of Personal Information to Third Parties",
+        "content": "The Company does not provide users' personal information to third parties in principle. However, exceptions are made in the following cases:",
+        "items": [
+          "When users have given prior consent",
+          "Information disclosed to other users due to service characteristics (profile, posts, etc.)",
+          "When required by law or by investigative agencies according to procedures and methods set by law for investigative purposes"
+        ]
+      },
+      "section6": {
+        "title": "6. Measures to Ensure Personal Information Security",
+        "content": "The Company takes the following measures to ensure the security of personal information:",
+        "items": [
+          "Minimization and training of personal information handling staff",
+          "Restricting access to personal information",
+          "Use of encryption technology to safely store and transmit personal information",
+          "Building security systems to prevent personal information leakage and damage from hacking or computer viruses",
+          "Maintaining and preventing forgery of personal information processing system access records"
+        ]
+      },
+      "section7": {
+        "title": "7. Cookies and Automatic Collection Tools",
+        "content": "The Company uses cookies to improve services and provide customized services:",
+        "items": [
+          "Cookie collection purpose: Maintaining login status, service usage analysis, providing customized content",
+          "How to refuse cookie settings: You can refuse cookie storage through browser settings",
+          "When cookies are refused: There may be restrictions on using some services that require login"
+        ]
+      },
+      "section8": {
+        "title": "8. Protection of Minor's Personal Information",
+        "content": "The Company pays special attention to protecting the personal information of children under 14 years of age:",
+        "items": [
+          "Legal guardian consent required for registration of children under 14",
+          "Minor's personal information is managed more strictly",
+          "Measures to prevent exposure of inappropriate content to minors"
+        ]
+      },
+      "section9": {
+        "title": "9. Rights and Obligations of Data Subjects and How to Exercise Them",
+        "content": "Data subjects can exercise the following personal information protection-related rights against the Company at any time:",
+        "items": [
+          "Request to view personal information",
+          "Request for correction in case of errors",
+          "Request for deletion",
+          "Request to stop processing"
+        ],
+        "footer": "Rights can be exercised through the settings menu in the service or in writing, by phone, or email to the personal information protection officer, and the Company will take action without delay."
+      },
+      "section10": {
+        "title": "10. Personal Information Protection Officer",
+        "content": "The Company has designated a personal information protection officer as follows to take overall responsibility for personal information processing and to handle complaints and damage relief related to personal information processing of data subjects:",
+        "contact": {
+          "title": "▶ Personal Information Protection Officer",
+          "company": "Company: SingingBird",
+          "department": "Department: Development Team",
+          "manager": "Manager: Yoon Hwang",
+          "email": "Email: poestagramer@gmail.com",
+          "phone": "Customer Service: 010-2849-0490"
+        }
+      },
+      "section11": {
+        "title": "11. Changes to Privacy Policy",
+        "content": "This privacy policy applies from the effective date, and if there are additions, deletions, or corrections to changes according to laws and policies, we will notify you through announcements 7 days before the implementation of the changes."
+      }
+    },
+    "termsOfService": {
+      "title": "Terms of Service",
+      "close": "Close",
+      "agree": "Agree",
+      "section1": {
+        "title": "1. Purpose",
+        "content": "These terms are intended to define the conditions and procedures for using the poestagram service (hereinafter \"Service\") provided by SingingBird (hereinafter \"Company\") and other necessary matters."
+      },
+      "section2": {
+        "title": "2. Effectiveness and Changes of Terms",
+        "content": "These terms apply to all members who wish to use the Service. The Company may revise these terms within the scope that does not violate related laws such as the Act on the Regulation of Terms and Conditions."
+      },
+      "section3": {
+        "title": "3. Provision of Services",
+        "content": "The Company provides the following services:",
+        "items": [
+          "Upload and sharing of media content such as game videos and photos",
+          "Social networking with other users (follow, like, comment)",
+          "User profile management and personalization services",
+          "Content search and recommendation services",
+          "Other services additionally developed by the Company or provided through partnerships"
+        ]
+      },
+      "section4": {
+        "title": "4. Service Usage Rules",
+        "content": "Members must not engage in the following acts:",
+        "items": [
+          "Acts that violate laws or terms",
+          "Acts that interfere with normal service operation",
+          "Acts of collecting, storing, or disclosing other members' personal information",
+          "Acts of unauthorized copying or distribution of others' content",
+          "Uploading false information or manipulated content",
+          "Using automated programs for service use",
+          "Posting unauthorized commercial advertisements",
+          "Providing inappropriate content to minors",
+          "Acts that infringe on the Company's intellectual property rights"
+        ]
+      },
+      "section5": {
+        "title": "5. Service Suspension",
+        "content": "The Company may suspend service provision in the following cases:",
+        "items": [
+          "In case of system inspection, maintenance, replacement, etc.",
+          "In case of force majeure such as natural disasters, wars, or service suspension by telecommunications service providers"
+        ]
+      },
+      "section6": {
+        "title": "6. Member Obligations",
+        "content": "Members must comply with the following:",
+        "items": [
+          "Provide accurate information when applying for membership",
+          "Immediately register changes when member information changes",
+          "Comply with related laws and terms when using the service"
+        ]
+      },
+      "section7": {
+        "title": "7. Content Policy",
+        "content": "Content uploaded by members must comply with the following standards:",
+        "items": [
+          "Obligation to comply with copyright of uploaded content such as game videos and photos",
+          "Prohibition of content that infringes on others' intellectual property rights",
+          "Prohibition of inappropriate content such as pornography, violent content, hate speech",
+          "Compliance with game company guidelines (for game videos)",
+          "Prohibition of uploading content containing personal information"
+        ]
+      },
+      "section8": {
+        "title": "8. Content License",
+        "content": "Regarding content uploaded by members to the service:",
+        "items": [
+          "Members retain ownership of the content",
+          "The Company may use content for service provision, improvement, and promotion purposes",
+          "Related licenses terminate when content is deleted",
+          "Members bear all legal responsibility for content"
+        ]
+      },
+      "section9": {
+        "title": "9. Community Guidelines",
+        "content": "When using social features, the following must be observed:",
+        "items": [
+          "Maintain courtesy and respect when interacting through comments, likes, etc.",
+          "Prohibition of spam and advertising comments",
+          "Prohibition of cyberbullying, harassment, and threats",
+          "Prohibition of unauthorized disclosure of others' personal information",
+          "Creating a healthy and constructive communication culture"
+        ]
+      },
+      "section10": {
+        "title": "10. Reporting and Sanctions",
+        "content": "Regarding inappropriate content or behavior:",
+        "items": [
+          "Members can report issues through the reporting function",
+          "The Company may take measures such as warnings, content deletion, account suspension/deletion for violations",
+          "Appeal procedures are provided for disciplinary measures",
+          "Immediate account deletion measures are possible for serious violations"
+        ]
+      },
+      "section11": {
+        "title": "11. Personal Information Protection",
+        "content": "Regarding personal information processing:",
+        "items": [
+          "Profile information, posts, activity records, etc. are collected and used",
+          "The scope of information sharing with other users follows the privacy policy",
+          "Related data is deleted after a certain period when accounts are deleted",
+          "Please refer to the separate privacy policy for details"
+        ]
+      },
+      "section12": {
+        "title": "12. Minor Protection",
+        "content": "For the protection of minors:",
+        "items": [
+          "Legal guardian consent is required for those under 14 years of age",
+          "Harmful content targeting minors is restricted",
+          "Minor's personal information is specially protected",
+          "Immediate action is taken when minor-related issues occur"
+        ]
+      }
+    }
   }
 } 

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { resetPasswordApi, login } from "@/services/auth";
 import { useAuthStore } from "@/store/authStore";
 import Button from "@/components/ui/Button";
@@ -19,6 +20,7 @@ interface ResetPasswordNewPasswordStepProps {
 
 export default function ResetPasswordNewPasswordStep({ email, code }: ResetPasswordNewPasswordStepProps) {
   const router = useRouter();
+  const t = useTranslations('resetPassword.newPassword');
   const [newPassword, setNewPassword] = useState("");
   const [passwordMessage, setPasswordMessage] = useState<Message | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -50,26 +52,26 @@ export default function ResetPasswordNewPasswordStep({ email, code }: ResetPassw
     }
 
     if (value.length < 8) {
-      setPasswordMessage({ text: "8자리 이상 입력해 주세요.", type: "error" });
+      setPasswordMessage({ text: t('errors.tooShort'), type: "error" });
     } else if (!/[a-zA-Z]/.test(value)) {
-      setPasswordMessage({ text: "영문을 포함해 주세요.", type: "error" });
+      setPasswordMessage({ text: t('errors.noLetter'), type: "error" });
     } else if (!/\d/.test(value)) {
-      setPasswordMessage({ text: "숫자를 포함해 주세요.", type: "error" });
+      setPasswordMessage({ text: t('errors.noNumber'), type: "error" });
     } else if (!/[!@#$%^&*(),.?":{}|<>]/.test(value)) {
-      setPasswordMessage({ text: "특수문자를 포함해 주세요.", type: "error" });
+      setPasswordMessage({ text: t('errors.noSpecial'), type: "error" });
     } else {
-      setPasswordMessage({ text: "안전한 비밀번호예요!", type: "success" });
+      setPasswordMessage({ text: t('success'), type: "success" });
     }
   };
 
   const handleSubmit = async () => {
     if (!newPassword) {
-      setPasswordMessage({ text: "새 비밀번호를 입력해 주세요.", type: "error" });
+      setPasswordMessage({ text: t('errors.required'), type: "error" });
       return;
     }
 
     if (!validatePassword(newPassword)) {
-      setPasswordMessage({ text: "비밀번호 조건을 확인해 주세요.", type: "error" });
+      setPasswordMessage({ text: t('errors.invalid'), type: "error" });
       return;
     }
 
@@ -93,7 +95,7 @@ export default function ResetPasswordNewPasswordStep({ email, code }: ResetPassw
       router.push("/feed"); 
     } catch (error) {
       setPasswordMessage({ 
-        text: error instanceof Error ? error.message : "비밀번호 변경에 실패했습니다.", 
+        text: error instanceof Error ? error.message : t('errors.changeFailed'), 
         type: "error" 
       });
     } finally {
@@ -103,13 +105,13 @@ export default function ResetPasswordNewPasswordStep({ email, code }: ResetPassw
 
   return (
     <>
-      <p className="text-gray-400 text-center">새로운 비밀번호를 만들어 주세요</p>
+      <p className="text-gray-400 text-center">{t('title')}</p>
       <div className="space-y-4">
         <Input
-          label="새 비밀번호"
+          label={t('label')}
           type="password"
-          placeholder="8자리 이상, 영문+숫자+특수문자"
-            value={newPassword}
+          placeholder={t('placeholder')}
+          value={newPassword}
           onChange={handlePasswordChange}
           showPasswordToggle={true}
           isValid={passwordMessage?.type === "success"}
@@ -124,10 +126,10 @@ export default function ResetPasswordNewPasswordStep({ email, code }: ResetPassw
         <Button
           onClick={handleSubmit}
           loading={isSubmitting}
-          loadingText="변경 중..."
+          loadingText={t('changing')}
           disabled={!newPassword || !validatePassword(newPassword)}
         >
-          완료
+          {t('completeButton')}
         </Button>
       </div>
     </>

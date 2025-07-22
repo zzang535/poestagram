@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { sendVerificationEmail, checkEmail } from "@/services/auth";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
@@ -16,6 +17,7 @@ interface ResetPasswordEmailStepProps {
 }
 
 export default function ResetPasswordEmailStep({ onNext }: ResetPasswordEmailStepProps) {
+  const t = useTranslations('resetPassword.email');
   const [email, setEmail] = useState("");
   const [isSending, setIsSending] = useState(false);
   const [emailMessage, setEmailMessage] = useState<Message | null>(null);
@@ -36,13 +38,12 @@ export default function ResetPasswordEmailStep({ onNext }: ResetPasswordEmailSte
 
   const handleSendVerification = async () => {
     if (!email) {
-      setEmailMessage({ text: "이메일을 입력해주세요.", type: "error" });
+      setEmailMessage({ text: t('errors.required'), type: "error" });
       return;
     }
 
-
     if (!validateEmail(email)) {
-      setEmailMessage({ text: "올바른 이메일 형식으로 입력해 주세요.", type: "error" });
+      setEmailMessage({ text: t('errors.invalid'), type: "error" });
       return;
     }
 
@@ -53,13 +54,13 @@ export default function ResetPasswordEmailStep({ onNext }: ResetPasswordEmailSte
       // 먼저 이메일 존재 여부 확인
       const checkResult = await checkEmail(email);
       if (!checkResult.exists) {
-        setEmailMessage({ text: "등록되지 않은 이메일입니다.", type: "error" });
+        setEmailMessage({ text: t('errors.notFound'), type: "error" });
         setIsSending(false);
         return;
       }
 
       await sendVerificationEmail(email);
-      setEmailMessage({ text: "인증번호가 이메일로 전송되었습니다.", type: "success" });
+      setEmailMessage({ text: t('success'), type: "success" });
       onNext(email);
     } catch (error: any) {
        // 서버에서 오는 에러 처리
@@ -74,15 +75,15 @@ export default function ResetPasswordEmailStep({ onNext }: ResetPasswordEmailSte
 
   return (
     <>
-      <p className="text-gray-400 text-center">가입하신 이메일 주소를 입력해 주세요</p>
+      <p className="text-gray-400 text-center">{t('title')}</p>
       <div className="space-y-4">
         <Input
-          label="이메일 주소"
-            type="email"
-            placeholder="이메일 주소"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
+          label={t('label')}
+          type="email"
+          placeholder={t('placeholder')}
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
         
         {emailMessage && (
           <p className={`text-sm ${getMessageColor(emailMessage.type)}`}>
@@ -93,13 +94,13 @@ export default function ResetPasswordEmailStep({ onNext }: ResetPasswordEmailSte
         <Button
           onClick={handleSendVerification}
           loading={isSending}
-          loadingText="전송 중..."
+          loadingText={t('sending')}
         >
-          인증번호 받기
+          {t('sendButton')}
         </Button>
 
         <Link href="/login" className="block text-center text-blue-400 text-sm hover:underline">
-          로그인으로 돌아가기
+          {t('backToLogin')}
         </Link>
       </div>
     </>
