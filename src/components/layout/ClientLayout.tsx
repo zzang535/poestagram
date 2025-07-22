@@ -8,6 +8,7 @@ import {
   faHome,
 } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { useAuthStore } from "@/store/authStore";
 import Header from "@/components/layout/Header";
 import PrivacyPolicyModal from "@/components/policy/PrivacyPolicyModal";
@@ -20,6 +21,7 @@ interface ClientLayoutProps {
 
 export default function ClientLayout({ children }: ClientLayoutProps) {
   const pathname = usePathname();
+  const t = useTranslations('navigation');
   
   // docs 경로에서는 기본 레이아웃만 적용
   if (pathname.startsWith("/docs")) {
@@ -41,23 +43,23 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
 
   const getPageTitle = () => {
     if (pathname === '/create-post') {
-      return '새 게시물';
+      return t('newPost');
     } else if (pathname === '/login') {
-      return '로그인';
+      return t('login');
     } else if (pathname === '/signup') {
-      return '회원가입';
+      return t('signup');
     } else if (pathname === '/feed') {
-      return 'poestagram';
+      return t('feed');
     } else if (pathname?.startsWith('/user/') && pathname?.endsWith('/feed')) {
-      return '게시물';
+      return t('posts');
     } else if (pathname === '/edit-profile') {
-      return '프로필 편집';
+      return t('editProfile');
     } else if (pathname?.includes('/profile')) {
-      return '프로필';
+      return t('profile');
     } else if (pathname === '/reset-password') {
-      return '비밀번호 재설정';
+      return t('resetPassword');
     } else {
-      return 'poestagram';
+      return t('feed');
     }
   };
 

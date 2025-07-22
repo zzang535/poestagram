@@ -1,0 +1,20 @@
+{
+  "navigation": {
+    "newPost": "New Post",
+    "login": "Login", 
+    "signup": "Sign Up",
+    "feed": "poestagram",
+    "posts": "Posts",
+    "editProfile": "Edit Profile",
+    "profile": "Profile",
+    "resetPassword": "Reset Password"
+  },
+  "menu": {
+    "logout": "Logout",
+    "login": "Login",
+    "signup": "Sign Up",
+    "privacyPolicy": "Privacy Policy",
+    "termsOfService": "Terms of Service",
+    "language": "Language"
+  }
+} 

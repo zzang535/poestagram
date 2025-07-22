@@ -2,6 +2,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSignOutAlt, faSignInAlt, faUserPlus, faXmark } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
+import LanguageSelector from "./LanguageSelector";
 
 interface SlideMenuProps {
   isOpen: boolean;
@@ -22,6 +24,7 @@ export default function SlideMenu({
 }: SlideMenuProps) {
   const [isVisible, setIsVisible] = useState(false);
   const [shouldRender, setShouldRender] = useState(false);
+  const t = useTranslations('menu');
 
   useEffect(() => {
     if (isOpen) {
@@ -89,7 +92,7 @@ export default function SlideMenu({
                   onClick={onLogout}
                   className="w-full flex items-center space-x-3 text-white p-3 hover:bg-zinc-900 rounded-lg transition-colors"
                 >
-                  <span>로그아웃</span>
+                  <span>{t('logout')}</span>
                 </button>
               </>
             ) : (
@@ -100,17 +103,22 @@ export default function SlideMenu({
                   className="w-full flex items-center space-x-3 text-white p-3 hover:bg-zinc-900 rounded-lg transition-colors"
                   onClick={onClose}
                 >
-                  <span>로그인</span>
+                  <span>{t('login')}</span>
                 </Link>
                 <Link
                   href="/signup"
                   className="w-full flex items-center space-x-3 text-white p-3 hover:bg-zinc-900 rounded-lg transition-colors"
                   onClick={onClose}
                 >
-                  <span>회원가입</span>
+                  <span>{t('signup')}</span>
                 </Link>
               </>
             )}
+            
+            {/* 언어 선택 드롭다운 - 회원가입 바로 아래 */}
+            <div className="mt-2">
+              <LanguageSelector />
+            </div>
           </div>
           <div className="pt-4 border-t border-zinc-950">
             <div className="flex justify-center space-x-4 text-xs text-gray-400">
@@ -118,14 +126,14 @@ export default function SlideMenu({
                 onClick={onOpenPrivacyModal} 
                 className="hover:underline"
               >
-                개인정보처리방침
+                {t('privacyPolicy')}
               </button>
               <span>•</span>
               <button 
                 onClick={onOpenTermsModal} 
                 className="hover:underline"
               >
-                이용약관
+                {t('termsOfService')}
               </button>
             </div>
           </div>

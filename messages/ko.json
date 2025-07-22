@@ -1,0 +1,20 @@
+{
+  "navigation": {
+    "newPost": "새 게시물",
+    "login": "로그인",
+    "signup": "회원가입",
+    "feed": "피오이스타그램",
+    "posts": "게시물",
+    "editProfile": "프로필 편집",
+    "profile": "프로필",
+    "resetPassword": "비밀번호 재설정"
+  },
+  "menu": {
+    "logout": "로그아웃",
+    "login": "로그인",
+    "signup": "회원가입",
+    "privacyPolicy": "개인정보처리방침",
+    "termsOfService": "이용약관",
+    "language": "언어"
+  }
+} 

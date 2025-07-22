@@ -2,6 +2,8 @@ import type { Metadata } from 'next'
 import "./globals.css";
 import ClientLayout from "@/components/layout/ClientLayout";
 import { MaintenanceContent } from "@/app/maintenance/page";
+import { NextIntlClientProvider } from 'next-intl';
+import { getLocale } from 'next-intl/server';
 
 export const metadata: Metadata = {
   title: {
@@ -48,13 +50,16 @@ export const metadata: Metadata = {
   },
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   // 메인터넌스 모드 체크
   const isMaintenanceMode = process.env.MAINTENANCE_MODE === 'true';
+  
+  // next-intl에서 로케일 가져오기
+  const locale = await getLocale();
 
   // 개발 환경에서 디버깅
   if (process.env.NODE_ENV === 'development') {
@@ -65,7 +70,7 @@ export default function RootLayout({
   }
 
   return (
-    <html lang="ko">
+    <html lang={locale}>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content="#000000" />
@@ -75,9 +80,11 @@ export default function RootLayout({
         {isMaintenanceMode ? (
           <MaintenanceContent />
         ) : (
-          <ClientLayout>
-            {children}
-          </ClientLayout>
+          <NextIntlClientProvider>
+            <ClientLayout>
+              {children}
+            </ClientLayout>
+          </NextIntlClientProvider>
         )}
       </body>
     </html>
