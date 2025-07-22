@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 import { createComment, getComments, deleteComment, toggleCommentLikeApi } from "@/services/comments";
 import { useAuthStore } from "@/store/authStore";
@@ -22,6 +23,7 @@ export default function CommentModal({ isOpen, onClose, feedId }: CommentModalPr
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated());
   const user = useAuthStore((s) => s.user);
   const router = useRouter();
+  const t = useTranslations('comment');
   const [comments, setComments] = useState<Comment[]>([]);
   const [commentInput, setCommentInput] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -101,7 +103,7 @@ export default function CommentModal({ isOpen, onClose, feedId }: CommentModalPr
       setComments(response.comments);
     } catch (error) {
       console.error("댓글 로딩 실패:", error);
-      setError("댓글을 불러오는 중 오류가 발생했습니다.");
+      setError(t('loadingError'));
     } finally {
       setIsLoading(false);
     }
@@ -221,7 +223,7 @@ export default function CommentModal({ isOpen, onClose, feedId }: CommentModalPr
       setActiveMenuCommentId(null);
     } catch (error) {
       console.error("댓글 삭제 실패:", error);
-      alert("댓글 삭제 중 오류가 발생했습니다.");
+      alert(t('deleteError'));
     }
   };
 
@@ -229,7 +231,7 @@ export default function CommentModal({ isOpen, onClose, feedId }: CommentModalPr
     <Modal 
       isOpen={isOpen} 
       onClose={onClose} 
-      title="댓글"
+      title={t('title')}
       enableKeyboardAdjustment={true}
       footer={isAuthenticated ? (
         <div className="bg-zinc-950 border-t border-zinc-900 flex items-center gap-[10px] px-4 h-full">
@@ -244,7 +246,7 @@ export default function CommentModal({ isOpen, onClose, feedId }: CommentModalPr
             <input
               ref={inputRef}
               type="text"
-              placeholder="댓글을 입력하세요..."
+              placeholder={t('placeholder')}
               value={commentInput}
               onChange={(e) => setCommentInput(e.target.value)}
               onFocus={handleInputFocus}
@@ -292,14 +294,14 @@ export default function CommentModal({ isOpen, onClose, feedId }: CommentModalPr
               onClick={fetchComments}
               className="ml-2 underline hover:text-red-400"
             >
-              다시 시도
+              {t('retry')}
             </button>
           </div>
         )}
 
         {!isLoading && !error && comments.length === 0 && (
           <div className="p-4 text-center text-gray-400">
-            첫 댓글을 남겨보세요.
+            {t('firstComment')}
           </div>
         )}
 
@@ -339,7 +341,7 @@ export default function CommentModal({ isOpen, onClose, feedId }: CommentModalPr
                             onClick={() => handleDeleteComment(comment.id)}
                             className="w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-zinc-700 transition-colors"
                           >
-                            삭제
+                            {t('delete')}
                           </button>
                         </div>
                       )}

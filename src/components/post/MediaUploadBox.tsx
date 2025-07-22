@@ -1,5 +1,6 @@
 "use client";
 import { forwardRef, useState, useEffect, useRef } from "react";
+import { useTranslations } from "next-intl";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCamera, faChevronLeft, faChevronRight, faXmark, faPlus } from "@fortawesome/free-solid-svg-icons";
 import ImageUploadLoading from "@/components/ui/ImageUploadLoading";
@@ -23,6 +24,7 @@ const MediaUploadBox = forwardRef<HTMLDivElement, MediaUploadBoxProps>(({
   onFrameSizeChange,
   onFileIdsChange
 }, ref) => {
+  const t = useTranslations('mediaUpload');
   const [previews, setPreviews] = useState<PreviewImage[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isImageUploading, setIsImageUploading] = useState(false);
@@ -173,7 +175,7 @@ const MediaUploadBox = forwardRef<HTMLDivElement, MediaUploadBoxProps>(({
     // 파일 크기 검사
     const oversizedFiles = files.filter(file => file.size > MAX_FILE_SIZE_MB * 1024 * 1024);
     if (oversizedFiles.length > 0) {
-      alert(`파일 크기가 ${MAX_FILE_SIZE_MB}MB를 초과했습니다. 업로드할 수 없습니다.`);
+      alert(t('fileSizeError'));
       return;
     }
 
@@ -183,12 +185,12 @@ const MediaUploadBox = forwardRef<HTMLDivElement, MediaUploadBoxProps>(({
     );
 
     if (validFiles.length === 0) {
-      alert('이미지 또는 비디오 파일만 업로드할 수 있습니다.');
+      alert(t('fileTypeError'));
       return;
     }
 
     if (validFiles.length !== files.length) {
-      alert('일부 파일이 지원되지 않는 형식이어서 제외되었습니다.');
+      alert(t('unsupportedFiles'));
     }
 
     try {
@@ -215,7 +217,7 @@ const MediaUploadBox = forwardRef<HTMLDivElement, MediaUploadBoxProps>(({
       
     } catch (error) {
       console.error("파일 업로드 중 오류 발생:", error);
-      alert("파일 업로드 중 오류가 발생했습니다.");
+      alert(t('uploadError'));
     } finally {
       setIsImageUploading(false);
     }
@@ -450,7 +452,7 @@ const MediaUploadBox = forwardRef<HTMLDivElement, MediaUploadBoxProps>(({
                     ) : (
                       <img
                         src={preview.url}
-                        alt={`미리보기 ${index + 1}`}
+                        alt={`${t('preview')} ${index + 1}`}
                         className="w-full h-full"
                         style={{
                           objectFit: (() => {
@@ -528,17 +530,17 @@ const MediaUploadBox = forwardRef<HTMLDivElement, MediaUploadBoxProps>(({
                 </div>
                 <p className="text-gray-300 text-sm">
                   {isDragOver 
-                    ? "파일을 여기에 놓으세요" 
-                    : "이미지 또는 동영상을 업로드하세요"
+                    ? t('dropFiles')
+                    : t('uploadMedia')
                   }
                 </p>
                 <p className="text-xs text-gray-400 mt-4">
                   {isDragOver 
-                    ? "드롭하여 업로드" 
-                    : "클릭하거나 드래그해서 업로드"
+                    ? t('dropToUpload')
+                    : t('clickOrDrag')
                   }
                 </p>
-                <p className="text-xs text-gray-400 mt-1">지원 형식: JPG, PNG, MP4 (최대 200MB)</p>
+                <p className="text-xs text-gray-400 mt-1">{t('supportedFormats')}</p>
               </div>
             </label>
           </>

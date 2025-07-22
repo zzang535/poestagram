@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef } from "react";
+import { useTranslations } from "next-intl";
 import Modal from "@/components/ui/Modal";
 import ImageCropView, { ImageCropViewRef } from "./ImageCropView";
 
@@ -18,19 +19,20 @@ export default function ImageCropModal({
   onCropComplete 
 }: ImageCropModalProps) {
   const imageCropRef = useRef<ImageCropViewRef>(null);
+  const t = useTranslations('imageCrop');
 
   return (
     <Modal 
       isOpen={isOpen} 
       onClose={onClose} 
-      title="프로필 사진 편집"
+      title={t('title')}
       standardFooter={{
         onCancel: onClose,
         onConfirm: () => {
           imageCropRef.current?.handleCrop();
         },
-        cancelText: "취소",
-        confirmText: "완료"
+        cancelText: t('cancel'),
+        confirmText: t('complete')
       }}
     >
       {imageFile ? (
@@ -42,7 +44,7 @@ export default function ImageCropModal({
         />
       ) : (
         <div className="p-6 text-center text-gray-400">
-          이미지를 선택해주세요.
+          {t('selectImage')}
         </div>
       )}
     </Modal>

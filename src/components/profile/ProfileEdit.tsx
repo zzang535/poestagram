@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useAuthStore } from "@/store/authStore";
 import { getUserProfile, updateProfileImage } from "@/services/users";
 import { UserProfile } from "@/types/users";
@@ -21,6 +22,7 @@ export default function ProfileEdit() {
   const authUser = useAuthStore((s) => s.user);
   const updateUser = useAuthStore((s) => s.updateUser);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const t = useTranslations('profileEdit');
   
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
@@ -72,7 +74,7 @@ export default function ProfileEdit() {
     if (file) {
       // 이미지 파일 검증
       if (!file.type.startsWith('image/')) {
-        alert('이미지 파일만 업로드할 수 있습니다.');
+        alert(t('imageOnly'));
         return;
       }
       
@@ -104,7 +106,7 @@ export default function ProfileEdit() {
       setCurrentView("profile");
     } catch (error) {
       console.error('프로필 이미지 업로드 실패:', error);
-      alert(error instanceof Error ? error.message : '프로필 사진 변경에 실패했습니다.');
+      alert(error instanceof Error ? error.message : t('uploadFailed'));
     } finally {
       setUploading(false);
       setSelectedImageFile(null);
@@ -151,7 +153,7 @@ export default function ProfileEdit() {
 
   const handleSave = async () => {
     // TODO: 프로필 업데이트 API 호출 (username, bio)
-    alert("프로필 저장 기능은 추후 구현됩니다.");
+    alert(t('saveNotImplemented'));
   };
 
   if (loading) {
@@ -165,7 +167,7 @@ export default function ProfileEdit() {
   if (!userProfile) {
     return (
       <div className="min-h-screen bg-black text-white flex items-center justify-center">
-        <p className="text-gray-400">프로필 정보를 불러올 수 없습니다.</p>
+        <p className="text-gray-400">{t('profileNotFound')}</p>
       </div>
     );
   }
@@ -194,27 +196,27 @@ export default function ProfileEdit() {
             variant="primary"
             size="md"
           >
-            {uploading ? "업로드 중..." : "프로필 사진 변경"}
+            {uploading ? t('uploading') : t('changePhoto')}
           </TextButton>
         </div>
 
         <div className="space-y-4">
           {/* 사용자명 필드 */}
           <Input
-            label="사용자명"
+            label={t('username')}
             value={formData.username}
             readOnly={true}
-            placeholder="사용자명을 입력하세요"
+            placeholder={t('usernamePlaceholder')}
             onClick={() => setIsUsernameModalOpen(true)}
             showArrow={true}
           />
 
           {/* 소개 필드 */}
           <TextArea
-            label="소개"
+            label={t('bio')}
             value={formData.bio}
             readOnly={true}
-            placeholder="자신을 소개해주세요"
+            placeholder={t('bioPlaceholder')}
             rows={6}
             onClick={() => setIsBioModalOpen(true)}
             showArrow={true}

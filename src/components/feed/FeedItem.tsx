@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
+import { useTranslations } from "next-intl";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronLeft, faChevronRight, faHeart as faSolidHeart, faEllipsis, faPlay, faPause, faExpand } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as faRegularHeart, faComment, faBookmark } from "@fortawesome/free-regular-svg-icons";
@@ -31,6 +32,7 @@ export default function FeedItem({
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated());
   const currentUser = useAuthStore((s) => s.user);
   const { currentPlayingVideo, setCurrentPlayingVideo } = useVideoStore();
+  const t = useTranslations('feedItem');
 
   const [isCommentModalOpen, setIsCommentModalOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -453,7 +455,7 @@ export default function FeedItem({
 
   const handleDeleteFeed = async () => {
     if (!currentUser || currentUser.id !== user.id) {
-      alert("삭제 권한이 없습니다.");
+      alert(t('noDeletePermission'));
       return;
     }
     setIsConfirmModalOpen(true);
@@ -468,7 +470,7 @@ export default function FeedItem({
       }
     } catch (error) {
       console.error("피드 삭제 실패:", error);
-      alert(error instanceof Error ? error.message : "피드 삭제 중 오류가 발생했습니다.");
+      alert(error instanceof Error ? error.message : t('deleteError'));
     }
   };
 
@@ -522,7 +524,7 @@ export default function FeedItem({
                     onClick={handleDeleteFeed}
                     className="w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-zinc-700 transition-colors"
                   >
-                    삭제
+                    {t('delete')}
                   </button>
                 </div>
               )}
@@ -557,7 +559,7 @@ export default function FeedItem({
                     {file.content_type.startsWith("image") && (
                       <img
                         src={file.url}
-                        alt="게임 포스트"
+                        alt={t('gamePost')}
                         className="w-full h-full bg-black"
                         style={{
                           objectFit: (() => {
@@ -769,8 +771,8 @@ export default function FeedItem({
         isOpen={isConfirmModalOpen}
         onClose={() => setIsConfirmModalOpen(false)}
         onConfirm={executeDeleteFeed}
-        title="게시물 삭제"
-        message="이 게시물을 삭제하시겠어요?"
+        title={t('deleteTitle')}
+        message={t('deleteMessage')}
       />
     </>
   );

@@ -1,6 +1,7 @@
 "use client";
 import { useState, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { createFeed } from "@/services/feeds";
 import MediaUploadBox from "./MediaUploadBox";
 import TextArea from "@/components/ui/TextArea";
@@ -12,6 +13,7 @@ export default function CreatePost() {
   const [fileIds, setFileIds] = useState<number[]>([]);
   const [isFeedUploading, setIsFeedUploading] = useState(false);
   const router = useRouter();
+  const t = useTranslations('createPost');
 
   const handleDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setDescription(e.target.value);
@@ -20,7 +22,7 @@ export default function CreatePost() {
   const handleUpload = async () => {
     try {
       if (fileIds.length === 0) {
-        alert("업로드할 파일이 없습니다.");
+        alert(t('noFiles'));
         return;
       }
 
@@ -40,7 +42,7 @@ export default function CreatePost() {
       
     } catch (error) {
       console.error("피드 업로드 오류:", error);
-      alert(error instanceof Error ? error.message : "피드 생성 중 오류가 발생했습니다.");
+      alert(error instanceof Error ? error.message : t('createError'));
     } finally {
       setIsFeedUploading(false);
     }
@@ -67,10 +69,10 @@ export default function CreatePost() {
           {/* 설명 입력 */}
           <div className="space-y-2">
             <TextArea
-              label="설명"
+              label={t('description')}
               value={description}
               onChange={handleDescriptionChange}
-              placeholder="게시물에 대한 설명을 입력하세요..."
+              placeholder={t('descriptionPlaceholder')}
               rows={4}
               disabled={isFeedUploading}
             />
@@ -85,9 +87,9 @@ export default function CreatePost() {
             onClick={handleUpload}
             disabled={fileIds.length === 0}
             loading={isFeedUploading}
-            loadingText="업로드 중..."
+            loadingText={t('uploading')}
           >
-            게시하기
+            {t('publish')}
           </Button>
         </div>
       </div>

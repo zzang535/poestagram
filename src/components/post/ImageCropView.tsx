@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, forwardRef, useImperativeHandle } from "react";
+import { useTranslations } from "next-intl";
 
 interface ImageCropViewProps {
   imageFile: File;
@@ -14,6 +15,7 @@ export interface ImageCropViewRef {
 
 const ImageCropView = forwardRef<ImageCropViewRef, ImageCropViewProps>(
   ({ imageFile, onCropComplete, onCancel }, ref) => {
+  const t = useTranslations('imageCrop');
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [imageUrl, setImageUrl] = useState<string>("");
   const [imageElement, setImageElement] = useState<HTMLImageElement | null>(null);
@@ -226,7 +228,7 @@ const ImageCropView = forwardRef<ImageCropViewRef, ImageCropViewProps>(
     <>
       {/* 설명 텍스트 */}
       <div className="px-6 py-4 text-center">
-        <p className="text-gray-300 text-sm">이미지를 드래그하여 크롭 영역을 조정하세요</p>
+        <p className="text-gray-300 text-sm">{t('dragToAdjust')}</p>
       </div>
 
       {/* 이미지 크롭 영역 */}
@@ -240,7 +242,7 @@ const ImageCropView = forwardRef<ImageCropViewRef, ImageCropViewProps>(
               {/* 원본 이미지 */}
               <img
                 src={imageUrl}
-                alt="크롭할 이미지"
+                alt={t('imageToCrop')}
                 className="w-full h-full object-cover pointer-events-none select-none"
                 style={{ 
                   width: imageSize.width, 

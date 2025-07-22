@@ -145,6 +145,95 @@
     "success": "인증이 완료되었습니다.",
     "resendSuccess": "인증번호가 재전송되었습니다."
   },
+  "comment": {
+    "title": "댓글",
+    "placeholder": "댓글을 입력하세요...",
+    "firstComment": "첫 댓글을 남겨보세요.",
+    "loadingError": "댓글을 불러오는 중 오류가 발생했습니다.",
+    "deleteError": "댓글 삭제 중 오류가 발생했습니다.",
+    "retry": "다시 시도",
+    "delete": "삭제"
+  },
+  "createPost": {
+    "description": "설명",
+    "descriptionPlaceholder": "게시물에 대한 설명을 입력하세요...",
+    "noFiles": "업로드할 파일이 없습니다.",
+    "createError": "피드 생성 중 오류가 발생했습니다.",
+    "uploading": "업로드 중...",
+    "publish": "게시하기"
+  },
+  "profile": {
+    "posts": "게시물",
+    "edit": "프로필 편집",
+    "userNotFound": "사용자 정보를 찾을 수 없습니다.",
+    "loadingFeeds": "피드를 불러오는 중...",
+    "noPosts": "게시물이 없습니다.",
+    "textPost": "텍스트 게시물"
+  },
+  "profileEdit": {
+    "imageOnly": "이미지 파일만 업로드할 수 있습니다.",
+    "uploadFailed": "프로필 사진 변경에 실패했습니다.",
+    "uploading": "업로드 중...",
+    "changePhoto": "프로필 사진 변경",
+    "username": "사용자명",
+    "usernamePlaceholder": "사용자명을 입력하세요",
+    "bio": "소개",
+    "bioPlaceholder": "자신을 소개해주세요",
+    "saveNotImplemented": "프로필 저장 기능은 추후 구현됩니다.",
+    "profileNotFound": "프로필 정보를 불러올 수 없습니다.",
+    "usernameModal": {
+      "title": "사용자명 변경",
+      "placeholder": "새로운 사용자명을 입력하세요",
+      "required": "사용자명을 입력해주세요.",
+      "sameUsername": "현재 사용자명과 동일합니다.",
+      "updateFailed": "사용자명 변경에 실패했습니다.",
+      "cancel": "취소",
+      "confirm": "변경",
+      "updating": "변경 중..."
+    },
+    "bioModal": {
+      "title": "소개 변경",
+      "placeholder": "자신을 소개해주세요",
+      "updateFailed": "소개글 변경에 실패했습니다.",
+      "cancel": "취소",
+      "confirm": "변경",
+      "updating": "변경 중..."
+    }
+  },
+  "mediaUpload": {
+    "fileSizeError": "파일 크기가 200MB를 초과했습니다. 업로드할 수 없습니다.",
+    "fileTypeError": "이미지 또는 비디오 파일만 업로드할 수 있습니다.",
+    "unsupportedFiles": "일부 파일이 지원되지 않는 형식이어서 제외되었습니다.",
+    "uploadError": "파일 업로드 중 오류가 발생했습니다.",
+    "dropFiles": "파일을 여기에 놓으세요",
+    "uploadMedia": "이미지 또는 동영상을 업로드하세요",
+    "dropToUpload": "드롭하여 업로드",
+    "clickOrDrag": "클릭하거나 드래그해서 업로드",
+    "supportedFormats": "지원 형식: JPG, PNG, MP4 (최대 200MB)",
+    "preview": "미리보기"
+  },
+  "imageCrop": {
+    "title": "프로필 사진 편집",
+    "cancel": "취소",
+    "complete": "완료",
+    "selectImage": "이미지를 선택해주세요.",
+    "dragToAdjust": "이미지를 드래그하여 자르기 영역을 조정하세요",
+    "imageToCrop": "자를 이미지"
+  },
+  "feeds": {
+    "noPosts": "게시물이 없습니다",
+    "noMorePosts": "더 이상 게시물이 없습니다",
+    "loadError": "피드를 불러오는 중 오류가 발생했습니다.",
+    "retry": "다시 시도"
+  },
+  "feedItem": {
+    "noDeletePermission": "삭제 권한이 없습니다.",
+    "deleteError": "피드 삭제 중 오류가 발생했습니다.",
+    "deleteTitle": "게시물 삭제",
+    "deleteMessage": "이 게시물을 삭제하시겠어요?",
+    "delete": "삭제",
+    "gamePost": "게임 포스트"
+  },
   "policy": {
     "privacyPolicy": {
       "title": "개인정보 처리방침",

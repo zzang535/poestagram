@@ -59,7 +59,7 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
     } else if (pathname === '/reset-password') {
       return t('resetPassword');
     } else {
-      return t('feed');
+      return t('poestagram');
     }
   };
 

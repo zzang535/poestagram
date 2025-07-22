@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
+import { useTranslations } from "next-intl";
 import { getAllFeeds } from "@/services/feeds";
 import FeedItem from "@/components/feed/FeedItem";
 import { Feed, FeedItemProps } from "@/types/feeds";
@@ -10,6 +11,7 @@ interface AllFeedsProps {
 
 export default function AllFeeds({ initialData }: AllFeedsProps) {
   const limit = 3;
+  const t = useTranslations('feeds');
   
   const [feedData, setFeedData] = useState<FeedItemProps[]>(initialData);
   const [offset, setOffset] = useState(0);
@@ -70,7 +72,7 @@ export default function AllFeeds({ initialData }: AllFeedsProps) {
       setHasMore(res.feeds.length === limitVal);
     } catch (e) {
       console.error("피드 로딩 실패:", e);
-      setError("피드를 불러오는 중 오류가 발생했습니다.");
+      setError(t('loadError'));
     } finally {
       setLoading(false);
     }
@@ -110,7 +112,7 @@ export default function AllFeeds({ initialData }: AllFeedsProps) {
           <div className="flex flex-col items-center justify-center min-h-[calc(100vh-142px)] px-4">
             <div className="text-center space-y-6">
               <div className="space-y-2">
-                <h3 className="text-xl font-semibold text-white">게시물이 없습니다</h3>
+                <h3 className="text-xl font-semibold text-white">{t('noPosts')}</h3>
               </div>
             </div>
           </div>
@@ -149,7 +151,7 @@ export default function AllFeeds({ initialData }: AllFeedsProps) {
         {!loading && !hasMore && feedData.length > 0 && !error && (
           <div className="flex flex-col items-center justify-center space-y-4 mt-4 p-4">
             <div className="text-center text-gray-400">
-              <p className="text-sm">더 이상 게시물이 없습니다</p>
+              <p className="text-sm">{t('noMorePosts')}</p>
             </div>
           </div>
         )}
@@ -164,7 +166,7 @@ export default function AllFeeds({ initialData }: AllFeedsProps) {
               onClick={handleRetry}
               className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
             >
-              다시 시도
+              {t('retry')}
             </button>
           </div>
         )}

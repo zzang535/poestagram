@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import Modal from "@/components/ui/Modal";
 import Input from "@/components/ui/Input";
 import { updateUsername } from "@/services/users";
@@ -21,6 +22,7 @@ export default function UsernameEditModal({
   const [username, setUsername] = useState(currentUsername);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const t = useTranslations('profileEdit.usernameModal');
 
   const handleSubmit = async () => {
     if (isSubmitting) return;
@@ -28,12 +30,12 @@ export default function UsernameEditModal({
     // 입력값 검증
     const trimmedUsername = username.trim();
     if (!trimmedUsername) {
-      setError("사용자명을 입력해주세요.");
+      setError(t('required'));
       return;
     }
 
     if (trimmedUsername === currentUsername) {
-      setError("현재 사용자명과 동일합니다.");
+      setError(t('sameUsername'));
       return;
     }
 
@@ -48,7 +50,7 @@ export default function UsernameEditModal({
       onClose();
     } catch (error: any) {
       console.error("사용자명 변경 실패:", error);
-      setError(error.message || "사용자명 변경에 실패했습니다.");
+      setError(error.message || t('updateFailed'));
     } finally {
       setIsSubmitting(false);
     }
@@ -65,26 +67,26 @@ export default function UsernameEditModal({
     <Modal 
       isOpen={isOpen} 
       onClose={handleClose} 
-      title="사용자명 변경"
+      title={t('title')}
       standardFooter={{
         onCancel: handleClose,
         onConfirm: handleSubmit,
-        cancelText: "취소",
-        confirmText: "변경",
+        cancelText: t('cancel'),
+        confirmText: t('confirm'),
         confirmDisabled: !username.trim() || username.trim() === currentUsername,
         confirmLoading: isSubmitting,
-        confirmLoadingText: "변경 중..."
+        confirmLoadingText: t('updating')
       }}
     >
       <div className="p-4">
         <Input
-          label="사용자명"
+          label={t('title')}
           value={username}
           onChange={(e) => {
             setUsername(e.target.value);
             if (error) setError(null); // 입력 시 에러 초기화
           }}
-          placeholder="새로운 사용자명을 입력하세요"
+          placeholder={t('placeholder')}
           error={error}
           disabled={isSubmitting}
         />

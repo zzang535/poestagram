@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import Modal from "@/components/ui/Modal";
 import TextArea from "@/components/ui/TextArea";
 import { updateBio } from "@/services/users";
@@ -23,6 +24,7 @@ export default function BioEditModal({
   const [bio, setBio] = useState(currentBio || "");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const t = useTranslations('profileEdit.bioModal');
 
   const hasChanges = bio !== currentBio;
 
@@ -40,7 +42,7 @@ export default function BioEditModal({
       onClose();
     } catch (error: any) {
       console.error("소개글 변경 실패:", error);
-      setError(error.message || "소개글 변경에 실패했습니다.");
+      setError(error.message || t('updateFailed'));
     } finally {
       setIsSubmitting(false);
     }
@@ -57,26 +59,26 @@ export default function BioEditModal({
     <Modal 
       isOpen={isOpen} 
       onClose={handleClose} 
-      title="소개 변경"
+      title={t('title')}
       standardFooter={{
         onCancel: handleClose,
         onConfirm: handleSubmit,
-        cancelText: "취소",
-        confirmText: "변경",
+        cancelText: t('cancel'),
+        confirmText: t('confirm'),
         confirmDisabled: !hasChanges,
         confirmLoading: isSubmitting,
-        confirmLoadingText: "변경 중..."
+        confirmLoadingText: t('updating')
       }}
     >
       <div className="p-4">
         <TextArea
-          label="소개"
+          label={t('title')}
           value={bio}
           onChange={(e) => {
             setBio(e.target.value);
             if (error) setError(null); // 입력 시 에러 초기화
           }}
-          placeholder="자신을 소개해주세요"
+          placeholder={t('placeholder')}
           rows={6}
           error={error}
           disabled={isSubmitting}

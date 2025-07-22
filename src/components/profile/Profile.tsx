@@ -2,6 +2,7 @@
 
 import { useRouter, useParams } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
+import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { getUserFeeds } from "@/services/feeds";
 import { getUserProfile } from "@/services/users";
@@ -19,6 +20,7 @@ interface ProfileProps {
 
 export default function Profile({ userId, initialProfile, initialFeeds }: ProfileProps) {
   const router = useRouter();
+  const t = useTranslations('profile');
 
   const [profileLoading, setProfileLoading] = useState(!initialProfile);
   const [feedsLoading, setFeedsLoading] = useState(!initialFeeds);
@@ -112,7 +114,7 @@ export default function Profile({ userId, initialProfile, initialFeeds }: Profil
   if (!userProfile) {
     return (
       <div className="bg-black text-white py-[73px] min-h-screen flex justify-center items-center">
-        <p className="text-gray-400">사용자 정보를 찾을 수 없습니다.</p>
+        <p className="text-gray-400">{t('userNotFound')}</p>
       </div>
     );
   }
@@ -130,7 +132,7 @@ export default function Profile({ userId, initialProfile, initialFeeds }: Profil
           </div>
           <div className="flex-1">
             <h2 className="text-xl font-bold">{userProfile.username}</h2>
-            <p className="text-gray-400 mt-1">{userProfile.feeds_count} 게시물</p>
+            <p className="text-gray-400 mt-1">{userProfile.feeds_count} {t('posts')}</p>
             {userProfile.bio && (
               <p className="text-gray-300 mt-2 text-sm">{userProfile.bio}</p>
             )}
@@ -156,7 +158,7 @@ export default function Profile({ userId, initialProfile, initialFeeds }: Profil
                     }}
                     className="w-full text-left px-4 py-2 text-sm text-white hover:bg-zinc-700 transition-colors"
                   >
-                    프로필 편집
+                    {t('edit')}
                   </button>
                 </div>
               )}
@@ -167,13 +169,13 @@ export default function Profile({ userId, initialProfile, initialFeeds }: Profil
 
       {feedsLoading && feeds.length === 0 && (
         <div className="flex justify-center items-center h-40">
-          <p className="text-gray-400">피드를 불러오는 중...</p>
+          <p className="text-gray-400">{t('loadingFeeds')}</p>
         </div>
       )}
 
       {!feedsLoading && feeds.length === 0 && (
         <div className="flex justify-center items-center h-40">
-          <p className="text-gray-400">게시물이 없습니다.</p>
+          <p className="text-gray-400">{t('noPosts')}</p>
         </div>
       )}
 
@@ -202,7 +204,7 @@ export default function Profile({ userId, initialProfile, initialFeeds }: Profil
               {feed.files.length === 0 && (
                 <div className="w-full h-full bg-gray-900 flex items-center justify-center">
                   <p className="text-gray-400 text-xs p-2 text-center truncate">
-                    {feed.description || "텍스트 게시물"}
+                    {feed.description || t('textPost')}
                   </p>
                 </div>
               )}

@@ -145,6 +145,95 @@
     "success": "Verification completed.",
     "resendSuccess": "Verification code has been resent."
   },
+  "comment": {
+    "title": "Comments",
+    "placeholder": "Write a comment...",
+    "firstComment": "Be the first to comment.",
+    "loadingError": "An error occurred while loading comments.",
+    "deleteError": "An error occurred while deleting comment.",
+    "retry": "Try again",
+    "delete": "Delete"
+  },
+  "createPost": {
+    "description": "Description",
+    "descriptionPlaceholder": "Write a description for your post...",
+    "noFiles": "No files to upload.",
+    "createError": "An error occurred while creating the post.",
+    "uploading": "Uploading...",
+    "publish": "Publish"
+  },
+  "profile": {
+    "posts": "posts",
+    "edit": "Edit Profile",
+    "userNotFound": "User information not found.",
+    "loadingFeeds": "Loading feeds...",
+    "noPosts": "No posts yet.",
+    "textPost": "Text post"
+  },
+  "profileEdit": {
+    "imageOnly": "Only image files can be uploaded.",
+    "uploadFailed": "Failed to change profile photo.",
+    "uploading": "Uploading...",
+    "changePhoto": "Change Profile Photo",
+    "username": "Username",
+    "usernamePlaceholder": "Enter your username",
+    "bio": "Bio",
+    "bioPlaceholder": "Tell us about yourself",
+    "saveNotImplemented": "Profile save feature will be implemented later.",
+    "profileNotFound": "Profile information could not be loaded.",
+    "usernameModal": {
+      "title": "Change Username",
+      "placeholder": "Enter new username",
+      "required": "Please enter a username.",
+      "sameUsername": "Same as current username.",
+      "updateFailed": "Failed to change username.",
+      "cancel": "Cancel",
+      "confirm": "Change",
+      "updating": "Changing..."
+    },
+    "bioModal": {
+      "title": "Change Bio",
+      "placeholder": "Tell us about yourself",
+      "updateFailed": "Failed to change bio.",
+      "cancel": "Cancel",
+      "confirm": "Change",
+      "updating": "Changing..."
+    }
+  },
+  "mediaUpload": {
+    "fileSizeError": "File size exceeds 200MB. Cannot upload.",
+    "fileTypeError": "Only image or video files can be uploaded.",
+    "unsupportedFiles": "Some files were excluded due to unsupported formats.",
+    "uploadError": "An error occurred while uploading files.",
+    "dropFiles": "Drop files here",
+    "uploadMedia": "Upload images or videos",
+    "dropToUpload": "Drop to upload",
+    "clickOrDrag": "Click or drag to upload",
+    "supportedFormats": "Supported formats: JPG, PNG, MP4 (Max 200MB)",
+    "preview": "Preview"
+  },
+  "imageCrop": {
+    "title": "Edit Profile Photo",
+    "cancel": "Cancel",
+    "complete": "Done",
+    "selectImage": "Please select an image.",
+    "dragToAdjust": "Drag the image to adjust the crop area",
+    "imageToCrop": "Image to crop"
+  },
+  "feeds": {
+    "noPosts": "No posts yet",
+    "noMorePosts": "No more posts",
+    "loadError": "An error occurred while loading feeds.",
+    "retry": "Try again"
+  },
+  "feedItem": {
+    "noDeletePermission": "You don't have permission to delete.",
+    "deleteError": "An error occurred while deleting the post.",
+    "deleteTitle": "Delete Post",
+    "deleteMessage": "Do you want to delete this post?",
+    "delete": "Delete",
+    "gamePost": "Game post"
+  },
   "policy": {
     "privacyPolicy": {
       "title": "Privacy Policy",
