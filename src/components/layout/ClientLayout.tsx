@@ -58,6 +58,8 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
       return t('profile');
     } else if (pathname === '/reset-password') {
       return t('resetPassword');
+    } else if (pathname === '/customer-center') {
+      return t('customerCenter');
     } else {
       return t('poestagram');
     }

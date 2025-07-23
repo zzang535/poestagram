@@ -7,7 +7,8 @@
     "editProfile": "Edit Profile",
     "profile": "Profile",
     "resetPassword": "Reset Password",
-    "poestagram": "poestagram"
+    "poestagram": "poestagram",
+    "customerCenter": "Customer Center"
   },
   "menu": {
     "logout": "Logout",
@@ -16,7 +17,8 @@
     "privacyPolicy": "Privacy Policy",
     "termsOfService": "Terms of Service",
     "language": "Language",
-    "poestagram": "poestagram"
+    "poestagram": "poestagram",
+    "customerCenter": "Customer Center"
   },
   "login": {
     "identifier": "Username",
@@ -243,6 +245,44 @@
     "myProfile": "My Profile",
     "characterLimitExceeded": "Character limit exceeded. (Max {maxLength} characters)"
   },
+  "customerCenter": {
+    "title": "Customer Center",
+    "contact": {
+      "title": "Contact Information",
+      "company": "Company: SingingBird",
+      "email": "Email: poestagramer@gmail.com",
+      "phone": "Phone: 010-2849-0490",
+      "hours": "Business Hours: Mon-Fri 9:00 AM - 6:00 PM (KST)"
+    },
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "q1": {
+        "question": "How do I upload game videos?",
+        "answer": "Go to the 'New Post' page and select video files to upload. Supported formats are MP4. The maximum file size is 200MB."
+      },
+      "q2": {
+        "question": "Can I edit my posts after uploading?",
+        "answer": "Currently, you can only delete posts. Post editing feature will be added in future updates."
+      },
+      "q3": {
+        "question": "How do I change my profile information?",
+        "answer": "Go to 'Edit Profile' from the menu to change your username, bio, and profile picture."
+      },
+      "q4": {
+        "question": "What should I do if I forgot my password?",
+        "answer": "Use the 'Forgot Password' link on the login page to reset your password via email verification."
+      },
+      "q5": {
+        "question": "How do I report inappropriate content?",
+        "answer": "Click the menu button (⋮) on any post and select 'Report'. We will review reported content promptly."
+      }
+    },
+    "support": {
+      "title": "Need More Help?",
+      "description": "If you have questions that aren't answered in the FAQ, please contact us using the information above. We'll respond as quickly as possible.",
+      "emailSubject": "Poestagram Support Inquiry"
+    }
+  },
   "policy": {
     "privacyPolicy": {
       "title": "Privacy Policy",
@@ -360,7 +400,7 @@
           "department": "Department: Development Team",
           "manager": "Manager: Yoon Hwang",
           "email": "Email: poestagramer@gmail.com",
-          "phone": "Customer Service: 010-2849-0490"
+          "phone": "Phone: 010-2849-0490"
         }
       },
       "section11": {

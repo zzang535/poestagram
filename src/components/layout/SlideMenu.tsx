@@ -115,7 +115,16 @@ export default function SlideMenu({
               </>
             )}
             
-            {/* 언어 선택 드롭다운 - 회원가입 바로 아래 */}
+            {/* 고객센터 링크 */}
+            <Link
+              href="/customer-center"
+              className="w-full flex items-center space-x-3 text-white p-3 hover:bg-zinc-900 rounded-lg transition-colors"
+              onClick={onClose}
+            >
+              <span>{t('customerCenter')}</span>
+            </Link>
+
+            {/* 언어 선택 드롭다운 */}
             <div>
               <LanguageSelector />
             </div>

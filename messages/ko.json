@@ -7,7 +7,8 @@
     "editProfile": "프로필 편집",
     "profile": "프로필",
     "resetPassword": "비밀번호 재설정",
-    "poestagram": "피오이스타그램"
+    "poestagram": "피오이스타그램",
+    "customerCenter": "고객센터"
   },
   "menu": {
     "logout": "로그아웃",
@@ -16,7 +17,8 @@
     "privacyPolicy": "개인정보처리방침",
     "termsOfService": "이용약관",
     "language": "언어",
-    "poestagram": "피오이스타그램"
+    "poestagram": "피오이스타그램",
+    "customerCenter": "고객센터"
   },
   "login": {
     "identifier": "아이디",
@@ -243,6 +245,44 @@
     "myProfile": "내 프로필",
     "characterLimitExceeded": "글자 수 제한을 초과했습니다. ({maxLength}자 이하)"
   },
+  "customerCenter": {
+    "title": "고객센터",
+    "contact": {
+      "title": "연락처 정보",
+      "company": "회사명: 싱잉버드",
+      "email": "이메일: poestagramer@gmail.com",
+      "phone": "전화번호: 010-2849-0490",
+      "hours": "운영시간: 평일 오전 9시 - 오후 6시 (한국시간)"
+    },
+    "faq": {
+      "title": "자주 묻는 질문",
+      "q1": {
+        "question": "게임 영상은 어떻게 업로드하나요?",
+        "answer": "새 게시물 페이지에서 비디오 파일을 선택하여 업로드할 수 있습니다. 지원 형식은 MP4이며, 최대 파일 크기는 200MB입니다."
+      },
+      "q2": {
+        "question": "업로드한 게시물을 수정할 수 있나요?",
+        "answer": "현재는 게시물 삭제만 가능합니다. 게시물 수정 기능은 향후 업데이트에서 추가될 예정입니다."
+      },
+      "q3": {
+        "question": "프로필 정보는 어떻게 변경하나요?",
+        "answer": "메뉴에서 '프로필 편집'을 선택하여 사용자명, 소개글, 프로필 사진을 변경할 수 있습니다."
+      },
+      "q4": {
+        "question": "비밀번호를 잊어버렸어요.",
+        "answer": "로그인 페이지의 '비밀번호를 잊으셨나요?' 링크를 사용하여 이메일 인증을 통해 비밀번호를 재설정할 수 있습니다."
+      },
+      "q5": {
+        "question": "부적절한 콘텐츠는 어떻게 신고하나요?",
+        "answer": "게시물의 메뉴 버튼(⋮)을 클릭하여 '신고하기'를 선택하세요. 신고된 콘텐츠는 신속히 검토됩니다."
+      }
+    },
+    "support": {
+      "title": "더 많은 도움이 필요하신가요?",
+      "description": "FAQ에서 답변을 찾지 못한 질문이 있으시면, 위의 연락처로 문의해 주세요. 최대한 빠르게 답변드리겠습니다.",
+      "emailSubject": "피오이스타그램 지원 문의"
+    }
+  },
   "policy": {
     "privacyPolicy": {
       "title": "개인정보 처리방침",
@@ -360,7 +400,7 @@
           "department": "담당부서: 개발팀",
           "manager": "담당자: 황윤",
           "email": "이메일: poestagramer@gmail.com",
-          "phone": "고객센터: 010-2849-0490"
+          "phone": "전화번호: 010-2849-0490"
         }
       },
       "section11": {
