@@ -49,6 +49,8 @@ export async function generateMetadata({ params, searchParams }: UserFeedPagePro
       title: `${feedTitle} - poestagram`,
       description: `${username}의 POE 패스오브 엑자일 게임 콘텐츠: ${description || '게임 플레이 영상과 스크린샷을 확인해보세요.'}`,
       keywords: ['피오이스타그램', 'poestagram', 'POE', '패스오브 엑자일', '게임커뮤니티', username],
+      
+      // open graph : 링크 공유 시 표시되는 정보
       openGraph: {
         title: feedTitle,
         description: `${username}의 POE 게임 콘텐츠: ${description || '게임 플레이 영상과 스크린샷을 확인해보세요.'}`,

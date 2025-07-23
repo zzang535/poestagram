@@ -12,6 +12,12 @@ export async function generateMetadata(): Promise<Metadata> {
       index: true,
       follow: true,
     },
+
+    openGraph: {
+      title: `${t('title')} - poestagram`,
+      description: 'Get support and find answers to frequently asked questions about poestagram.',
+      type: 'website',
+    },
   };
 }
 
